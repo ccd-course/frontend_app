@@ -1,26 +1,23 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+import { Header } from "./components/Header";
+import { LandingPage } from "./pages/LandingPage";
+import { PageNotFound } from "./pages/PageNotFound";
+import { GamePage } from "./pages/GamePage";
 
-function App() {
+import "./App.css";
+
+export const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="App" style={{ display: "flex", flexDirection: "column" }}>
+      <Header></Header>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/Game/:id" element={<GamePage />} />
+        <Route path="*" element={<PageNotFound />} />
+      </Routes>
     </div>
   );
-}
+};
 
 export default App;
