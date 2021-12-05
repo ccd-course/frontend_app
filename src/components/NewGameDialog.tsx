@@ -34,7 +34,7 @@ export const NewGameDialog = ({ open, setOpen }: NewGameDialogProps) => {
   const initNewGame = () => {
     // SEND REQUEST AND INIT THE GAME
     const newGameId = "2932";
-    navigate(`/game/${newGameId}`);
+    navigate(`/Game/${newGameId}`);
   };
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
