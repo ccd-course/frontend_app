@@ -14,6 +14,7 @@ import FormLabel from "@mui/material/FormLabel";
 import Button from "@mui/material/Button";
 import { PrimaryButtonStyle } from "../styles/ButtonStyles";
 import { COLOR } from "../styles/Colors";
+import { useNavigate } from "react-router-dom";
 
 interface NewGameDialogProps {
   open: boolean;
@@ -21,11 +22,20 @@ interface NewGameDialogProps {
 }
 
 export const NewGameDialog = ({ open, setOpen }: NewGameDialogProps) => {
+  const navigate = useNavigate();
+
   const [value, setValue] = React.useState(0);
   const [numberOfPlayer, setNumberOfPlayer] = useState(0);
   const [playersName, setPlayersName] = useState<string[]>([]);
   const [disabled, setDisabled] = useState(true);
 
+  // SEND THE REQUEST TO INIT THE GAME
+  // REDIRECT THE USER TO THE GAME_ID
+  const initNewGame = () => {
+    // SEND REQUEST AND INIT THE GAME
+    const newGameId = "2932";
+    navigate(`/game/${newGameId}`);
+  };
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
@@ -178,6 +188,7 @@ export const NewGameDialog = ({ open, setOpen }: NewGameDialogProps) => {
             ...PrimaryButtonStyle,
             backgroundColor: disabled ? "#333" : PrimaryButtonStyle.background,
           }}
+          onClick={initNewGame}
           disabled={disabled}
         >
           Start
