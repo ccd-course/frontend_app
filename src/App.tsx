@@ -4,6 +4,7 @@ import { Header } from "./components/Header";
 import { LandingPage } from "./pages/LandingPage";
 import { PageNotFound } from "./pages/PageNotFound";
 import "./App.css";
+
 export const App = () => {
   return (
     <div className="App" style={{ display: "flex", flexDirection: "column" }}>
