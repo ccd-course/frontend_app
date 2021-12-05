@@ -5,8 +5,9 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import { COLOR } from "../styles/Colors";
+import { PrimaryButtonStyle } from "../styles/ButtonStyles";
 
-export const Header = (props: any) => {
+export const Header = () => {
   return (
     <div>
       <AppBar
@@ -21,8 +22,12 @@ export const Header = (props: any) => {
             <div style={{ display: "inline" }}>JChess</div>
           </Typography>
           <Stack spacing={2} direction="row">
-            <Button variant="contained">Signup</Button>
-            <Button variant="contained">Login</Button>
+            <Button variant="contained" style={PrimaryButtonStyle}>
+              Signup
+            </Button>
+            <Button variant="contained" style={PrimaryButtonStyle}>
+              Login
+            </Button>
           </Stack>
         </Toolbar>
       </AppBar>
