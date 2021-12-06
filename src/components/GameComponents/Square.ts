@@ -13,7 +13,8 @@ export class Square {
     this.sqaureColor = this.generateSquareColor();
   }
 
-  // Draw the square
+  // Given the coordinates of the verteses
+  // Draw the square and fill it with the generated color
   public drawSquare() {
     this.p5.fill(this.sqaureColor);
     this.p5.beginShape();

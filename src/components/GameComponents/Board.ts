@@ -20,9 +20,9 @@ export class Board {
     this.numCols = this.boardTable.length;
 
     // Calculate the radiouses of the circles on the board
-    this.boardCirclesRadious = this.generateBoardCirclesRadiousList();
+    this.boardCirclesRadious = this.calculateBoardCirclesRadious();
 
-    // Generate the list of squares and pieces
+    // Generate the squares and calculate their coordinates
     this.generateSquares();
   }
 
@@ -39,8 +39,8 @@ export class Board {
     });
   }
 
-  // Calculate the readious of board circles
-  private generateBoardCirclesRadiousList = () => {
+  // Given the table rows, the function calculate the radious of each circle
+  private calculateBoardCirclesRadious = () => {
     let maxRadious = this.p5Reference.width / 2 - 10;
     const circlesRadiousList = [];
     const distance = maxRadious / (this.numRows + 1);
