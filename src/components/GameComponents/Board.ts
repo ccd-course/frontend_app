@@ -13,4 +13,16 @@ export class Board {
     this.numRows = this.boardTable[0].length;
     this.numCols = this.boardTable.length;
   }
+
+  // Calculate the readious of board circles
+  private generateBoardCirclesRadiousList = () => {
+    let maxRadious = this.p5Reference.width / 2 - 10;
+    const circlesRadiousList = [];
+    const distance = maxRadious / (this.numRows + 1);
+    for (let i = this.numRows; i >= 0; i--) {
+      circlesRadiousList.push(maxRadious);
+      maxRadious -= distance;
+    }
+    return circlesRadiousList.reverse();
+  };
 }
