@@ -25,7 +25,6 @@ export const Game = (containerRef: any) => {
     } else {
       p5.resizeCanvas(width, width);
     }
-
     draw(p5);
   };
 

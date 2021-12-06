@@ -67,7 +67,6 @@ export const GamePage = () => {
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                backgroundColor: "red",
               }}
               ref={gameContainerRef}
             >
