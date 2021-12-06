@@ -15,6 +15,21 @@ export class Piece {
     this.pieceImage = this.loadImagePromise();
   }
 
+  // Draw the piece on the canvas
+  public async drawPiece() {
+    if (this.coordinate && this.size) {
+      const image = await this.pieceImage;
+      this.p5Reference.imageMode(this.p5Reference.CENTER);
+      this.p5Reference.image(
+        image,
+        this.coordinate.x,
+        this.coordinate.y,
+        this.size,
+        this.size
+      );
+    }
+  }
+
   // Set the position coordinate of the piece
   public setPosition(coordinate: Coordinate) {
     this.coordinate = coordinate;
