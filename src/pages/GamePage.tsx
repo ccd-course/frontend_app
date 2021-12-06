@@ -3,9 +3,11 @@ import Card from "@mui/material/Card";
 import CircularProgress from "@mui/material/CircularProgress";
 import { COLOR } from "../styles/Colors";
 import { PageStyle } from "../styles/DefaultPagesStyle";
+import { Game } from "../components/Game";
 
 export const GamePage = () => {
   const [isLoading, setIsLoading] = React.useState(true);
+
   // SEND REQUEST TO GET THE BOARD DATA
   setTimeout(() => {
     setIsLoading(false);
@@ -66,7 +68,7 @@ export const GamePage = () => {
                 alignItems: "center",
               }}
             >
-              NEW GAME
+              <Game></Game>
             </div>
             <div
               style={{
