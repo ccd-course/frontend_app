@@ -15,6 +15,17 @@ export class Piece {
     this.pieceImage = this.loadImagePromise();
   }
 
+  // Set the position coordinate of the piece
+  public setPosition(coordinate: Coordinate) {
+    this.coordinate = coordinate;
+  }
+
+  // Set the image size
+  // It differs from one place to another
+  public setDimenstion(size: number) {
+    this.size = size;
+  }
+
   // Load the image, given the playerID and pieceID
   private loadImagePromise = (): Promise<p5Types.Image> => {
     const img = require("../../images/player" +
