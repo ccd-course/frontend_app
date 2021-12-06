@@ -1,11 +1,14 @@
-import React from "react";
+import React, { useRef } from "react";
 import Card from "@mui/material/Card";
 import CircularProgress from "@mui/material/CircularProgress";
 import { COLOR } from "../styles/Colors";
 import { PageStyle } from "../styles/DefaultPagesStyle";
+import { Game } from "../components/Game";
 
 export const GamePage = () => {
+  const gameContainerRef = useRef(null);
   const [isLoading, setIsLoading] = React.useState(true);
+
   // SEND REQUEST TO GET THE BOARD DATA
   setTimeout(() => {
     setIsLoading(false);
@@ -59,14 +62,15 @@ export const GamePage = () => {
             ></div>
             <div
               style={{
-                flex: 1,
+                flex: 2,
                 height: "100%",
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
               }}
+              ref={gameContainerRef}
             >
-              NEW GAME
+              <Game containerRef={gameContainerRef}></Game>
             </div>
             <div
               style={{
