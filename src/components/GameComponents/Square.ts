@@ -1,5 +1,6 @@
 import p5Types from "p5";
-import { SquareCoordinates } from "../../types";
+import { Coordinate, SquareCoordinates } from "../../types";
+import { intersectionPointOfTwoLines } from "./Helpers";
 import { Piece } from "./Piece";
 
 export class Square {
@@ -22,6 +23,44 @@ export class Square {
       [this.coordinates.p3.x, this.coordinates.p3.y],
       [this.coordinates.p2.x, this.coordinates.p2.y],
       [this.coordinates.p4.x, this.coordinates.p4.y]
+    );
+  }
+
+  // Place a piece on this square and redraw
+  public setPiece = (piece: Piece) => {
+    this.piece = piece;
+    this.piece.setPosition(this.center);
+    this.piece.setDimenstion(this.contentDimension);
+    this.drawPiece();
+  };
+
+  // Draw the piece in the square if it exists
+  public drawPiece() {
+    if (this.piece) this.piece.drawPiece();
+  }
+
+  // Returning a reference to the piece
+  public getPiece = () => {
+    return this.piece;
+  };
+
+  // Remove the content of the sqaure
+  public empty = () => {
+    this.piece = undefined;
+    this.drawSquare();
+  };
+
+  // Calculate the size of the square content
+  // The shortest side of the square minus a margin
+  private get contentDimension() {
+    return (
+      this.p5.dist(
+        this.coordinates.p3.x,
+        this.coordinates.p3.y,
+        this.coordinates.p4.x,
+        this.coordinates.p4.y
+      ) -
+      12 * this.squareIndex[0]
     );
   }
 
