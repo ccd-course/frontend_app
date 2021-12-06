@@ -1,6 +1,8 @@
 import React from "react";
 import Sketch from "react-p5";
 import p5Types from "p5"; //Import this for typechecking and intellisense
+import { Board } from "./GameComponents/Board";
+import { BoardTable } from "../Dummy/BoardTable";
 
 export const Game = (containerRef: any) => {
   let canvas: p5Types.Element;
@@ -18,6 +20,10 @@ export const Game = (containerRef: any) => {
 
   const draw = (p5: p5Types) => {
     p5.background(255);
+    p5.angleMode(p5.DEGREES);
+    p5.background(p5.color(57, 62, 70));
+    p5.translate(p5.width / 2, p5.height / 2);
+    new Board(p5, BoardTable).drawBoard();
   };
 
   const setup = (p5: p5Types, canvasParentRef: Element) => {
