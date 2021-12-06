@@ -1,8 +1,10 @@
 import p5Types from "p5";
 import { SquareCoordinates } from "../../types";
+import { Piece } from "./Piece";
 
 export class Square {
   private sqaureColor: p5Types.Color; // The color of the square is generated automatically.
+  private piece: Piece | undefined; // Reference to the piece if it exists in this square
 
   constructor(
     private p5: p5Types, // Reference to the p5 library
@@ -11,6 +13,16 @@ export class Square {
   ) {
     // Generate the color of the square
     this.sqaureColor = this.generateSquareColor();
+  }
+
+  // Calculate the coordinate point of the center of the square
+  public get center(): Coordinate {
+    return intersectionPointOfTwoLines(
+      [this.coordinates.p1.x, this.coordinates.p1.y],
+      [this.coordinates.p3.x, this.coordinates.p3.y],
+      [this.coordinates.p2.x, this.coordinates.p2.y],
+      [this.coordinates.p4.x, this.coordinates.p4.y]
+    );
   }
 
   // Given the coordinates of the verteses
