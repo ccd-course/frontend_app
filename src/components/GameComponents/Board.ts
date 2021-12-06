@@ -2,6 +2,7 @@ import p5Types from "p5"; //Import this for typechecking and intellisense
 import { BoardTable } from "../../types";
 import { generateSquaresCoordinatesForOneCircle } from "./Helpers";
 import { Square } from "./Square";
+import { Piece } from "./Piece";
 
 export class Board {
   private readonly numRows: number; // Number of rows on the baord
@@ -24,12 +25,27 @@ export class Board {
 
     // Generate the squares and calculate their coordinates
     this.generateSquares();
+    // Add the pieces to the board
+    this.addBoardPieces();
   }
 
   // Render the board
   public drawBoard() {
     this.drawSquares();
     return this;
+  }
+
+  // Read the board table and generate the pieces in the right square
+  private addBoardPieces() {
+    this.boardTable.forEach((col, colIndex) => {
+      col.forEach((row, rowIndex) => {
+        if (row) {
+          this.squares[`{${rowIndex + 1},${colIndex + 1}}`].setPiece(
+            new Piece(this.p5Reference, row.pieceID, row.playerID)
+          );
+        }
+      });
+    });
   }
 
   // Render all the squares
