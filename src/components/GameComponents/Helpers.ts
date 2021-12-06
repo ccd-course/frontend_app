@@ -19,3 +19,22 @@ export const generateSquaresCoordinatesForOneCircle = (
   }
   return coordinates;
 };
+
+// Find the intersection coordinate of two lines
+export const intersectionPointOfTwoLines = (
+  point1: [number, number],
+  point2: [number, number],
+  point3: [number, number],
+  point4: [number, number]
+): { x: number; y: number } => {
+  const ua =
+    ((point4[0] - point3[0]) * (point1[1] - point3[1]) -
+      (point4[1] - point3[1]) * (point1[0] - point3[0])) /
+    ((point4[1] - point3[1]) * (point2[0] - point1[0]) -
+      (point4[0] - point3[0]) * (point2[1] - point1[1]));
+
+  const x = point1[0] + ua * (point2[0] - point1[0]);
+  const y = point1[1] + ua * (point2[1] - point1[1]);
+
+  return { x, y };
+};
