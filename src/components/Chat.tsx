@@ -7,6 +7,10 @@ import Divider from "@mui/material/Divider";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 
+interface ChatProps {
+  width: number;
+}
+
 export const Chat = () => {
   const [isOpen, setState] = React.useState(false);
 
