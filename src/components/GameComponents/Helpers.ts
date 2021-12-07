@@ -38,3 +38,21 @@ export const intersectionPointOfTwoLines = (
 
   return { x, y };
 };
+
+// Get the real angle relative to the center
+export const getAngleHelper = (
+  p5Reference: p5Types,
+  angle: number,
+  x: number,
+  y: number
+) => {
+  if (x > 0 && y > 0) {
+    return angle;
+  } else if (x < 0 && y > 0) {
+    return 90 - p5Reference.abs(angle) + 90;
+  } else if (x < 0 && y < 0) {
+    return angle + 180;
+  } else {
+    return 270 + (90 - p5Reference.abs(angle));
+  }
+};
