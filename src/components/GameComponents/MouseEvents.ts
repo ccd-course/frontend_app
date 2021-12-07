@@ -20,9 +20,25 @@ export class MouseEvents {
   private onMouseClick() {
     this.canvas.mouseClicked((event: PointerEvent) => {
       MouseEvent.next({
-        x: event.offsetX,
-        y: event.offsetY,
+        x: this.transformCoordianteForX(event.offsetX),
+        y: this.transformCoordianteForY(event.offsetY),
       });
     });
   }
+
+  // Coordinate transformation of any point on x-axis of the canvas
+  // From top-left to center
+  private transformCoordianteForX = (x: number): number => {
+    if (x >= this.width / 2) return x - this.width / 2;
+    if (x < this.width / 2) return -(this.width / 2 - x);
+    throw Error("Mouse click error");
+  };
+
+  // Coordinate transformation of any point on y-axis of the canvas
+  // From top-left to center
+  private transformCoordianteForY = (y: number) => {
+    if (y <= this.height / 2) return this.height / 2 - y;
+    if (y > this.height / 2) return -(y - this.height / 2);
+    throw Error("Mouse click error");
+  };
 }
