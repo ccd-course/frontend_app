@@ -84,4 +84,18 @@ export class Square {
       return this.p5.color(240, 227, 202);
     else return this.p5.color(163, 87, 9);
   }
+
+  // Draw a circle inside the square
+  public signSquare = () => {
+    this.drawSquare();
+    this.p5.fill(0);
+    this.p5.circle(this.center.x, this.center.y, this.contentDimension);
+    this.drawPiece();
+  };
+
+  // Redraw the square and the piece without the circle
+  public neglectSquare = () => {
+    this.drawSquare();
+    this.drawPiece();
+  };
 }

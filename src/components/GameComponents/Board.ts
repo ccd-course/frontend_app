@@ -61,6 +61,7 @@ export class Board {
         // otherwise do nothing
         if (this.squares[squareIndex].getPiece()) {
           this.sourceSquare = this.squares[squareIndex];
+          this.sourceSquare.signSquare();
         }
         // Handle the second click
       } else if (this.sourceSquare && !this.destinationSquare) {
