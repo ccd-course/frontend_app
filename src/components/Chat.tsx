@@ -11,7 +11,7 @@ interface ChatProps {
   width: number;
 }
 
-export const Chat = () => {
+export const Chat = (props: ChatProps) => {
   const [isOpen, setState] = React.useState(false);
 
   const toggleDrawer =
