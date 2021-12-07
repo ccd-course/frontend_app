@@ -36,7 +36,7 @@ export const Chat = (props: ChatProps) => {
       onKeyDown={toggleDrawer(false)}
     >
       <List>
-        {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
+        {["DATA"].map((text, index) => (
           <ListItem button key={text}>
             <ListItemText primary={text} />
           </ListItem>
@@ -44,7 +44,7 @@ export const Chat = (props: ChatProps) => {
       </List>
       <Divider />
       <List>
-        {["All mail", "Trash", "Spam"].map((text, index) => (
+        {["DATA"].map((text, index) => (
           <ListItem button key={text}>
             <ListItemText primary={text} />
           </ListItem>
@@ -56,7 +56,8 @@ export const Chat = (props: ChatProps) => {
   return (
     <div>
       <React.Fragment key={"right"}>
-        <Button onClick={toggleDrawer(true)}>OPEN</Button>
+        {/*         <Button onClick={toggleDrawer(true)}>OPEN</Button>
+         */}{" "}
         <SwipeableDrawer
           anchor={"right"}
           open={isOpen}
