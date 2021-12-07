@@ -4,6 +4,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { COLOR } from "../styles/Colors";
 import { PageStyle } from "../styles/DefaultPagesStyle";
 import { Game } from "../components/Game";
+import { Chat } from "../components/Chat";
 
 export const GamePage = () => {
   const gameContainerRef = useRef(null);
@@ -47,6 +48,7 @@ export const GamePage = () => {
               alignItems: "center",
               width: "100%",
               height: "100%",
+              flexWrap: "wrap",
             }}
           >
             <div
@@ -62,7 +64,7 @@ export const GamePage = () => {
             ></div>
             <div
               style={{
-                flex: 2,
+                flex: 3,
                 height: "100%",
                 display: "flex",
                 justifyContent: "center",
@@ -74,15 +76,17 @@ export const GamePage = () => {
             </div>
             <div
               style={{
-                flex: 1,
                 height: "100%",
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "space-around",
                 alignContent: "center",
                 alignItems: "center",
+                width: 300,
               }}
-            ></div>
+            >
+              <Chat></Chat>
+            </div>
           </div>
         </Card>
       );
