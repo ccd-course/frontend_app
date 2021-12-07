@@ -5,7 +5,11 @@ import { Coordinate } from "../../types";
 export const MouseEvent = new Subject<Coordinate>();
 
 export class MouseEvents {
-  constructor(private canvas: p5Types.Element) {}
+  constructor(
+    private canvas: p5Types.Element,
+    private width: number,
+    private height: number
+  ) {}
 
   // Register the events
   listen() {
