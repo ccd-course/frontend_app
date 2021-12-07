@@ -30,7 +30,7 @@ export const Chat = (props: ChatProps) => {
 
   const list = () => (
     <Box
-      sx={{ width: "50%" }}
+      sx={{ width: props.width }}
       role="presentation"
       onClick={toggleDrawer(false)}
       onKeyDown={toggleDrawer(false)}

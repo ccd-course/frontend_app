@@ -9,11 +9,18 @@ import { Chat } from "../components/Chat";
 export const GamePage = () => {
   const gameContainerRef = useRef(null);
   const [isLoading, setIsLoading] = React.useState(true);
+  const [chatWidth, setChatWidth] = React.useState(window.innerWidth / 2);
 
   // SEND REQUEST TO GET THE BOARD DATA
   setTimeout(() => {
     setIsLoading(false);
   }, 0);
+
+  const handleResize = () => {
+    setChatWidth(window.innerWidth / 2);
+  };
+
+  window.addEventListener("resize", handleResize);
 
   const customRendering = () => {
     if (isLoading) {
@@ -53,17 +60,6 @@ export const GamePage = () => {
           >
             <div
               style={{
-                flex: 1,
-                height: "100%",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-around",
-                alignContent: "center",
-                alignItems: "center",
-              }}
-            ></div>
-            <div
-              style={{
                 flex: 3,
                 height: "100%",
                 display: "flex",
@@ -82,10 +78,10 @@ export const GamePage = () => {
                 justifyContent: "space-around",
                 alignContent: "center",
                 alignItems: "center",
-                width: 300,
+                flex: 1,
               }}
             >
-              <Chat></Chat>
+              <Chat width={chatWidth}></Chat>
             </div>
           </div>
         </Card>
