@@ -1,16 +1,25 @@
 import p5Types from "p5"; //Import this for typechecking and intellisense
-import { BoardTable } from "../../types";
-import { generateSquaresCoordinatesForOneCircle } from "./Helpers";
+import { BoardTable, Coordinate } from "../../types";
+import {
+  generateSquaresCoordinatesForOneCircle,
+  getSquareIdOfMouseClick,
+} from "./Helpers";
 import { Square } from "./Square";
 import { Piece } from "./Piece";
+import { Subscription } from "rxjs";
+import { MouseEvent } from "./MouseEvents";
 
 export class Board {
   private readonly numRows: number; // Number of rows on the baord
   private readonly numCols: number; // Number of cols on the board
 
+  private sourceSquare: Square | undefined;
+  private destinationSquare: Square | undefined;
+
   // Object containing references to the generated squares (Key is the index of the square)
   private squares: { [key: string]: Square } = {};
   private boardCirclesRadious: number[]; // Needed to generate the squares
+  private MouseEvent: Subscription;
 
   constructor(
     private readonly p5Reference: p5Types,
@@ -27,8 +36,46 @@ export class Board {
     this.generateSquares();
     // Add the pieces to the board
     this.addBoardPieces();
-  }
 
+    // Subscribe to the MouseEvent
+    this.MouseEvent = MouseEvent.subscribe(this.handleMouseEvent);
+  }
+  // Update the layout
+  // The movment, which should be sent to the backend will be implmented in the Move class
+  public handleMouseEvent = (coordinate: Coordinate) => {
+    const squareID = getSquareIdOfMouseClick(
+      this.p5Reference,
+      coordinate.x,
+      coordinate.y,
+      this.numCols,
+      this.boardCirclesRadious
+    );
+    if (squareID) {
+      const { x, y } = squareID;
+      const squareIndex = `{${x},${y}}`;
+
+      // Handle the first click
+      if (!this.sourceSquare && !this.destinationSquare) {
+        // Handle the first click
+        // If the square has a piece
+        // otherwise do nothing
+        if (this.squares[squareIndex].getPiece()) {
+          this.sourceSquare = this.squares[squareIndex];
+          this.sourceSquare.signSquare();
+        }
+        // Handle the second click
+      } else if (this.sourceSquare && !this.destinationSquare) {
+        // If the destination square has a piece, you can move
+        if (!this.squares[squareIndex].getPiece()) {
+          this.destinationSquare = this.squares[squareIndex];
+          this.destinationSquare.setPiece(<Piece>this.sourceSquare.getPiece());
+          this.sourceSquare.empty();
+          this.sourceSquare = undefined;
+          this.destinationSquare = undefined;
+        }
+      }
+    }
+  };
   // Render the board
   public drawBoard() {
     this.drawSquares();
