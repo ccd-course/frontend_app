@@ -10,6 +10,9 @@ export class Board {
   private readonly numRows: number; // Number of rows on the baord
   private readonly numCols: number; // Number of cols on the board
 
+  private sourceSquare: Square | undefined;
+  private destinationSquare: Square | undefined;
+
   // Object containing references to the generated squares (Key is the index of the square)
   private squares: { [key: string]: Square } = {};
   private boardCirclesRadious: number[]; // Needed to generate the squares
