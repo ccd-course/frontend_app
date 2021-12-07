@@ -3,6 +3,7 @@ import Sketch from "react-p5";
 import p5Types from "p5"; //Import this for typechecking and intellisense
 import { Board } from "./GameComponents/Board";
 import { BoardTable } from "../Dummy/BoardTable";
+import { MouseEvents } from "./GameComponents/MouseEvents";
 
 export const Game = (containerRef: any) => {
   let canvas: p5Types.Element;
@@ -29,6 +30,7 @@ export const Game = (containerRef: any) => {
   const setup = (p5: p5Types, canvasParentRef: Element) => {
     const { width, height } = getCanvasSize();
     canvas = p5.createCanvas(width, height).parent(canvasParentRef);
+    new MouseEvents(canvas, width, height).listen();
     draw(p5);
   };
 
