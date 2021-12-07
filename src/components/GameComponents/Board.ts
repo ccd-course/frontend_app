@@ -3,6 +3,8 @@ import { BoardTable } from "../../types";
 import { generateSquaresCoordinatesForOneCircle } from "./Helpers";
 import { Square } from "./Square";
 import { Piece } from "./Piece";
+import { Subscription } from "rxjs";
+import { MouseEvent } from "./MouseEvents";
 
 export class Board {
   private readonly numRows: number; // Number of rows on the baord
@@ -11,6 +13,7 @@ export class Board {
   // Object containing references to the generated squares (Key is the index of the square)
   private squares: { [key: string]: Square } = {};
   private boardCirclesRadious: number[]; // Needed to generate the squares
+  private MouseEvent: Subscription;
 
   constructor(
     private readonly p5Reference: p5Types,
@@ -27,6 +30,9 @@ export class Board {
     this.generateSquares();
     // Add the pieces to the board
     this.addBoardPieces();
+
+    // Subscribe to the MouseEvent
+    this.MouseEvent = MouseEvent.subscribe();
   }
 
   // Render the board
