@@ -22,6 +22,7 @@ export class Board {
   private boardCirclesRadious: number[]; // Needed to generate the squares
   private MouseEvent: Subscription;
 
+  private possibleMovments: string[] = [];
   constructor(
     private readonly p5Reference: p5Types,
     private boardTable: BoardTable
@@ -63,20 +64,24 @@ export class Board {
         if (this.squares[squareIndex].getPiece()) {
           this.sourceSquare = this.squares[squareIndex];
           this.sourceSquare.signSquare();
-          const possibleMovments = generateRandomMovment(
+          this.possibleMovments = generateRandomMovment(
             this.numCols,
             this.numRows
-          );
+          ).map((square) => {
+            return `{${square.x},${square.y}}`;
+          });
 
-          possibleMovments.forEach((x) => {
-            console.log(x);
-            this.squares[`{${x.x},${x.y}}`].signSquare();
+          this.possibleMovments.forEach((square) => {
+            this.squares[square].signSquare();
           });
         }
         // Handle the second click
       } else if (this.sourceSquare && !this.destinationSquare) {
         // If the destination square has a piece, you can move
-        if (!this.squares[squareIndex].getPiece()) {
+        if (
+          !this.squares[squareIndex].getPiece() &&
+          this.possibleMovments.includes(squareIndex)
+        ) {
           this.destinationSquare = this.squares[squareIndex];
           this.destinationSquare.setPiece(<Piece>this.sourceSquare.getPiece());
           this.sourceSquare.empty();
