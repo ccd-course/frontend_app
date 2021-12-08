@@ -8,7 +8,7 @@ import { Square } from "./Square";
 import { Piece } from "./Piece";
 import { Subscription } from "rxjs";
 import { MouseEvent } from "./MouseEvents";
-import { generateRandomMovment } from "../../Dummy/GenerateRandomMovment";
+import { generateRandomMovment } from "../../../Dummy/GenerateRandomMovment";
 
 export class Board {
   private readonly numRows: number; // Number of rows on the baord
