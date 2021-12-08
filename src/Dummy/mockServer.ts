@@ -1,3 +1,5 @@
+import { BoardTable } from "./BoardTable";
+
 export const getRandomInt = (max: number) => {
   return Math.floor(Math.random() * max + 1);
 };
@@ -13,4 +15,11 @@ export const createNewGame = (players: string[]) => {
     data[gameID].push(player);
   });
   return gameID;
+};
+
+export const getChessboard = (gameID: number) => {
+  return {
+    boardTable: BoardTable,
+    players: data[gameID],
+  };
 };
