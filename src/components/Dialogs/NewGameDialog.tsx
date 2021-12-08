@@ -15,6 +15,7 @@ import Button from "@mui/material/Button";
 import { PrimaryButtonStyle } from "../../styles/ButtonStyles";
 import { COLOR } from "../../styles/Colors";
 import { useNavigate } from "react-router-dom";
+import { createNewGame } from "../../Dummy/mockServer";
 
 interface NewGameDialogProps {
   open: boolean;
@@ -33,9 +34,10 @@ export const NewGameDialog = ({ open, setOpen }: NewGameDialogProps) => {
   // REDIRECT THE USER TO THE GAME_ID
   const initNewGame = () => {
     // SEND REQUEST AND INIT THE GAME
-    const newGameId = "2932";
+    const newGameId = createNewGame(playersName);
     navigate(`/Game/${newGameId}`);
   };
+
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };

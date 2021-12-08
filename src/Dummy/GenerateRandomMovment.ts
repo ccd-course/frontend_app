@@ -1,5 +1,5 @@
-import { Square } from "../src/components/GameComponents/Square";
-import { BoardTable } from "../src/types";
+import { Square } from "../components/GameComponents/Square";
+import { BoardTable } from "../types";
 
 export const getRandomInt = (max: number) => {
   return Math.floor(Math.random() * max + 1);

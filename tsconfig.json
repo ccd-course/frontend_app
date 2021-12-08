@@ -16,5 +16,5 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["src", "Dummy"]
+  "include": ["src", "src/Dummy"]
 }

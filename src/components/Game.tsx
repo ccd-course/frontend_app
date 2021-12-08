@@ -2,7 +2,7 @@ import React from "react";
 import Sketch from "react-p5";
 import p5Types from "p5"; //Import this for typechecking and intellisense
 import { Board } from "./GameComponents/Board";
-import { BoardTable } from "../../Dummy/BoardTable";
+import { BoardTable } from "../Dummy/BoardTable";
 import { MouseEvents } from "./GameComponents/MouseEvents";
 
 export const Game = (containerRef: any) => {
