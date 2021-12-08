@@ -5,7 +5,15 @@ import { COLOR } from "../styles/Colors";
 import { PageStyle } from "../styles/DefaultPagesStyle";
 import { Game } from "../components/Game";
 import { Chat } from "../components/Chat";
-import { Button } from "@mui/material";
+import { Button, Stack, styled } from "@mui/material";
+import Paper from "@mui/material/Paper";
+
+const Item = styled(Paper)(({ theme }) => ({
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: "center",
+  color: theme.palette.text.secondary,
+}));
 
 export const GamePage = () => {
   const gameContainerRef = useRef() as React.MutableRefObject<HTMLInputElement>;
@@ -84,6 +92,15 @@ export const GamePage = () => {
                 flex: 1,
               }}
             >
+              <Stack
+                direction="row"
+                spacing={3}
+                style={{ width: "100%", justifyContent: "center" }}
+              >
+                <Item>Item 1</Item>
+                <Item>Item 2</Item>
+                <Item>Item 3</Item>
+              </Stack>
               <Button
                 onClick={() => {
                   toggleChatArea(true);
