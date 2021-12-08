@@ -9,11 +9,11 @@ import ListItemText from "@mui/material/ListItemText";
 
 interface ChatProps {
   width: number;
+  isOpen: boolean;
+  toggleOpen: (open: boolean) => void;
 }
 
 export const Chat = (props: ChatProps) => {
-  const [isOpen, setState] = React.useState(false);
-
   const toggleDrawer =
     (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
       if (
@@ -25,9 +25,8 @@ export const Chat = (props: ChatProps) => {
         return;
       }
 
-      setState(open);
+      props.toggleOpen(open);
     };
-
   const list = () => (
     <Box
       sx={{ width: props.width }}
@@ -56,11 +55,9 @@ export const Chat = (props: ChatProps) => {
   return (
     <div>
       <React.Fragment key={"right"}>
-        {/*         <Button onClick={toggleDrawer(true)}>OPEN</Button>
-         */}{" "}
         <SwipeableDrawer
           anchor={"right"}
-          open={isOpen}
+          open={props.isOpen}
           onClose={toggleDrawer(false)}
           onOpen={toggleDrawer(true)}
         >

@@ -5,11 +5,14 @@ import { COLOR } from "../styles/Colors";
 import { PageStyle } from "../styles/DefaultPagesStyle";
 import { Game } from "../components/Game";
 import { Chat } from "../components/Chat";
+import { Button } from "@mui/material";
 
 export const GamePage = () => {
-  const gameContainerRef = useRef(null);
+  const gameContainerRef = useRef() as React.MutableRefObject<HTMLInputElement>;
+
   const [isLoading, setIsLoading] = React.useState(true);
   const [chatWidth, setChatWidth] = React.useState(window.innerWidth / 2);
+  const [openChatArea, toggleChatArea] = React.useState(false);
 
   // SEND REQUEST TO GET THE BOARD DATA
   setTimeout(() => {
@@ -81,9 +84,20 @@ export const GamePage = () => {
                 flex: 1,
               }}
             >
-              <Chat width={chatWidth}></Chat>
+              <Button
+                onClick={() => {
+                  toggleChatArea(true);
+                }}
+              >
+                OPEN
+              </Button>
             </div>
           </div>
+          <Chat
+            width={chatWidth}
+            isOpen={openChatArea}
+            toggleOpen={toggleChatArea}
+          ></Chat>
         </Card>
       );
     }
