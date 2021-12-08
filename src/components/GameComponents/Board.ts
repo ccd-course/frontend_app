@@ -8,6 +8,7 @@ import { Square } from "./Square";
 import { Piece } from "./Piece";
 import { Subscription } from "rxjs";
 import { MouseEvent } from "./MouseEvents";
+import { generateRandomMovment } from "../../Dummy/GenerateRandomMovment";
 
 export class Board {
   private readonly numRows: number; // Number of rows on the baord
@@ -62,6 +63,15 @@ export class Board {
         if (this.squares[squareIndex].getPiece()) {
           this.sourceSquare = this.squares[squareIndex];
           this.sourceSquare.signSquare();
+          const possibleMovments = generateRandomMovment(
+            this.numCols,
+            this.numRows
+          );
+
+          possibleMovments.forEach((x) => {
+            console.log(x);
+            this.squares[`{${x.x},${x.y}}`].signSquare();
+          });
         }
         // Handle the second click
       } else if (this.sourceSquare && !this.destinationSquare) {
