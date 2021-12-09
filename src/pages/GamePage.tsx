@@ -9,6 +9,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Paper from "@mui/material/Paper";
 import { useLocation } from "react-router-dom";
 import { BoardTable } from "../types";
+import { getChessboard } from "../requests/Game";
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -30,10 +31,10 @@ export const GamePage = () => {
   // SEND REQUEST TO GET THE BOARD DATA
   useEffect(() => {
     const gameID = location.pathname.split("/")[2];
-    const gameData = getChessboard(Number(gameID));
-    setPlayers(gameData.players);
-    setBoardTable(gameData.boardTable);
-    setIsLoading(false);
+    getChessboard(gameID).then((gameData: any) => {
+      setBoardTable(gameData.boardTable);
+      setIsLoading(false);
+    });
   }, []);
 
   const handleResize = () => {

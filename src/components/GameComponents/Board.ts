@@ -8,7 +8,6 @@ import { Square } from "./Square";
 import { Piece } from "./Piece";
 import { Subscription } from "rxjs";
 import { MouseEvent } from "./MouseEvents";
-import { generateRandomMovment } from "../../Dummy/GenerateRandomMovment";
 
 export class Board {
   private boardCirclesRadious: number[]; // Needed to generate the squares (Rows)
@@ -59,12 +58,6 @@ export class Board {
         if (this.squares[squareIndex].getPiece()) {
           this.sourceSquare = this.squares[squareIndex];
           this.sourceSquare.signSquare();
-          this.possibleMovments = generateRandomMovment(
-            this.numCols,
-            this.numRows
-          ).map((square) => {
-            return this.squares[`{${square.x},${square.y}}`];
-          });
 
           this.possibleMovments.forEach((square) => {
             square.signSquare();
