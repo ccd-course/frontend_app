@@ -15,7 +15,7 @@ import Button from "@mui/material/Button";
 import { PrimaryButtonStyle } from "../../styles/ButtonStyles";
 import { COLOR } from "../../styles/Colors";
 import { useNavigate } from "react-router-dom";
-import { createNewGame } from "../../Dummy/mockServer";
+import { createNewGameRequest } from "../../requests/Game";
 
 interface NewGameDialogProps {
   open: boolean;
@@ -32,9 +32,9 @@ export const NewGameDialog = ({ open, setOpen }: NewGameDialogProps) => {
 
   // SEND THE REQUEST TO INIT THE GAME
   // REDIRECT THE USER TO THE GAME_ID
-  const initNewGame = () => {
+  const initNewGame = async () => {
     // SEND REQUEST AND INIT THE GAME
-    const newGameId = createNewGame(playersName);
+    const newGameId = await createNewGameRequest(playersName);
     navigate(`/Game/${newGameId}`);
   };
 

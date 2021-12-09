@@ -8,7 +8,6 @@ import { Button, Divider, Stack, styled } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import Paper from "@mui/material/Paper";
 import { useLocation } from "react-router-dom";
-import { getChessboard } from "../Dummy/mockServer";
 import { BoardTable } from "../types";
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -132,7 +131,6 @@ export const GamePage = () => {
                       width: "100%",
                       height: "100%",
                     }}
-                    disabled
                     onClick={() => {
                       toggleChatArea(true);
                     }}
