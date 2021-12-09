@@ -1,3 +1,5 @@
+import { Square } from "./components/GameComponents/Square";
+
 export interface NewGameDialogProps {
   open: boolean;
   setOpen: (isOpen: boolean) => void;
@@ -17,4 +19,11 @@ export interface SquareCoordinates {
   p2: Coordinate;
   p3: Coordinate;
   p4: Coordinate;
+}
+
+export interface IBoard {
+  numRows: number;
+  numCos: number;
+  sourceSquare: Square | undefined;
+  destinationSquare: Square | undefined;
 }

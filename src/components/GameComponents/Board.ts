@@ -11,18 +11,15 @@ import { MouseEvent } from "./MouseEvents";
 import { generateRandomMovment } from "../../Dummy/GenerateRandomMovment";
 
 export class Board {
+  private boardCirclesRadious: number[]; // Needed to generate the squares (Rows)
   private readonly numRows: number; // Number of rows on the baord
   private readonly numCols: number; // Number of cols on the board
-
   private sourceSquare: Square | undefined;
   private destinationSquare: Square | undefined;
-
-  // Object containing references to the generated squares (Key is the index of the square)
-  private squares: { [key: string]: Square } = {};
-  private boardCirclesRadious: number[]; // Needed to generate the squares
+  private possibleMovments: Square[] = [];
   private MouseEvent: Subscription;
+  private squares: { [key: string]: Square } = {}; // Reference to the board squares
 
-  private possibleMovments: string[] = [];
   constructor(
     private readonly p5Reference: p5Types,
     private boardTable: BoardTable
@@ -30,67 +27,16 @@ export class Board {
     // Init the number of rows and cols
     this.numRows = this.boardTable[0].length;
     this.numCols = this.boardTable.length;
-
     // Calculate the radiouses of the circles on the board
     this.boardCirclesRadious = this.calculateBoardCirclesRadious();
-
     // Generate the squares and calculate their coordinates
     this.generateSquares();
     // Add the pieces to the board
     this.addBoardPieces();
-
     // Subscribe to the MouseEvent
     this.MouseEvent = MouseEvent.subscribe(this.handleMouseEvent);
   }
-  // Update the layout
-  // The movment, which should be sent to the backend will be implmented in the Move class
-  public handleMouseEvent = (coordinate: Coordinate) => {
-    const squareID = getSquareIdOfMouseClick(
-      this.p5Reference,
-      coordinate.x,
-      coordinate.y,
-      this.numCols,
-      this.boardCirclesRadious
-    );
-    if (squareID) {
-      const { x, y } = squareID;
-      const squareIndex = `{${x},${y}}`;
 
-      // Handle the first click
-      if (!this.sourceSquare && !this.destinationSquare) {
-        // Handle the first click
-        // If the square has a piece
-        // otherwise do nothing
-        if (this.squares[squareIndex].getPiece()) {
-          this.sourceSquare = this.squares[squareIndex];
-          this.sourceSquare.signSquare();
-          this.possibleMovments = generateRandomMovment(
-            this.numCols,
-            this.numRows
-          ).map((square) => {
-            return `{${square.x},${square.y}}`;
-          });
-
-          this.possibleMovments.forEach((square) => {
-            this.squares[square].signSquare();
-          });
-        }
-        // Handle the second click
-      } else if (this.sourceSquare && !this.destinationSquare) {
-        // If the destination square has a piece, you can move
-        if (
-          !this.squares[squareIndex].getPiece() &&
-          this.possibleMovments.includes(squareIndex)
-        ) {
-          this.destinationSquare = this.squares[squareIndex];
-          this.destinationSquare.setPiece(<Piece>this.sourceSquare.getPiece());
-          this.sourceSquare.empty();
-          this.sourceSquare = undefined;
-          this.destinationSquare = undefined;
-        }
-      }
-    }
-  };
   // Render the board
   public drawBoard() {
     this.drawSquares();
