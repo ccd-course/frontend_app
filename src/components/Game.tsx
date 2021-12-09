@@ -14,8 +14,8 @@ export const Game = (props: GameProps) => {
   let canvas: p5Types.Element;
 
   const getCanvasSize = () => {
-    const width = props.containerRef.current.clientWidth;
-    const height = props.containerRef.current.clientHeight;
+    const width = 500; //props.containerRef.current.clientWidth;
+    const height = 500; //props.containerRef.current.clientHeight;
 
     if (width >= height) {
       return { width: height, height: height };
@@ -24,7 +24,6 @@ export const Game = (props: GameProps) => {
     }
   };
 
-  console.log(props.boardTable);
   const draw = (p5: p5Types) => {
     p5.background(255);
     p5.angleMode(p5.DEGREES);

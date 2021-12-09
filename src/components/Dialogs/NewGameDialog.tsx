@@ -35,6 +35,7 @@ export const NewGameDialog = ({ open, setOpen }: NewGameDialogProps) => {
   const initNewGame = async () => {
     // SEND REQUEST AND INIT THE GAME
     const newGameId = await createNewGameRequest(playersName);
+    console.log(newGameId);
     navigate(`/Game/${newGameId}`);
   };
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Card from "@mui/material/Card";
 import { COLOR } from "../styles/Colors";
 import { PageStyle } from "../styles/DefaultPagesStyle";
@@ -25,14 +25,13 @@ export const GamePage = () => {
   const [players, setPlayers] = React.useState([]);
   const [boardTable, setBoardTable] = React.useState<BoardTable>([]);
 
-  const gameContainerRef = useRef() as React.MutableRefObject<HTMLInputElement>;
   const location = useLocation();
 
   // SEND REQUEST TO GET THE BOARD DATA
   useEffect(() => {
     const gameID = location.pathname.split("/")[2];
-    getChessboard(gameID).then((gameData: any) => {
-      setBoardTable(gameData.boardTable);
+    getChessboard(gameID).then((board: any) => {
+      setBoardTable(board);
       setIsLoading(false);
     });
   }, []);
@@ -87,12 +86,15 @@ export const GamePage = () => {
                 justifyContent: "center",
                 alignItems: "center",
               }}
-              ref={gameContainerRef}
+              ref={(divElement) => {
+                console.log(divElement);
+              }}
             >
-              <Game
-                boardTable={boardTable}
-                containerRef={gameContainerRef}
-              ></Game>
+              {boardTable ? (
+                <Game boardTable={boardTable} containerRef={null}></Game>
+              ) : (
+                ""
+              )}
             </div>
             <div
               style={{
