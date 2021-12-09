@@ -26,6 +26,8 @@ export class Board {
     // Init the number of rows and cols
     this.numRows = this.boardTable[0].length;
     this.numCols = this.boardTable.length;
+    console.log(this.numRows);
+    console.log(this.numCols);
     // Calculate the radiouses of the circles on the board
     this.boardCirclesRadious = this.calculateBoardCirclesRadious();
     // Generate the squares and calculate their coordinates

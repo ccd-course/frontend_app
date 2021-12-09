@@ -86,9 +86,7 @@ export const GamePage = () => {
                 justifyContent: "center",
                 alignItems: "center",
               }}
-              ref={(divElement) => {
-                console.log(divElement);
-              }}
+              className="container"
             >
               {boardTable ? (
                 <Game boardTable={boardTable} containerRef={null}></Game>

@@ -1,5 +1,4 @@
 import axios from "axios";
-import { BoardTable } from "../types";
 
 const baseURL = "https://backend.chess.valentinriess.com";
 
@@ -24,7 +23,15 @@ export const getChessboard = async (gameID: string) => {
     return await axios
       .get(baseURL + "/getChessboard?gameID=" + gameID)
       .then((data) => {
-        console.log(data.data.chessboard);
+        const players = [];
+        data.data.chessboard.forEach((cols: any) => {
+          cols.forEach((row: any) => {
+            if (row && row.playerName) {
+              players.push(row.playerName);
+              row.playerID = 1;
+            }
+          });
+        });
         return data.data.chessboard;
       });
   } catch (e) {
