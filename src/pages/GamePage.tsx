@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import Card from "@mui/material/Card";
 import { COLOR } from "../styles/Colors";
 import { PageStyle } from "../styles/DefaultPagesStyle";
@@ -8,6 +8,7 @@ import { Button, Divider, Stack, styled } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import Paper from "@mui/material/Paper";
 import { useLocation } from "react-router-dom";
+import { getChessboard } from "../Dummy/mockServer";
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -19,16 +20,16 @@ const Item = styled(Paper)(({ theme }) => ({
 export const GamePage = () => {
   const location = useLocation();
   const gameContainerRef = useRef() as React.MutableRefObject<HTMLInputElement>;
-
   const [isLoading, setIsLoading] = React.useState(true);
   const [chatWidth, setChatWidth] = React.useState(window.innerWidth / 2);
   const [openChatArea, toggleChatArea] = React.useState(false);
 
   // SEND REQUEST TO GET THE BOARD DATA
-  setTimeout(() => {
+  useEffect(() => {
     const gameID = location.pathname.split("/")[2];
+    getChessboard(Number(gameID));
     setIsLoading(false);
-  }, 0);
+  }, []);
 
   const handleResize = () => {
     setChatWidth(window.innerWidth / 2);
