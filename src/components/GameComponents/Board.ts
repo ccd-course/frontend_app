@@ -72,7 +72,19 @@ export class Board {
         }
         // Handle the second click
       } else if (this.sourceSquare && !this.destinationSquare) {
+        this.destinationSquare = this.squares[squareIndex];
         // If the destination square has a piece, you can move
+        if (
+          this.sourceSquare?.getIndex() == this.destinationSquare?.getIndex()
+        ) {
+          // If the destination square has a piece, you can move
+          this.sourceSquare = undefined;
+          this.destinationSquare = undefined;
+          this.possibleMovments.forEach((square) => {
+            square.neglectSquare();
+          });
+          return;
+        }
         if (
           this.possibleMovments
             .map((square) => square.getIndex())
