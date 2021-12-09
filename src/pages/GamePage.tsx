@@ -1,12 +1,13 @@
 import React, { useRef } from "react";
 import Card from "@mui/material/Card";
-import CircularProgress from "@mui/material/CircularProgress";
 import { COLOR } from "../styles/Colors";
 import { PageStyle } from "../styles/DefaultPagesStyle";
 import { Game } from "../components/Game";
 import { Chat } from "../components/Chat";
 import { Button, Divider, Stack, styled } from "@mui/material";
+import CircularProgress from "@mui/material/CircularProgress";
 import Paper from "@mui/material/Paper";
+import { useLocation } from "react-router-dom";
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -16,6 +17,7 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 export const GamePage = () => {
+  const location = useLocation();
   const gameContainerRef = useRef() as React.MutableRefObject<HTMLInputElement>;
 
   const [isLoading, setIsLoading] = React.useState(true);
@@ -24,6 +26,7 @@ export const GamePage = () => {
 
   // SEND REQUEST TO GET THE BOARD DATA
   setTimeout(() => {
+    const gameID = location.pathname.split("/")[2];
     setIsLoading(false);
   }, 0);
 
