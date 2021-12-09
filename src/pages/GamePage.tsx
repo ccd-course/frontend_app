@@ -9,6 +9,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Paper from "@mui/material/Paper";
 import { useLocation } from "react-router-dom";
 import { getChessboard } from "../Dummy/mockServer";
+import { BoardTable } from "../types";
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -18,16 +19,21 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 export const GamePage = () => {
-  const location = useLocation();
-  const gameContainerRef = useRef() as React.MutableRefObject<HTMLInputElement>;
   const [isLoading, setIsLoading] = React.useState(true);
   const [chatWidth, setChatWidth] = React.useState(window.innerWidth / 2);
-  const [openChatArea, toggleChatArea] = React.useState(false);
+  const [chatArea, toggleChatArea] = React.useState(false);
+
+  let players: string[];
+  let boardTable: BoardTable;
+  const gameContainerRef = useRef() as React.MutableRefObject<HTMLInputElement>;
+  const location = useLocation();
 
   // SEND REQUEST TO GET THE BOARD DATA
   useEffect(() => {
     const gameID = location.pathname.split("/")[2];
-    getChessboard(Number(gameID));
+    const gameData = getChessboard(Number(gameID));
+    players = gameData.players;
+    boardTable = gameData.boardTable;
     setIsLoading(false);
   }, []);
 
@@ -135,7 +141,7 @@ export const GamePage = () => {
           </div>
           <Chat
             width={chatWidth}
-            isOpen={openChatArea}
+            isOpen={chatArea}
             toggleOpen={toggleChatArea}
           ></Chat>
         </Card>
