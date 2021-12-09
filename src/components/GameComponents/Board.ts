@@ -27,6 +27,7 @@ export class Board {
     private readonly p5Reference: p5Types,
     private boardTable: BoardTable
   ) {
+    console.log(this.boardTable);
     // Init the number of rows and cols
     this.numRows = this.boardTable[0].length;
     this.numCols = this.boardTable.length;

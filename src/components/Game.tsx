@@ -2,15 +2,20 @@ import React from "react";
 import Sketch from "react-p5";
 import p5Types from "p5"; //Import this for typechecking and intellisense
 import { Board } from "./GameComponents/Board";
-import { BoardTable } from "../Dummy/BoardTable";
 import { MouseEvents } from "./GameComponents/MouseEvents";
+import { BoardTable } from "../types";
 
-export const Game = (containerRef: any) => {
+interface GameProps {
+  boardTable: BoardTable;
+  containerRef: any;
+}
+
+export const Game = (props: GameProps) => {
   let canvas: p5Types.Element;
 
   const getCanvasSize = () => {
-    const width = containerRef.containerRef.current.clientWidth;
-    const height = containerRef.containerRef.current.clientHeight;
+    const width = props.containerRef.current.clientWidth;
+    const height = props.containerRef.current.clientHeight;
 
     if (width >= height) {
       return { width: height, height: height };
@@ -19,12 +24,13 @@ export const Game = (containerRef: any) => {
     }
   };
 
+  console.log(props.boardTable);
   const draw = (p5: p5Types) => {
     p5.background(255);
     p5.angleMode(p5.DEGREES);
     p5.background(p5.color(57, 62, 70));
     p5.translate(p5.width / 2, p5.height / 2);
-    new Board(p5, BoardTable).drawBoard();
+    new Board(p5, props.boardTable).drawBoard();
   };
 
   const setup = (p5: p5Types, canvasParentRef: Element) => {

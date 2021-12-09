@@ -22,9 +22,9 @@ export const GamePage = () => {
   const [isLoading, setIsLoading] = React.useState(true);
   const [chatWidth, setChatWidth] = React.useState(window.innerWidth / 2);
   const [chatArea, toggleChatArea] = React.useState(false);
+  const [players, setPlayers] = React.useState([]);
+  const [boardTable, setBoardTable] = React.useState<BoardTable>([]);
 
-  let players: string[];
-  let boardTable: BoardTable;
   const gameContainerRef = useRef() as React.MutableRefObject<HTMLInputElement>;
   const location = useLocation();
 
@@ -32,8 +32,8 @@ export const GamePage = () => {
   useEffect(() => {
     const gameID = location.pathname.split("/")[2];
     const gameData = getChessboard(Number(gameID));
-    players = gameData.players;
-    boardTable = gameData.boardTable;
+    setPlayers(gameData.players);
+    setBoardTable(gameData.boardTable);
     setIsLoading(false);
   }, []);
 
@@ -89,7 +89,10 @@ export const GamePage = () => {
               }}
               ref={gameContainerRef}
             >
-              <Game containerRef={gameContainerRef}></Game>
+              <Game
+                boardTable={boardTable}
+                containerRef={gameContainerRef}
+              ></Game>
             </div>
             <div
               style={{
@@ -129,6 +132,7 @@ export const GamePage = () => {
                       width: "100%",
                       height: "100%",
                     }}
+                    disabled
                     onClick={() => {
                       toggleChatArea(true);
                     }}
