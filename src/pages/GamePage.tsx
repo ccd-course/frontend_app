@@ -5,7 +5,7 @@ import { COLOR } from "../styles/Colors";
 import { PageStyle } from "../styles/DefaultPagesStyle";
 import { Game } from "../components/Game";
 import { Chat } from "../components/Chat";
-import { Button, Stack, styled } from "@mui/material";
+import { Button, Divider, Stack, styled } from "@mui/material";
 import Paper from "@mui/material/Paper";
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -93,21 +93,40 @@ export const GamePage = () => {
               }}
             >
               <Stack
-                direction="row"
-                spacing={3}
-                style={{ width: "100%", justifyContent: "center" }}
-              >
-                <Item>Item 1</Item>
-                <Item>Item 2</Item>
-                <Item>Item 3</Item>
-              </Stack>
-              <Button
-                onClick={() => {
-                  toggleChatArea(true);
+                direction="column"
+                justifyContent="ceter"
+                alignContent="center"
+                divider={
+                  <Divider
+                    orientation="horizontal"
+                    flexItem
+                    style={{ backgroundColor: "white" }}
+                  />
+                }
+                spacing={2}
+                style={{
+                  height: "100%",
+                  width: "90%",
+                  margin: 10,
                 }}
               >
-                OPEN
-              </Button>
+                <Item style={{ height: "10%" }}>Player's turn</Item>
+                <Item style={{ height: "70%" }}>Moves</Item>
+                <Item style={{ height: "10%", padding: 0 }}>
+                  <Button
+                    variant="contained"
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                    }}
+                    onClick={() => {
+                      toggleChatArea(true);
+                    }}
+                  >
+                    Chat
+                  </Button>
+                </Item>
+              </Stack>
             </div>
           </div>
           <Chat
