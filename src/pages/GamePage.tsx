@@ -8,7 +8,7 @@ import { Button, Divider, Stack, styled } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import Paper from "@mui/material/Paper";
 import { useLocation } from "react-router-dom";
-import { BoardTable } from "../types";
+import { BoardTable, ResponseChessboard } from "../types";
 import { getChessboard } from "../requests/Game";
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -18,19 +18,36 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
+const extractPlayerNames = (boardTable: ResponseChessboard) => {
+  const playerNames: string[] = [];
+
+  boardTable.forEach((col) => {
+    col.forEach((row) => {
+      if (row && !playerNames.includes(row.playerName)) {
+        playerNames.push(row.playerName);
+        row.playerName = playerNames.length.toString();
+      } else if (row && playerNames.includes(row.playerName)) {
+        row.playerName = (playerNames.indexOf(row.playerName) + 1).toString();
+      }
+    });
+  });
+  return playerNames;
+};
+
 export const GamePage = () => {
+  const location = useLocation();
+
   const [isLoading, setIsLoading] = React.useState(true);
   const [chatWidth, setChatWidth] = React.useState(window.innerWidth / 2);
   const [chatArea, toggleChatArea] = React.useState(false);
-  const [players, setPlayers] = React.useState([]);
+  const [players, setPlayers] = React.useState<string[]>([]);
   const [boardTable, setBoardTable] = React.useState<BoardTable>([]);
 
-  const location = useLocation();
-
-  // SEND REQUEST TO GET THE BOARD DATA
   useEffect(() => {
     const gameID = location.pathname.split("/")[2];
-    getChessboard(gameID).then((board: any) => {
+    getChessboard(gameID).then((board) => {
+      const _players = extractPlayerNames(board);
+      setPlayers(_players);
       setBoardTable(board);
       setIsLoading(false);
     });

@@ -16,11 +16,7 @@ import { PrimaryButtonStyle } from "../../styles/ButtonStyles";
 import { COLOR } from "../../styles/Colors";
 import { useNavigate } from "react-router-dom";
 import { createNewGameRequest } from "../../requests/Game";
-
-interface NewGameDialogProps {
-  open: boolean;
-  setOpen: (isOpen: boolean) => void;
-}
+import { NewGameDialogProps } from "../../types";
 
 export const NewGameDialog = ({ open, setOpen }: NewGameDialogProps) => {
   const navigate = useNavigate();
@@ -30,13 +26,13 @@ export const NewGameDialog = ({ open, setOpen }: NewGameDialogProps) => {
   const [playersName, setPlayersName] = useState<string[]>([]);
   const [disabled, setDisabled] = useState(true);
 
-  // SEND THE REQUEST TO INIT THE GAME
-  // REDIRECT THE USER TO THE GAME_ID
   const initNewGame = async () => {
-    // SEND REQUEST AND INIT THE GAME
-    const newGameId = await createNewGameRequest(playersName);
-    console.log(newGameId);
-    navigate(`/Game/${newGameId}`);
+    try {
+      const newGameId = await createNewGameRequest(playersName);
+      navigate(`/Game/${newGameId}`);
+    } catch (e) {
+      console.log("ERROR WHILE CREATING A NEW GAME");
+    }
   };
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {

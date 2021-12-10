@@ -5,9 +5,13 @@ export interface NewGameDialogProps {
   setOpen: (isOpen: boolean) => void;
 }
 
+export interface NewGameDialogProps {
+  open: boolean;
+  setOpen: (isOpen: boolean) => void;
+}
 export interface BoardPiece {
-  playerID: number;
-  pieceID: number;
+  playerName: string;
+  pieceID: string;
 }
 
 export type BoardTable = (BoardPiece | null)[][];
@@ -27,3 +31,5 @@ export interface IBoard {
   sourceSquare: Square | undefined;
   destinationSquare: Square | undefined;
 }
+
+export type ResponseChessboard = { pieceID: string; playerName: string }[][];

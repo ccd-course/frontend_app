@@ -109,7 +109,7 @@ export class Board {
       col.forEach((row, rowIndex) => {
         if (row) {
           this.squares[`{${rowIndex + 1},${colIndex + 1}}`].setPiece(
-            new Piece(this.p5Reference, row.pieceID, row.playerID)
+            new Piece(this.p5Reference, row.pieceID, row.playerName)
           );
         }
       });

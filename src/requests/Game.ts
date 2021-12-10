@@ -1,4 +1,5 @@
 import axios from "axios";
+import { ResponseChessboard } from "../types";
 
 const baseURL = "https://backend.chess.valentinriess.com";
 
@@ -18,23 +19,16 @@ export const createNewGameRequest = async (players: string[]) => {
   }
 };
 
-export const getChessboard = async (gameID: string) => {
-  try {
-    return await axios
-      .get(baseURL + "/getChessboard?gameID=" + gameID)
-      .then((data) => {
-        const players = [];
-        data.data.chessboard.forEach((cols: any) => {
-          cols.forEach((row: any) => {
-            if (row && row.playerName) {
-              players.push(row.playerName);
-              row.playerID = 1;
-            }
-          });
-        });
-        return data.data.chessboard;
-      });
-  } catch (e) {
-    console.log(e);
-  }
+/**
+ *
+ * @param gameID
+ * @returns
+ *
+ */
+export const getChessboard = async (
+  gameID: string
+): Promise<ResponseChessboard> => {
+  return axios.get(baseURL + "/getChessboard?gameID=" + gameID).then((data) => {
+    return data.data.chessboard;
+  });
 };
