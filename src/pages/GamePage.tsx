@@ -1,20 +1,57 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Card from "@mui/material/Card";
-import CircularProgress from "@mui/material/CircularProgress";
 import { COLOR } from "../styles/Colors";
 import { PageStyle } from "../styles/DefaultPagesStyle";
 import { Game } from "../components/Game";
 import { Chat } from "../components/Chat";
+import { Button, Divider, Stack, styled } from "@mui/material";
+import CircularProgress from "@mui/material/CircularProgress";
+import Paper from "@mui/material/Paper";
+import { useLocation } from "react-router-dom";
+import { BoardTable, ResponseChessboard } from "../types";
+import { getChessboard } from "../requests/Game";
+
+const Item = styled(Paper)(({ theme }) => ({
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: "center",
+  color: theme.palette.text.secondary,
+}));
+
+const extractPlayerNames = (boardTable: ResponseChessboard) => {
+  const playerNames: string[] = [];
+
+  boardTable.forEach((col) => {
+    col.forEach((row) => {
+      if (row && !playerNames.includes(row.playerName)) {
+        playerNames.push(row.playerName);
+        row.playerName = playerNames.length.toString();
+      } else if (row && playerNames.includes(row.playerName)) {
+        row.playerName = (playerNames.indexOf(row.playerName) + 1).toString();
+      }
+    });
+  });
+  return playerNames;
+};
 
 export const GamePage = () => {
-  const gameContainerRef = useRef(null);
+  const location = useLocation();
   const [isLoading, setIsLoading] = React.useState(true);
   const [chatWidth, setChatWidth] = React.useState(window.innerWidth / 2);
-
-  // SEND REQUEST TO GET THE BOARD DATA
-  setTimeout(() => {
-    setIsLoading(false);
-  }, 0);
+  const [chatArea, toggleChatArea] = React.useState(false);
+  const [players, setPlayers] = React.useState<string[]>([]);
+  const [boardTable, setBoardTable] = React.useState<BoardTable>([]);
+  const [gameID, setGameID] = React.useState<string>();
+  useEffect(() => {
+    const gameID = location.pathname.split("/")[2];
+    setGameID(gameID);
+    getChessboard(gameID).then((board) => {
+      const _players = extractPlayerNames(board);
+      setPlayers(_players);
+      setBoardTable(board);
+      setIsLoading(false);
+    });
+  }, []);
 
   const handleResize = () => {
     setChatWidth(window.innerWidth / 2);
@@ -66,9 +103,17 @@ export const GamePage = () => {
                 justifyContent: "center",
                 alignItems: "center",
               }}
-              ref={gameContainerRef}
+              className="container"
             >
-              <Game containerRef={gameContainerRef}></Game>
+              {boardTable && gameID ? (
+                <Game
+                  boardTable={boardTable}
+                  containerRef={null}
+                  gameID={gameID}
+                ></Game>
+              ) : (
+                ""
+              )}
             </div>
             <div
               style={{
@@ -81,9 +126,48 @@ export const GamePage = () => {
                 flex: 1,
               }}
             >
-              <Chat width={chatWidth}></Chat>
+              <Stack
+                direction="column"
+                justifyContent="ceter"
+                alignContent="center"
+                divider={
+                  <Divider
+                    orientation="horizontal"
+                    flexItem
+                    style={{ backgroundColor: "white" }}
+                  />
+                }
+                spacing={2}
+                style={{
+                  height: "100%",
+                  width: "90%",
+                  margin: 10,
+                }}
+              >
+                <Item style={{ height: "10%" }}>Player's turn</Item>
+                <Item style={{ height: "70%" }}>Moves</Item>
+                <Item style={{ height: "10%", padding: 0 }}>
+                  <Button
+                    variant="contained"
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                    }}
+                    onClick={() => {
+                      toggleChatArea(true);
+                    }}
+                  >
+                    Chat
+                  </Button>
+                </Item>
+              </Stack>
             </div>
           </div>
+          <Chat
+            width={chatWidth}
+            isOpen={chatArea}
+            toggleOpen={toggleChatArea}
+          ></Chat>
         </Card>
       );
     }

@@ -98,4 +98,8 @@ export class Square {
     this.drawSquare();
     this.drawPiece();
   };
+
+  public getIndex() {
+    return this.squareIndex;
+  }
 }

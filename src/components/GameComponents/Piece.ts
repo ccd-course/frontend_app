@@ -9,8 +9,8 @@ export class Piece {
 
   constructor(
     private p5Reference: p5Types,
-    private readonly pieceId: number,
-    private readonly playerID: number
+    private readonly pieceId: string,
+    private readonly playerID: string
   ) {
     this.pieceImage = this.loadImagePromise();
   }

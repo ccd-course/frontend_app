@@ -8,24 +8,22 @@ import { Square } from "./Square";
 import { Piece } from "./Piece";
 import { Subscription } from "rxjs";
 import { MouseEvent } from "./MouseEvents";
-import { generateRandomMovment } from "../../Dummy/GenerateRandomMovment";
+import { executeMove, getPossibleMoves } from "../../requests/Game";
 
 export class Board {
+  private boardCirclesRadious: number[]; // Needed to generate the squares (Rows)
   private readonly numRows: number; // Number of rows on the baord
   private readonly numCols: number; // Number of cols on the board
-
   private sourceSquare: Square | undefined;
   private destinationSquare: Square | undefined;
-
-  // Object containing references to the generated squares (Key is the index of the square)
-  private squares: { [key: string]: Square } = {};
-  private boardCirclesRadious: number[]; // Needed to generate the squares
+  private possibleMovments: Square[] = [];
   private MouseEvent: Subscription;
+  private squares: { [key: string]: Square } = {}; // Reference to the board squares
 
-  private possibleMovments: string[] = [];
   constructor(
     private readonly p5Reference: p5Types,
-    private boardTable: BoardTable
+    private boardTable: BoardTable,
+    private gameID: string
   ) {
     // Init the number of rows and cols
     this.numRows = this.boardTable[0].length;
@@ -33,18 +31,17 @@ export class Board {
 
     // Calculate the radiouses of the circles on the board
     this.boardCirclesRadious = this.calculateBoardCirclesRadious();
-
     // Generate the squares and calculate their coordinates
     this.generateSquares();
     // Add the pieces to the board
     this.addBoardPieces();
-
     // Subscribe to the MouseEvent
     this.MouseEvent = MouseEvent.subscribe(this.handleMouseEvent);
   }
+
   // Update the layout
   // The movment, which should be sent to the backend will be implmented in the Move class
-  public handleMouseEvent = (coordinate: Coordinate) => {
+  public handleMouseEvent = async (coordinate: Coordinate) => {
     const squareID = getSquareIdOfMouseClick(
       this.p5Reference,
       coordinate.x,
@@ -64,29 +61,62 @@ export class Board {
         if (this.squares[squareIndex].getPiece()) {
           this.sourceSquare = this.squares[squareIndex];
           this.sourceSquare.signSquare();
-          this.possibleMovments = generateRandomMovment(
-            this.numCols,
-            this.numRows
-          ).map((square) => {
-            return `{${square.x},${square.y}}`;
+
+          console.log(this.gameID);
+          console.log(this.sourceSquare.getIndex());
+          this.possibleMovments = (
+            await getPossibleMoves(this.gameID, this.sourceSquare.getIndex())
+          ).map((possible: any) => {
+            console.log(possible);
+            return this.squares[`{${possible[0] + 1},${possible[1] + 1}}`];
           });
 
           this.possibleMovments.forEach((square) => {
-            this.squares[square].signSquare();
+            square.signSquare();
           });
         }
         // Handle the second click
       } else if (this.sourceSquare && !this.destinationSquare) {
+        this.destinationSquare = this.squares[squareIndex];
         // If the destination square has a piece, you can move
         if (
-          !this.squares[squareIndex].getPiece() &&
-          this.possibleMovments.includes(squareIndex)
+          this.sourceSquare?.getIndex()[0] ==
+            this.destinationSquare?.getIndex()[0] &&
+          this.sourceSquare?.getIndex()[1] ==
+            this.destinationSquare?.getIndex()[1]
         ) {
+          // If the destination square has a piece, you can move
+          this.sourceSquare.neglectSquare();
+          this.destinationSquare.neglectSquare();
+
+          this.sourceSquare = undefined;
+          this.destinationSquare = undefined;
+
+          this.possibleMovments.forEach((square) => {
+            square.neglectSquare();
+          });
+          return;
+        }
+        if (
+          this.possibleMovments
+            .map((square) => {
+              return square.getIndex().toString();
+            })
+            .includes(this.squares[squareIndex].getIndex().toString())
+        ) {
+          await executeMove(
+            this.gameID,
+            this.sourceSquare.getIndex(),
+            this.destinationSquare.getIndex()
+          );
           this.destinationSquare = this.squares[squareIndex];
           this.destinationSquare.setPiece(<Piece>this.sourceSquare.getPiece());
           this.sourceSquare.empty();
           this.sourceSquare = undefined;
           this.destinationSquare = undefined;
+          this.possibleMovments.forEach((square) => {
+            square.neglectSquare();
+          });
         }
       }
     }
@@ -103,7 +133,7 @@ export class Board {
       col.forEach((row, rowIndex) => {
         if (row) {
           this.squares[`{${rowIndex + 1},${colIndex + 1}}`].setPiece(
-            new Piece(this.p5Reference, row.pieceID, row.playerID)
+            new Piece(this.p5Reference, row.pieceID, row.playerName)
           );
         }
       });
