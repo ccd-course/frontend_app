@@ -1,6 +1,7 @@
 import React from "react";
 import Sketch from "react-p5";
-import p5Types from "p5"; //Import this for typechecking and intellisense
+import p5Types from "p5";
+
 import { Board } from "./GameComponents/Board";
 import { MouseEvents } from "./GameComponents/MouseEvents";
 import { BoardTable } from "../types";
