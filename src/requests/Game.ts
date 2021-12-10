@@ -40,11 +40,40 @@ export const getPossibleMoves = (
   try {
     return axios
       .post(baseURL + "/moveRequest", {
-        gameID,
-        piecePosition,
+        gameID: Number(gameID),
+        piecePosition: [piecePosition[0] - 1, piecePosition[1] - 1],
       })
       .then((data) => {
-        return data.data;
+        return data.data.possibleMoves;
+      })
+      .catch((e) => {
+        console.log("E", e);
+      });
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const executeMove = (
+  gameID: string,
+  previousPiecePosition: [number, number],
+  newPiecePosition: [number, number]
+) => {
+  try {
+    return axios
+      .post(baseURL + "/executedMove", {
+        gameID: Number(gameID),
+        previousPiecePosition: [
+          previousPiecePosition[0] - 1,
+          previousPiecePosition[1] - 1,
+        ],
+        newPiecePosition: [newPiecePosition[0] - 1, newPiecePosition[1] - 1],
+      })
+      .then((data) => {
+        return data.data.possibleMoves;
+      })
+      .catch((e) => {
+        console.log("E", e);
       });
   } catch (e) {
     console.log(e);

@@ -36,15 +36,15 @@ const extractPlayerNames = (boardTable: ResponseChessboard) => {
 
 export const GamePage = () => {
   const location = useLocation();
-
   const [isLoading, setIsLoading] = React.useState(true);
   const [chatWidth, setChatWidth] = React.useState(window.innerWidth / 2);
   const [chatArea, toggleChatArea] = React.useState(false);
   const [players, setPlayers] = React.useState<string[]>([]);
   const [boardTable, setBoardTable] = React.useState<BoardTable>([]);
-
+  const [gameID, setGameID] = React.useState<string>();
   useEffect(() => {
     const gameID = location.pathname.split("/")[2];
+    setGameID(gameID);
     getChessboard(gameID).then((board) => {
       const _players = extractPlayerNames(board);
       setPlayers(_players);
@@ -105,8 +105,12 @@ export const GamePage = () => {
               }}
               className="container"
             >
-              {boardTable ? (
-                <Game boardTable={boardTable} containerRef={null}></Game>
+              {boardTable && gameID ? (
+                <Game
+                  boardTable={boardTable}
+                  containerRef={null}
+                  gameID={gameID}
+                ></Game>
               ) : (
                 ""
               )}

@@ -8,6 +8,7 @@ import { BoardTable } from "../types";
 
 interface GameProps {
   boardTable: BoardTable;
+  gameID: string;
   containerRef: any;
 }
 
@@ -30,7 +31,7 @@ export const Game = (props: GameProps) => {
     p5.angleMode(p5.DEGREES);
     p5.background(p5.color(57, 62, 70));
     p5.translate(p5.width / 2, p5.height / 2);
-    new Board(p5, props.boardTable).drawBoard();
+    new Board(p5, props.boardTable, props.gameID).drawBoard();
   };
 
   const setup = (p5: p5Types, canvasParentRef: Element) => {

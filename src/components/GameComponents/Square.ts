@@ -100,6 +100,6 @@ export class Square {
   };
 
   public getIndex() {
-    return "{" + this.squareIndex[0] + "," + this.squareIndex[1] + "}";
+    return this.squareIndex;
   }
 }
