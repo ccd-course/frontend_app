@@ -32,3 +32,21 @@ export const getChessboard = async (
     return data.data.chessboard;
   });
 };
+
+export const getPossibleMoves = (
+  gameID: string,
+  piecePosition: [number, number]
+) => {
+  try {
+    return axios
+      .post(baseURL + "/moveRequest", {
+        gameID,
+        piecePosition,
+      })
+      .then((data) => {
+        return data.data;
+      });
+  } catch (e) {
+    console.log(e);
+  }
+};

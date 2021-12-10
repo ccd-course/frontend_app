@@ -33,3 +33,4 @@ export interface IBoard {
 }
 
 export type ResponseChessboard = { pieceID: string; playerName: string }[][];
+export type PossibleMoves = [number, number][];
