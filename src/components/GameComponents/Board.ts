@@ -4,7 +4,7 @@ import {
   generateSquaresCoordinatesForOneCircle,
   getSquareIdOfMouseClick,
 } from "./Helpers";
-import { Square } from "./Square";
+import { SELECTION_TYPE, Square } from "./Square";
 import { Piece } from "./Piece";
 import { Subscription } from "rxjs";
 import { MouseEvent } from "./MouseEvents";
@@ -60,7 +60,7 @@ export class Board {
         // otherwise do nothing
         if (this.squares[squareIndex].getPiece()) {
           this.sourceSquare = this.squares[squareIndex];
-          this.sourceSquare.signSquare();
+          this.sourceSquare.signSquare(SELECTION_TYPE.SQUARE_WITH_PIECE);
 
           console.log(this.gameID);
           console.log(this.sourceSquare.getIndex());
@@ -72,7 +72,7 @@ export class Board {
           });
 
           this.possibleMovments.forEach((square) => {
-            square.signSquare();
+            square.signSquare(SELECTION_TYPE.POSSIBLE_MOVE);
           });
         }
         // Handle the second click

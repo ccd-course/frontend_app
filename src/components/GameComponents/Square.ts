@@ -3,6 +3,11 @@ import { Coordinate, SquareCoordinates } from "../../types";
 import { intersectionPointOfTwoLines } from "./Helpers";
 import { Piece } from "./Piece";
 
+export enum SELECTION_TYPE {
+  SQUARE_WITH_PIECE,
+  POSSIBLE_MOVE,
+}
+
 export class Square {
   private sqaureColor: p5Types.Color; // The color of the square is generated automatically.
   private piece: Piece | undefined; // Reference to the piece if it exists in this square
@@ -14,6 +19,11 @@ export class Square {
   ) {
     // Generate the color of the square
     this.sqaureColor = this.generateSquareColor();
+  }
+
+  private getSelectionColor(type: SELECTION_TYPE) {
+    if (type === SELECTION_TYPE.POSSIBLE_MOVE) return this.p5.color(0, 87, 63);
+    return this.p5.color(51, 102, 153);
   }
 
   // Calculate the coordinate point of the center of the square
@@ -86,9 +96,9 @@ export class Square {
   }
 
   // Draw a circle inside the square
-  public signSquare = () => {
+  public signSquare = (type: SELECTION_TYPE) => {
     this.drawSquare();
-    this.p5.fill(0);
+    this.p5.fill(this.getSelectionColor(type));
     this.p5.circle(this.center.x, this.center.y, this.contentDimension);
     this.drawPiece();
   };
