@@ -4,6 +4,9 @@ import { Square } from "./Square";
 
 /**
  * Calculate the coordinates of the squares and init them
+ * @param p5
+ * @param boardCirclesRadious
+ * @returns
  */
 export const generateSquareCoordinates = (
   p5: p5Types,

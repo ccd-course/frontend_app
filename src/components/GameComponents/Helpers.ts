@@ -1,4 +1,5 @@
 import p5Types from "p5"; //Import this for typechecking and intellisense
+import { ResponseChessboard } from "../../types";
 
 // Given the number of cols needed and the radious of the circle
 // The function returns a list of coordinates, which determine where the squares should be drawn
@@ -112,4 +113,21 @@ export const getSquareIdOfMouseClick = (
   }
 
   return { x, y };
+};
+export const extractPlayerNames = (
+  boardTable: ResponseChessboard
+): string[] => {
+  const playerNames: string[] = [];
+
+  boardTable.forEach((col) => {
+    col.forEach((row) => {
+      if (row && !playerNames.includes(row.playerName)) {
+        playerNames.push(row.playerName);
+        row.playerName = (playerNames.length - 1).toString();
+      } else if (row && playerNames.includes(row.playerName)) {
+        row.playerName = playerNames.indexOf(row.playerName).toString();
+      }
+    });
+  });
+  return playerNames;
 };

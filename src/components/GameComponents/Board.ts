@@ -1,14 +1,10 @@
 import p5Types from "p5";
 import { BoardTable, Coordinate } from "../../types";
-import {
-  generateSquaresCoordinatesForOneCircle,
-  getSquareIdOfMouseClick,
-} from "./Helpers";
+import { getSquareIdOfMouseClick } from "./Helpers";
 import { SELECTION_TYPE, Square } from "./Square";
 import { Piece } from "./Piece";
-import { Subscription } from "rxjs";
 import { executeMove, getPossibleMoves } from "../../requests/Game";
-import { currentPlayer, MouseEvent, players } from "../../storage/game_data";
+import { MouseEvent } from "../../storage/game_data";
 import {
   calculateBoardCirclesRadious,
   generateSquareCoordinates,
@@ -22,13 +18,13 @@ export class Board {
   private destinationSquare: Square | undefined;
   private possibleMovments: Square[] = [];
   private squares: { [key: string]: Square } = {}; // Reference to the board squares
-  private MouseEvent: Subscription;
-  private currentPlayer: number;
-  private players: string[];
+
   constructor(
     private readonly p5Reference: p5Types,
     private boardTable: BoardTable,
-    private gameID: string
+    private gameID: string,
+    private currentPlayer: string,
+    private players: string[]
   ) {
     // Init the number of rows and cols
     this.numRows = this.boardTable[0].length;
@@ -49,15 +45,14 @@ export class Board {
     this.initBoardPieces();
 
     // Subscribe to the MouseEvent
-    this.MouseEvent = MouseEvent.subscribe(this.handleMouseEvent);
-
-    this.currentPlayer = currentPlayer.getValue();
-    this.players = players.getValue();
+    MouseEvent.subscribe(this.handleMouseEvent);
   }
 
-  // Update the layout
-  // The movment, which should be sent to the backend will be implmented in the Move class
-  public handleMouseEvent = async (coordinate: Coordinate) => {
+  /**
+   * Handle the mouse click events
+   * @param coordinate Coordinate of the mouse click
+   */
+  public handleMouseEvent = async (coordinate: Coordinate): Promise<void> => {
     const squareID = getSquareIdOfMouseClick(
       this.p5Reference,
       coordinate.x,
@@ -65,25 +60,28 @@ export class Board {
       this.numCols,
       this.boardCirclesRadious
     );
+    // If the user click inside the board
     if (squareID) {
       const { x, y } = squareID;
       const squareIndex = `{${x},${y}}`;
 
-      // Handle the first click
+      // First click
       if (!this.sourceSquare && !this.destinationSquare) {
-        // Handle the first click
-        // If the square has a piece
-        // otherwise do nothing
+        const source = this.squares[squareIndex];
+        // Check if the square has a piece
+        // Check if the piece belongs to the right player
 
-        if (this.squares[squareIndex].getPiece()) {
-          if (
-            this.squares[squareIndex].getPlayerID().toString() !==
-            this.currentPlayer.toString()
-          ) {
-            return;
-          }
-          this.sourceSquare = this.squares[squareIndex];
+        if (
+          !source.getPiece() ||
+          source.getPlayerID().toString() !== this.currentPlayer.toString()
+        ) {
+          return;
+        } else {
+          this.sourceSquare = source;
+          // Sign the square
           this.sourceSquare.signSquare(SELECTION_TYPE.SQUARE_WITH_PIECE);
+
+          // Send a request and get back all possible movments
           this.possibleMovments = (
             await getPossibleMoves(this.gameID, this.sourceSquare.getIndex())
           ).map(
@@ -91,22 +89,26 @@ export class Board {
               this.squares[`{${possible[0] + 1},${possible[1] + 1}}`]
           );
 
+          // Sign the incpming possible movments
           this.possibleMovments.forEach((square) => {
             square.signSquare(SELECTION_TYPE.POSSIBLE_MOVE);
           });
         }
+      }
+      // Handle the second click
+      else if (this.sourceSquare) {
+        const dest = this.squares[squareIndex];
 
-        // Handle the second click
-      } else if (this.sourceSquare && !this.destinationSquare) {
-        this.destinationSquare = this.squares[squareIndex];
-        // If the destination square has a piece, you can move
+        // Check if the dest is one of possible movments
         if (
           !this.possibleMovments
             .map((square) => {
               return square.getIndex().toString();
             })
-            .includes(this.destinationSquare.getIndex().toString())
+            .includes(dest.getIndex().toString())
         ) {
+          // Set source and dest to default values
+          // remove all possible movments
           this.sourceSquare.neglectSquare();
           this.sourceSquare = undefined;
           this.destinationSquare = undefined;
@@ -114,46 +116,20 @@ export class Board {
             square.neglectSquare();
           });
           return;
-        }
-        if (
-          this.sourceSquare?.getIndex()[0] ==
-            this.destinationSquare?.getIndex()[0] &&
-          this.sourceSquare?.getIndex()[1] ==
-            this.destinationSquare?.getIndex()[1]
-        ) {
-          // If the destination square has a piece, you can move
-          this.sourceSquare?.neglectSquare();
-          this.destinationSquare?.neglectSquare();
-
-          this.sourceSquare = undefined;
-          this.destinationSquare = undefined;
-
-          this.possibleMovments.forEach((square) => {
-            square.neglectSquare();
-          });
-          return;
-        }
-        if (
-          this.possibleMovments
-            .map((square) => {
-              return square.getIndex().toString();
-            })
-            .includes(this.squares[squareIndex].getIndex().toString())
-        ) {
-          const _currentPlyer = await executeMove(
+        } else {
+          const nextPlayer = await executeMove(
             this.gameID,
             this.sourceSquare.getIndex(),
-            this.destinationSquare.getIndex()
+            dest.getIndex()
           );
 
-          this.currentPlayer = this.players.indexOf(_currentPlyer);
-          console.log(this.currentPlayer);
+          this.currentPlayer = this.players.indexOf(nextPlayer).toString();
+          dest.setPiece(<Piece>this.sourceSquare.getPiece());
 
-          this.destinationSquare = this.squares[squareIndex];
-          this.destinationSquare.setPiece(<Piece>this.sourceSquare.getPiece());
+          // After moving the piece
+          // Set source to undefined
           this.sourceSquare.empty();
           this.sourceSquare = undefined;
-          this.destinationSquare = undefined;
           this.possibleMovments.forEach((square) => {
             square.neglectSquare();
           });
@@ -161,14 +137,16 @@ export class Board {
       }
     }
   };
-  // Render the board
+
+  /**
+   * Render the board
+   */
   public drawBoard() {
     this.drawSquares();
-    return this;
   }
 
   /**
-   * Read the given board, the function init the pieces and store them in the right square
+   * Read the given board, init the pieces and store them in the right square
    */
   private initBoardPieces() {
     this.boardTable.forEach((col, colIndex) => {
