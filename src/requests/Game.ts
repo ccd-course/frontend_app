@@ -4,6 +4,11 @@ import { ResponseChessboard } from "../types";
 
 const baseURL = "https://backend.chess.valentinriess.com";
 
+/**
+ * Send a request to create a new game
+ * @param players
+ * @returns gameID
+ */
 export const createNewGameRequest = async (players: string[]) => {
   try {
     return await axios
@@ -21,7 +26,7 @@ export const createNewGameRequest = async (players: string[]) => {
 };
 
 /**
- *
+ * Send a request to get the chessboard
  * @param gameID
  * @returns
  *
@@ -34,6 +39,11 @@ export const getChessboard = async (
   });
 };
 
+/**
+ * Send a request to close the game
+ * @param gameID
+ * @returns
+ */
 export const closeGame = async (
   gameID: string
 ): Promise<ResponseChessboard> => {
@@ -43,6 +53,12 @@ export const closeGame = async (
   });
 };
 
+/**
+ * Send a request to get all possible moves for a given piece
+ * @param gameID
+ * @param piecePosition
+ * @returns
+ */
 export const getPossibleMoves = (
   gameID: string,
   piecePosition: [number, number]
@@ -64,6 +80,13 @@ export const getPossibleMoves = (
   }
 };
 
+/**
+ * Exectue the move
+ * @param gameID
+ * @param previousPiecePosition
+ * @param newPiecePosition
+ * @returns
+ */
 export const executeMove = (
   gameID: string,
   previousPiecePosition: [number, number],
@@ -84,7 +107,7 @@ export const executeMove = (
         return data.data;
       })
       .catch((e) => {
-        console.log("E", e);
+        console.log("e", e);
       });
   } catch (e) {
     console.log(e);
