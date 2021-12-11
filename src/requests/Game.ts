@@ -1,5 +1,4 @@
 import axios from "axios";
-import { currentPlayer } from "../storage/game_data";
 import { ResponseChessboard } from "../types";
 
 const baseURL = process.env.REACT_APP_API_BASE_URL;
@@ -103,7 +102,6 @@ export const executeMove = (
         newPiecePosition: [newPiecePosition[0] - 1, newPiecePosition[1] - 1],
       })
       .then((data) => {
-        currentPlayer.next(data.data);
         return data.data;
       })
       .catch((e) => {
