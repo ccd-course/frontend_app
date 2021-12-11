@@ -10,6 +10,11 @@ import {
   generateSquareCoordinates,
 } from "./Generators";
 
+/**
+ * Represent the chess-board
+ * handles the layout logic of the game
+ *
+ */
 export class Board {
   private boardCirclesRadious: number[]; // Needed to generate the squares (Rows)
   private readonly numRows: number; // Number of rows on the baord

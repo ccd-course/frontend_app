@@ -4,6 +4,9 @@ import { NewGameDialog } from "../components/Dialogs/NewGameDialog";
 import { StartGameButton } from "../styles/ButtonStyles";
 import { PageStyle } from "../styles/DefaultPagesStyle";
 
+/**
+ * Landing Page
+ */
 export const LandingPage = () => {
   const [open, setOpen] = React.useState(false);
 
