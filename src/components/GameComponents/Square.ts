@@ -23,7 +23,7 @@ export class Square {
 
   private getSelectionColor(type: SELECTION_TYPE) {
     if (type === SELECTION_TYPE.POSSIBLE_MOVE) return this.p5.color(0, 87, 63);
-    return this.p5.color(0, 0, 128);
+    return this.p5.color(51, 102, 153);
   }
 
   // Calculate the coordinate point of the center of the square
