@@ -199,7 +199,8 @@ export const GamePage = () => {
 
   return (
     <div style={PageStyle}>
-      {customRendering()} <ExitGame open={open} setOpen={setOpen}></ExitGame>
+      {customRendering()}{" "}
+      <ExitGame open={open} setOpen={setOpen} gameID={gameID}></ExitGame>
     </div>
   );
 };

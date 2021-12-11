@@ -7,11 +7,11 @@ import Button from "@mui/material/Button";
 import { PrimaryButtonStyle } from "../../styles/ButtonStyles";
 import { COLOR } from "../../styles/Colors";
 import { useNavigate } from "react-router-dom";
-import { createNewGameRequest } from "../../requests/Game";
+import { closeGame } from "../../requests/Game";
 import { NewGameDialogProps } from "../../types";
 import { DialogContentText } from "@mui/material";
 
-export const ExitGame = ({ open, setOpen }: NewGameDialogProps) => {
+export const ExitGame = ({ open, setOpen, gameID }: any) => {
   const navigate = useNavigate();
 
   const [disabled, setDisabled] = useState(true);
@@ -34,15 +34,14 @@ export const ExitGame = ({ open, setOpen }: NewGameDialogProps) => {
       <DialogTitle style={{ color: COLOR.FONT_SECONDARY }}>
         Exit the game
       </DialogTitle>
-
       <DialogContent>
-        <DialogContentText id="alert-dialog-description">
-          <p style={{ color: "#fff" }}>
-            Are you sure you want to leave the game?
-          </p>
+        <DialogContentText
+          id="alert-dialog-description"
+          style={{ color: "#fff" }}
+        >
+          Are you sure you want to leave the game?
         </DialogContentText>
       </DialogContent>
-
       <DialogActions>
         <Button
           variant="contained"
@@ -58,7 +57,11 @@ export const ExitGame = ({ open, setOpen }: NewGameDialogProps) => {
             backgroundColor: disabled ? "#333" : PrimaryButtonStyle.background,
           }}
           onClick={() => {
-            navigate(`/`);
+            closeGame(gameID).then(() => {
+              closeGame(gameID).then(() => {
+                navigate(`/`);
+              });
+            });
           }}
         >
           Exit

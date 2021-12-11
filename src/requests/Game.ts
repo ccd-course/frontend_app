@@ -33,6 +33,14 @@ export const getChessboard = async (
   });
 };
 
+export const closeGame = async (
+  gameID: string
+): Promise<ResponseChessboard> => {
+  return axios.post(baseURL + "/endGame?gameID=" + gameID, {}).then((data) => {
+    return data.data.chessboard;
+  });
+};
+
 export const getPossibleMoves = (
   gameID: string,
   piecePosition: [number, number]
