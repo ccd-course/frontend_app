@@ -10,6 +10,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { Item } from "../components/Item";
 import { BoardTable, ResponseChessboard } from "../types";
 import { getChessboard } from "../requests/Game";
+import { ExitGame } from "../components/Dialogs/ExitGameDialog";
 
 const extractPlayerNames = (boardTable: ResponseChessboard) => {
   const playerNames: string[] = [];
@@ -36,6 +37,8 @@ export const GamePage = () => {
   const [boardTable, setBoardTable] = React.useState<BoardTable>([]);
   const [gameID, setGameID] = React.useState<string>();
   const [_canvas, setCanvas] = React.useState(false);
+  const [open, setOpen] = React.useState(false);
+
   const [myRef, setMyRef] = React.useState<any>(null);
 
   const _ref = useRef<any>();
@@ -150,11 +153,26 @@ export const GamePage = () => {
                   margin: 10,
                 }}
               >
+                <Item style={{ height: "10%", padding: 0 }}>
+                  <Button
+                    variant="contained"
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                    }}
+                    onClick={() => {
+                      setOpen(true);
+                    }}
+                  >
+                    Exit the game
+                  </Button>
+                </Item>
                 <Item style={{ height: "10%" }}>Player's turn</Item>
                 <Item style={{ height: "70%" }}>Moves</Item>
                 <Item style={{ height: "10%", padding: 0 }}>
                   <Button
                     variant="contained"
+                    disabled
                     style={{
                       width: "100%",
                       height: "100%",
@@ -179,5 +197,10 @@ export const GamePage = () => {
     }
   };
 
-  return <div style={PageStyle}>{customRendering()}</div>;
+  return (
+    <div style={PageStyle}>
+      {customRendering()}{" "}
+      <ExitGame open={open} setOpen={setOpen} gameID={gameID}></ExitGame>
+    </div>
+  );
 };
