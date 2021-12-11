@@ -1,4 +1,4 @@
-import { Subject } from "rxjs";
+import { BehaviorSubject, Subject } from "rxjs";
 import { Coordinate } from "../types";
 
 /**
@@ -6,4 +6,6 @@ import { Coordinate } from "../types";
  */
 export const MouseEvent = new Subject<Coordinate>();
 
-export const currentPlayer = new Subject<Coordinate>();
+export const players = new BehaviorSubject<string[]>([]);
+
+export const currentPlayer = new Subject<string>();
