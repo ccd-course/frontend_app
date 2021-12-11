@@ -150,11 +150,24 @@ export const GamePage = () => {
                   margin: 10,
                 }}
               >
+                <Item style={{ height: "10%", padding: 0 }}>
+                  <Button
+                    variant="contained"
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                    }}
+                    onClick={() => {}}
+                  >
+                    Exit the game
+                  </Button>
+                </Item>
                 <Item style={{ height: "10%" }}>Player's turn</Item>
                 <Item style={{ height: "70%" }}>Moves</Item>
                 <Item style={{ height: "10%", padding: 0 }}>
                   <Button
                     variant="contained"
+                    disabled
                     style={{
                       width: "100%",
                       height: "100%",
