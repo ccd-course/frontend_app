@@ -68,7 +68,7 @@ export class Board {
 
         if (this.squares[squareIndex].getPiece()) {
           if (
-            this.squares[squareIndex].getPlayer().toString() !==
+            this.squares[squareIndex].getPlayerID().toString() !==
             this.currentPlayer.toString()
           ) {
             return;
