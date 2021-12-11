@@ -1,22 +1,15 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef } from "react";
+import { useLocation } from "react-router-dom";
 import Card from "@mui/material/Card";
 import { COLOR } from "../styles/Colors";
 import { PageStyle } from "../styles/DefaultPagesStyle";
 import { Game } from "../components/Game";
 import { Chat } from "../components/Chat";
-import { Button, Divider, Stack, styled } from "@mui/material";
+import { Button, Divider, Stack } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
-import Paper from "@mui/material/Paper";
-import { useLocation } from "react-router-dom";
+import { Item } from "../components/Item";
 import { BoardTable, ResponseChessboard } from "../types";
 import { getChessboard } from "../requests/Game";
-
-const Item = styled(Paper)(({ theme }) => ({
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: "center",
-  color: theme.palette.text.secondary,
-}));
 
 const extractPlayerNames = (boardTable: ResponseChessboard) => {
   const playerNames: string[] = [];
@@ -42,6 +35,19 @@ export const GamePage = () => {
   const [players, setPlayers] = React.useState<string[]>([]);
   const [boardTable, setBoardTable] = React.useState<BoardTable>([]);
   const [gameID, setGameID] = React.useState<string>();
+  const [_canvas, setCanvas] = React.useState(false);
+  const [myRef, setMyRef] = React.useState<any>(null);
+
+  const _ref = useRef<any>();
+
+  useLayoutEffect(() => {
+    const { current } = _ref;
+    if (current) {
+      setCanvas(true);
+      setMyRef(_ref);
+    }
+  });
+
   useEffect(() => {
     const gameID = location.pathname.split("/")[2];
     setGameID(gameID);
@@ -103,13 +109,13 @@ export const GamePage = () => {
                 justifyContent: "center",
                 alignItems: "center",
               }}
-              className="container"
+              ref={_ref}
             >
-              {boardTable && gameID ? (
+              {boardTable && gameID && _ref.current ? (
                 <Game
                   boardTable={boardTable}
-                  containerRef={null}
                   gameID={gameID}
+                  containerRef={myRef}
                 ></Game>
               ) : (
                 ""

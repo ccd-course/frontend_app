@@ -60,7 +60,7 @@ export class Square {
         this.coordinates.p4.x,
         this.coordinates.p4.y
       ) -
-      12 * this.squareIndex[0]
+      16 * this.squareIndex[0]
     );
   }
 
