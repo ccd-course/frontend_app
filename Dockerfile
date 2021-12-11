@@ -1,6 +1,11 @@
-FROM node:14.18
+FROM node:16.13 as build-stage
 WORKDIR /app
-COPY package.json package-lock.json ./
+COPY package*.json /app/
 RUN npm install
-COPY . .
-CMD ["npm", "start"]
+COPY ./ /app/
+RUN npm run build
+
+FROM nginx:1.15
+COPY --from=build-stage /app/build/ /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+EXPOSE 80
