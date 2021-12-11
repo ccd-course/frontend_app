@@ -7,8 +7,8 @@ import {
 import { SELECTION_TYPE, Square } from "./Square";
 import { Piece } from "./Piece";
 import { Subscription } from "rxjs";
-import { MouseEvent } from "./MouseEvents";
 import { executeMove, getPossibleMoves } from "../../requests/Game";
+import { MouseEvent } from "../../storage/game_data";
 
 export class Board {
   private boardCirclesRadious: number[]; // Needed to generate the squares (Rows)
@@ -61,9 +61,6 @@ export class Board {
         if (this.squares[squareIndex].getPiece()) {
           this.sourceSquare = this.squares[squareIndex];
           this.sourceSquare.signSquare(SELECTION_TYPE.SQUARE_WITH_PIECE);
-
-          console.log(this.gameID);
-          console.log(this.sourceSquare.getIndex());
           this.possibleMovments = (
             await getPossibleMoves(this.gameID, this.sourceSquare.getIndex())
           ).map((possible: any) => {
