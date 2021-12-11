@@ -83,7 +83,8 @@ export class Square {
    * @returns The playerID of the piece
    */
   public getPlayerID = () => {
-    return this.piece?.getPlayerID();
+    if (this.piece) return this.piece.getPlayerID();
+    throw Error("Square is empty");
   };
 
   /**

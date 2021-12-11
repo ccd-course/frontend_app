@@ -9,6 +9,10 @@ import { Piece } from "./Piece";
 import { Subscription } from "rxjs";
 import { executeMove, getPossibleMoves } from "../../requests/Game";
 import { currentPlayer, MouseEvent, players } from "../../storage/game_data";
+import {
+  calculateBoardCirclesRadious,
+  generateSquareCoordinates,
+} from "./Generators";
 
 export class Board {
   private boardCirclesRadious: number[]; // Needed to generate the squares (Rows)
@@ -31,19 +35,24 @@ export class Board {
     this.numCols = this.boardTable.length;
 
     // Calculate the radiouses of the circles on the board
-    this.boardCirclesRadious = this.calculateBoardCirclesRadious();
+    this.boardCirclesRadious = calculateBoardCirclesRadious(
+      p5Reference,
+      this.numRows
+    );
     // Generate the squares and calculate their coordinates
-    this.generateSquares();
+    this.squares = generateSquareCoordinates(
+      this.p5Reference,
+      this.boardCirclesRadious,
+      this.numCols
+    );
     // Add the pieces to the board
-    this.addBoardPieces();
+    this.initBoardPieces();
+
     // Subscribe to the MouseEvent
     this.MouseEvent = MouseEvent.subscribe(this.handleMouseEvent);
 
     this.currentPlayer = currentPlayer.getValue();
     this.players = players.getValue();
-
-    console.log(this.currentPlayer);
-    console.log(this.players);
   }
 
   // Update the layout
@@ -158,8 +167,10 @@ export class Board {
     return this;
   }
 
-  // Read the board table and generate the pieces in the right square
-  private addBoardPieces() {
+  /**
+   * Read the given board, the function init the pieces and store them in the right square
+   */
+  private initBoardPieces() {
     this.boardTable.forEach((col, colIndex) => {
       col.forEach((row, rowIndex) => {
         if (row) {
@@ -171,96 +182,12 @@ export class Board {
     });
   }
 
-  // Render all the squares
+  /**
+   * Render the sqaures on the screen
+   */
   private drawSquares() {
     Object.keys(this.squares).forEach((key) => {
       this.squares[key].drawSquare();
     });
   }
-
-  // Given the table rows, the function calculate the radious of each circle
-  private calculateBoardCirclesRadious = () => {
-    let maxRadious = this.p5Reference.width / 2 - 10;
-    const circlesRadiousList = [];
-    const distance = maxRadious / (this.numRows + 1);
-    for (let i = this.numRows; i >= 0; i--) {
-      circlesRadiousList.push(maxRadious);
-      maxRadious -= distance;
-    }
-    return circlesRadiousList.reverse();
-  };
-
-  // Calculate the square coorindates
-  private generateSquares = () => {
-    const boardSquaresCoordinates = this.boardCirclesRadious.map(
-      (circleRadious: number) => {
-        return generateSquaresCoordinatesForOneCircle(
-          this.p5Reference,
-          circleRadious,
-          this.numCols
-        );
-      }
-    );
-
-    for (let i = 0; i < boardSquaresCoordinates.length - 1; i++) {
-      for (let j = 0; j < boardSquaresCoordinates[i].length - 1; j++) {
-        const square = new Square(
-          this.p5Reference,
-          {
-            p1: {
-              x: boardSquaresCoordinates[i][j].x,
-              y: boardSquaresCoordinates[i][j].y,
-            },
-            p2: {
-              x: boardSquaresCoordinates[i][j + 1].x,
-              y: boardSquaresCoordinates[i][j + 1].y,
-            },
-            p3: {
-              x: boardSquaresCoordinates[i + 1][j + 1].x,
-              y: boardSquaresCoordinates[i + 1][j + 1].y,
-            },
-            p4: {
-              x: boardSquaresCoordinates[i + 1][j].x,
-              y: boardSquaresCoordinates[i + 1][j].y,
-            },
-          },
-          [i + 1, boardSquaresCoordinates[i].length - (j + 1) + 1]
-        );
-        this.squares[
-          `{${i + 1},${boardSquaresCoordinates[i].length - (j + 1) + 1}}`
-        ] = square;
-      }
-    }
-    for (let i = 0; i < boardSquaresCoordinates.length - 1; i++) {
-      const square = new Square(
-        this.p5Reference,
-        {
-          p1: {
-            x: boardSquaresCoordinates[i][boardSquaresCoordinates[i].length - 1]
-              .x,
-            y: boardSquaresCoordinates[i][boardSquaresCoordinates[i].length - 1]
-              .y,
-          },
-          p2: {
-            x: boardSquaresCoordinates[i][0].x,
-            y: boardSquaresCoordinates[i][0].y,
-          },
-          p3: {
-            x: boardSquaresCoordinates[i + 1][0].x,
-            y: boardSquaresCoordinates[i + 1][0].y,
-          },
-          p4: {
-            x: boardSquaresCoordinates[i + 1][
-              boardSquaresCoordinates[i].length - 1
-            ].x,
-            y: boardSquaresCoordinates[i + 1][
-              boardSquaresCoordinates[i].length - 1
-            ].y,
-          },
-        },
-        [i + 1, 1]
-      );
-      this.squares[`{${i + 1},1}`] = square;
-    }
-  };
 }
