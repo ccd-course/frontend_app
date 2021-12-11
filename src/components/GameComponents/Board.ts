@@ -65,7 +65,14 @@ export class Board {
         // Handle the first click
         // If the square has a piece
         // otherwise do nothing
+
         if (this.squares[squareIndex].getPiece()) {
+          if (
+            this.squares[squareIndex].getPlayer().toString() !==
+            this.currentPlayer.toString()
+          ) {
+            return;
+          }
           this.sourceSquare = this.squares[squareIndex];
           this.sourceSquare.signSquare(SELECTION_TYPE.SQUARE_WITH_PIECE);
           this.possibleMovments = (
@@ -79,6 +86,7 @@ export class Board {
             square.signSquare(SELECTION_TYPE.POSSIBLE_MOVE);
           });
         }
+
         // Handle the second click
       } else if (this.sourceSquare && !this.destinationSquare) {
         this.destinationSquare = this.squares[squareIndex];
@@ -123,11 +131,15 @@ export class Board {
             })
             .includes(this.squares[squareIndex].getIndex().toString())
         ) {
-          await executeMove(
+          const _currentPlyer = await executeMove(
             this.gameID,
             this.sourceSquare.getIndex(),
             this.destinationSquare.getIndex()
           );
+
+          this.currentPlayer = this.players.indexOf(_currentPlyer);
+          console.log(this.currentPlayer);
+
           this.destinationSquare = this.squares[squareIndex];
           this.destinationSquare.setPiece(<Piece>this.sourceSquare.getPiece());
           this.sourceSquare.empty();

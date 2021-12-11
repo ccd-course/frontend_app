@@ -72,6 +72,7 @@ export const executeMove = (
       })
       .then((data) => {
         currentPlayer.next(data.data);
+        return data.data;
       })
       .catch((e) => {
         console.log("E", e);

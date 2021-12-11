@@ -60,6 +60,11 @@ export class Square {
     this.drawSquare();
   };
 
+  public getPlayer = () => {
+    if (this.piece) return this.piece.getPlayerID();
+    return "";
+  };
+
   // Calculate the size of the square content
   // The shortest side of the square minus a margin
   private get contentDimension() {
