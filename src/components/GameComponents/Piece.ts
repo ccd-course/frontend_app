@@ -1,6 +1,9 @@
 import p5Types from "p5";
 import { Coordinate } from "../../types";
 
+/**
+ * Representation of the piece
+ */
 export class Piece {
   private pieceImage: Promise<p5Types.Image>; // Promise containing the image
   private coordinate: Coordinate | undefined; // Postion of the piece on the canvas
@@ -15,7 +18,9 @@ export class Piece {
     this.pieceImage = this.loadImagePromise();
   }
 
-  // Draw the piece on the canvas
+  /**
+   * Draw the piece on the canvas
+   */
   public async drawPiece() {
     if (this.coordinate && this.size) {
       const image = await this.pieceImage;
@@ -30,18 +35,24 @@ export class Piece {
     }
   }
 
-  // Set the position coordinate of the piece
+  /**
+   * Set the coordinate of the piece
+   *  */
   public setPosition(coordinate: Coordinate) {
     this.coordinate = coordinate;
   }
 
-  // Set the image size
-  // It differs from one place to another
+  /**
+   * Set the image size
+   * @param size
+   */
   public setDimenstion(size: number) {
     this.size = size;
   }
 
-  // Load the image, given the playerID and pieceID
+  /**
+   * @returns Load the image, given the playerID and pieceID
+   */
   private loadImagePromise = (): Promise<p5Types.Image> => {
     const img = require("../../images/player" +
       this.playerID +
@@ -56,6 +67,10 @@ export class Piece {
     });
   };
 
+  /**
+   *
+   * @returns the playerID, to which the piece belongs
+   */
   public getPlayerID() {
     return this.playerID;
   }
