@@ -8,26 +8,10 @@ import { Chat } from "../components/Chat";
 import { Button, Divider, Stack } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Item } from "../components/Item";
-import { BoardTable, ResponseChessboard } from "../types";
+import { BoardTable } from "../types";
 import { getChessboard } from "../requests/Game";
-import { currentPlayer, players } from "../storage/game_data";
 import { ExitGame } from "../components/Dialogs/ExitGameDialog";
-
-const extractPlayerNames = (boardTable: ResponseChessboard) => {
-  const playerNames: string[] = [];
-
-  boardTable.forEach((col) => {
-    col.forEach((row) => {
-      if (row && !playerNames.includes(row.playerName)) {
-        playerNames.push(row.playerName);
-        row.playerName = (playerNames.length - 1).toString();
-      } else if (row && playerNames.includes(row.playerName)) {
-        row.playerName = playerNames.indexOf(row.playerName).toString();
-      }
-    });
-  });
-  return playerNames;
-};
+import { extractPlayerNames } from "../components/GameComponents/Helpers";
 
 export const GamePage = () => {
   const location = useLocation();
@@ -38,8 +22,8 @@ export const GamePage = () => {
   const [gameID, setGameID] = React.useState<string>();
   const [_canvas, setCanvas] = React.useState(false);
   const [open, setOpen] = React.useState(false);
-
-  const [myRef, setMyRef] = React.useState<any>(null);
+  const [players, setPlayers] = React.useState<string[]>([]);
+  const [conatinerRef, setMyRef] = React.useState<any>(null);
 
   const _ref = useRef<any>();
 
@@ -56,8 +40,7 @@ export const GamePage = () => {
     setGameID(gameID);
     getChessboard(gameID).then((board) => {
       const _players = extractPlayerNames(board);
-      players.next(_players);
-      currentPlayer.next(0);
+      setPlayers(_players);
       setBoardTable(board);
       setIsLoading(false);
     });
@@ -119,7 +102,9 @@ export const GamePage = () => {
                 <Game
                   boardTable={boardTable}
                   gameID={gameID}
-                  containerRef={myRef}
+                  containerRef={conatinerRef}
+                  currentPlayer="0"
+                  players={players}
                 ></Game>
               ) : (
                 ""
@@ -200,7 +185,7 @@ export const GamePage = () => {
 
   return (
     <div style={PageStyle}>
-      {customRendering()}{" "}
+      {customRendering()}
       <ExitGame open={open} setOpen={setOpen} gameID={gameID}></ExitGame>
     </div>
   );

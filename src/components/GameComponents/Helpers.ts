@@ -1,8 +1,16 @@
 import p5Types from "p5"; //Import this for typechecking and intellisense
+import { ResponseChessboard } from "../../types";
 
-// Given the number of cols needed and the radious of the circle
-// The function returns a list of coordinates, which determine where the squares should be drawn
-// It returns also the angle of of each coordinate relative to the center
+/**
+ *
+ * Given the number of cols needed and the radious of the circle
+ * The function returns a list of coordinates, which determine where the squares should be drawn
+ * It returns also the angle of of each coordinate relative to the center
+ * @param p5
+ * @param radious
+ * @param numCols
+ * @returns
+ */
 export const generateSquaresCoordinatesForOneCircle = (
   p5: p5Types,
   radious: number,
@@ -20,7 +28,14 @@ export const generateSquaresCoordinatesForOneCircle = (
   return coordinates;
 };
 
-// Find the intersection coordinate of two lines
+/**
+ *  Find the intersection coordinate of two lines
+ * @param point1 x-point 1
+ * @param point2 y-point 1
+ * @param point3 x-point 2
+ * @param point4 y-point 2
+ * @returns
+ */
 export const intersectionPointOfTwoLines = (
   point1: [number, number],
   point2: [number, number],
@@ -57,6 +72,15 @@ export const getAngleHelper = (
   }
 };
 
+/**
+ *
+ * @param p5
+ * @param mouseX coordinate x
+ * @param mouseY coordinate y
+ * @param numCols num of cols in the board
+ * @param circlesRadiousList  The list of circle radiouses
+ * @returns SquareID
+ */
 export const getSquareIdOfMouseClick = (
   p5: p5Types,
   mouseX: number,
@@ -112,4 +136,26 @@ export const getSquareIdOfMouseClick = (
   }
 
   return { x, y };
+};
+
+/**
+ * @param boardTable The given dashboard from the backend
+ * @returns A list of player names
+ */
+export const extractPlayerNames = (
+  boardTable: ResponseChessboard
+): string[] => {
+  const playerNames: string[] = [];
+
+  boardTable.forEach((col) => {
+    col.forEach((row) => {
+      if (row && !playerNames.includes(row.playerName)) {
+        playerNames.push(row.playerName);
+        row.playerName = (playerNames.length - 1).toString();
+      } else if (row && playerNames.includes(row.playerName)) {
+        row.playerName = playerNames.indexOf(row.playerName).toString();
+      }
+    });
+  });
+  return playerNames;
 };

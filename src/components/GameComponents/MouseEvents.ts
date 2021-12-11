@@ -3,7 +3,7 @@ import { MouseEvent } from "../../storage/game_data";
 
 /**
  * @class MouseEvnts
- * @remarks
+ *
  * The class is responsible for capturing all mouse events on the canvas
  * Only one instance of this class can be created
  */
@@ -23,7 +23,6 @@ export class MouseEvents {
   ) {}
 
   /**
-   * @remarks
    * The function returns an instance of the class.
    * Only one instance of this class should be created.
    *
@@ -45,7 +44,6 @@ export class MouseEvents {
   }
 
   /**
-   * @remarks
    * Register all the events, which should be captured
    */
   listen() {
@@ -53,7 +51,6 @@ export class MouseEvents {
   }
 
   /**
-   * @remarks
    * Listen to the mouse clicks on the canvas
    * Publish the coordinates of the clicks to the MouseEvent(global object)
    */
