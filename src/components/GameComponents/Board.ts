@@ -8,7 +8,7 @@ import { SELECTION_TYPE, Square } from "./Square";
 import { Piece } from "./Piece";
 import { Subscription } from "rxjs";
 import { executeMove, getPossibleMoves } from "../../requests/Game";
-import { MouseEvent } from "../../storage/game_data";
+import { currentPlayer, MouseEvent, players } from "../../storage/game_data";
 
 export class Board {
   private boardCirclesRadious: number[]; // Needed to generate the squares (Rows)
@@ -17,9 +17,10 @@ export class Board {
   private sourceSquare: Square | undefined;
   private destinationSquare: Square | undefined;
   private possibleMovments: Square[] = [];
-  private MouseEvent: Subscription;
   private squares: { [key: string]: Square } = {}; // Reference to the board squares
-
+  private MouseEvent: Subscription;
+  private currentPlayer: number;
+  private players: string[];
   constructor(
     private readonly p5Reference: p5Types,
     private boardTable: BoardTable,
@@ -37,6 +38,12 @@ export class Board {
     this.addBoardPieces();
     // Subscribe to the MouseEvent
     this.MouseEvent = MouseEvent.subscribe(this.handleMouseEvent);
+
+    this.currentPlayer = currentPlayer.getValue();
+    this.players = players.getValue();
+
+    console.log(this.currentPlayer);
+    console.log(this.players);
   }
 
   // Update the layout
