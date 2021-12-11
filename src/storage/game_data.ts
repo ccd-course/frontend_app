@@ -8,4 +8,4 @@ export const MouseEvent = new Subject<Coordinate>();
 
 export const players = new BehaviorSubject<string[]>([]);
 
-export const currentPlayer = new Subject<string>();
+export const currentPlayer = new BehaviorSubject<number>(0);

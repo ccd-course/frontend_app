@@ -10,6 +10,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { Item } from "../components/Item";
 import { BoardTable, ResponseChessboard } from "../types";
 import { getChessboard } from "../requests/Game";
+import { currentPlayer, players } from "../storage/game_data";
 
 const extractPlayerNames = (boardTable: ResponseChessboard) => {
   const playerNames: string[] = [];
@@ -32,7 +33,6 @@ export const GamePage = () => {
   const [isLoading, setIsLoading] = React.useState(true);
   const [chatWidth, setChatWidth] = React.useState(window.innerWidth / 2);
   const [chatArea, toggleChatArea] = React.useState(false);
-  const [players, setPlayers] = React.useState<string[]>([]);
   const [boardTable, setBoardTable] = React.useState<BoardTable>([]);
   const [gameID, setGameID] = React.useState<string>();
   const [_canvas, setCanvas] = React.useState(false);
@@ -53,7 +53,8 @@ export const GamePage = () => {
     setGameID(gameID);
     getChessboard(gameID).then((board) => {
       const _players = extractPlayerNames(board);
-      setPlayers(_players);
+      players.next(_players);
+      currentPlayer.next(0);
       setBoardTable(board);
       setIsLoading(false);
     });
