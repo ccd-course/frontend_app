@@ -15,7 +15,6 @@ interface GameProps {
 export const Game = (props: GameProps) => {
   let canvas: p5Types.Element;
 
-  console.log(props.containerRef);
   const getCanvasSize = () => {
     const width = props.containerRef.current.clientWidth;
     const height = props.containerRef.current.clientHeight;
