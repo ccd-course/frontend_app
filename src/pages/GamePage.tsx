@@ -10,6 +10,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { Item } from "../components/Item";
 import { BoardTable, ResponseChessboard } from "../types";
 import { getChessboard } from "../requests/Game";
+import { currentPlayer, players } from "../storage/game_data";
 import { ExitGame } from "../components/Dialogs/ExitGameDialog";
 
 const extractPlayerNames = (boardTable: ResponseChessboard) => {
@@ -19,9 +20,9 @@ const extractPlayerNames = (boardTable: ResponseChessboard) => {
     col.forEach((row) => {
       if (row && !playerNames.includes(row.playerName)) {
         playerNames.push(row.playerName);
-        row.playerName = playerNames.length.toString();
+        row.playerName = (playerNames.length - 1).toString();
       } else if (row && playerNames.includes(row.playerName)) {
-        row.playerName = (playerNames.indexOf(row.playerName) + 1).toString();
+        row.playerName = playerNames.indexOf(row.playerName).toString();
       }
     });
   });
@@ -33,7 +34,6 @@ export const GamePage = () => {
   const [isLoading, setIsLoading] = React.useState(true);
   const [chatWidth, setChatWidth] = React.useState(window.innerWidth / 2);
   const [chatArea, toggleChatArea] = React.useState(false);
-  const [players, setPlayers] = React.useState<string[]>([]);
   const [boardTable, setBoardTable] = React.useState<BoardTable>([]);
   const [gameID, setGameID] = React.useState<string>();
   const [_canvas, setCanvas] = React.useState(false);
@@ -56,7 +56,8 @@ export const GamePage = () => {
     setGameID(gameID);
     getChessboard(gameID).then((board) => {
       const _players = extractPlayerNames(board);
-      setPlayers(_players);
+      players.next(_players);
+      currentPlayer.next(0);
       setBoardTable(board);
       setIsLoading(false);
     });

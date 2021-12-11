@@ -1,4 +1,5 @@
 import axios from "axios";
+import { currentPlayer } from "../storage/game_data";
 import { ResponseChessboard } from "../types";
 
 const baseURL = "https://backend.chess.valentinriess.com";
@@ -79,7 +80,8 @@ export const executeMove = (
         newPiecePosition: [newPiecePosition[0] - 1, newPiecePosition[1] - 1],
       })
       .then((data) => {
-        return data.data.possibleMoves;
+        currentPlayer.next(data.data);
+        return data.data;
       })
       .catch((e) => {
         console.log("E", e);

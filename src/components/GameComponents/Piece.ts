@@ -55,4 +55,8 @@ export class Piece {
       });
     });
   };
+
+  public getPlayerID() {
+    return this.playerID;
+  }
 }

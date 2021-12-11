@@ -8,7 +8,7 @@ import { SELECTION_TYPE, Square } from "./Square";
 import { Piece } from "./Piece";
 import { Subscription } from "rxjs";
 import { executeMove, getPossibleMoves } from "../../requests/Game";
-import { MouseEvent } from "../../storage/game_data";
+import { currentPlayer, MouseEvent, players } from "../../storage/game_data";
 
 export class Board {
   private boardCirclesRadious: number[]; // Needed to generate the squares (Rows)
@@ -17,9 +17,10 @@ export class Board {
   private sourceSquare: Square | undefined;
   private destinationSquare: Square | undefined;
   private possibleMovments: Square[] = [];
-  private MouseEvent: Subscription;
   private squares: { [key: string]: Square } = {}; // Reference to the board squares
-
+  private MouseEvent: Subscription;
+  private currentPlayer: number;
+  private players: string[];
   constructor(
     private readonly p5Reference: p5Types,
     private boardTable: BoardTable,
@@ -37,6 +38,12 @@ export class Board {
     this.addBoardPieces();
     // Subscribe to the MouseEvent
     this.MouseEvent = MouseEvent.subscribe(this.handleMouseEvent);
+
+    this.currentPlayer = currentPlayer.getValue();
+    this.players = players.getValue();
+
+    console.log(this.currentPlayer);
+    console.log(this.players);
   }
 
   // Update the layout
@@ -58,7 +65,14 @@ export class Board {
         // Handle the first click
         // If the square has a piece
         // otherwise do nothing
+
         if (this.squares[squareIndex].getPiece()) {
+          if (
+            this.squares[squareIndex].getPlayer().toString() !==
+            this.currentPlayer.toString()
+          ) {
+            return;
+          }
           this.sourceSquare = this.squares[squareIndex];
           this.sourceSquare.signSquare(SELECTION_TYPE.SQUARE_WITH_PIECE);
           this.possibleMovments = (
@@ -72,6 +86,7 @@ export class Board {
             square.signSquare(SELECTION_TYPE.POSSIBLE_MOVE);
           });
         }
+
         // Handle the second click
       } else if (this.sourceSquare && !this.destinationSquare) {
         this.destinationSquare = this.squares[squareIndex];
@@ -116,11 +131,15 @@ export class Board {
             })
             .includes(this.squares[squareIndex].getIndex().toString())
         ) {
-          await executeMove(
+          const _currentPlyer = await executeMove(
             this.gameID,
             this.sourceSquare.getIndex(),
             this.destinationSquare.getIndex()
           );
+
+          this.currentPlayer = this.players.indexOf(_currentPlyer);
+          console.log(this.currentPlayer);
+
           this.destinationSquare = this.squares[squareIndex];
           this.destinationSquare.setPiece(<Piece>this.sourceSquare.getPiece());
           this.sourceSquare.empty();
