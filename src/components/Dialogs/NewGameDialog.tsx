@@ -96,6 +96,11 @@ export const NewGameDialog = ({ open, setOpen }: NewGameDialogProps) => {
                   control={<Radio style={{ color: COLOR.FONT_SECONDARY }} />}
                   label="3 Players"
                 />
+                <FormControlLabel
+                  value="4"
+                  control={<Radio style={{ color: COLOR.FONT_SECONDARY }} />}
+                  label="4 Players"
+                />
               </RadioGroup>
               <div style={{ width: "100%" }}>{renderRequiredInput()}</div>
             </FormControl>
