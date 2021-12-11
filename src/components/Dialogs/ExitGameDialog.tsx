@@ -58,9 +58,7 @@ export const ExitGame = ({ open, setOpen, gameID }: any) => {
           }}
           onClick={() => {
             closeGame(gameID).then(() => {
-              closeGame(gameID).then(() => {
-                navigate(`/`);
-              });
+              navigate(`/`);
             });
           }}
         >
