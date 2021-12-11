@@ -19,9 +19,9 @@ const extractPlayerNames = (boardTable: ResponseChessboard) => {
     col.forEach((row) => {
       if (row && !playerNames.includes(row.playerName)) {
         playerNames.push(row.playerName);
-        row.playerName = playerNames.length.toString();
+        row.playerName = (playerNames.length - 1).toString();
       } else if (row && playerNames.includes(row.playerName)) {
-        row.playerName = (playerNames.indexOf(row.playerName) + 1).toString();
+        row.playerName = playerNames.indexOf(row.playerName).toString();
       }
     });
   });
