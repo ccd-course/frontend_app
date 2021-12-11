@@ -7,8 +7,8 @@ import {
 import { SELECTION_TYPE, Square } from "./Square";
 import { Piece } from "./Piece";
 import { Subscription } from "rxjs";
-import { MouseEvent } from "./MouseEvents";
 import { executeMove, getPossibleMoves } from "../../requests/Game";
+import { MouseEvent } from "../../storage/game_data";
 
 export class Board {
   private boardCirclesRadious: number[]; // Needed to generate the squares (Rows)
@@ -61,15 +61,12 @@ export class Board {
         if (this.squares[squareIndex].getPiece()) {
           this.sourceSquare = this.squares[squareIndex];
           this.sourceSquare.signSquare(SELECTION_TYPE.SQUARE_WITH_PIECE);
-
-          console.log(this.gameID);
-          console.log(this.sourceSquare.getIndex());
           this.possibleMovments = (
             await getPossibleMoves(this.gameID, this.sourceSquare.getIndex())
-          ).map((possible: any) => {
-            console.log(possible);
-            return this.squares[`{${possible[0] + 1},${possible[1] + 1}}`];
-          });
+          ).map(
+            (possible: any) =>
+              this.squares[`{${possible[0] + 1},${possible[1] + 1}}`]
+          );
 
           this.possibleMovments.forEach((square) => {
             square.signSquare(SELECTION_TYPE.POSSIBLE_MOVE);
@@ -80,14 +77,29 @@ export class Board {
         this.destinationSquare = this.squares[squareIndex];
         // If the destination square has a piece, you can move
         if (
+          !this.possibleMovments
+            .map((square) => {
+              return square.getIndex().toString();
+            })
+            .includes(this.destinationSquare.getIndex().toString())
+        ) {
+          this.sourceSquare.neglectSquare();
+          this.sourceSquare = undefined;
+          this.destinationSquare = undefined;
+          this.possibleMovments.forEach((square) => {
+            square.neglectSquare();
+          });
+          return;
+        }
+        if (
           this.sourceSquare?.getIndex()[0] ==
             this.destinationSquare?.getIndex()[0] &&
           this.sourceSquare?.getIndex()[1] ==
             this.destinationSquare?.getIndex()[1]
         ) {
           // If the destination square has a piece, you can move
-          this.sourceSquare.neglectSquare();
-          this.destinationSquare.neglectSquare();
+          this.sourceSquare?.neglectSquare();
+          this.destinationSquare?.neglectSquare();
 
           this.sourceSquare = undefined;
           this.destinationSquare = undefined;
