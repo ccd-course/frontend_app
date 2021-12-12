@@ -11,7 +11,8 @@ on:
 jobs:
   generate_docs:
     name: Generate documentation
-    runs-on: Node:latest
+    matrix:
+      node-version: [latest]
 
     steps:
       - run: npm install
