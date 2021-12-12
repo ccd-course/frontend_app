@@ -21,10 +21,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - npm install
-        env:
-          CI: true
       - npm run docs
-          CI: true
 
   build-and-push-docker-image:
     name: Build Docker image and push to repositories
