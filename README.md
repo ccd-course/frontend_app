@@ -32,12 +32,16 @@ Your app is ready to be deployed!
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
 ### Complete stack
-
 ```
 git clone git@github.com:ccd-course/frontend_app.git
 cd frontend_app
 docker-compose up
 ```
+Local instances can be found here:
+- Frontend [http://localhost:3000/](http://localhost:3000/)
+  (The first loading of the page takes a long time, because it needs to fetch dependencies and is not optimized due to `npm start`)
+- Backend [http://localhost:8080/](http://localhost:8080/)
+- JavaDocs for Backend [http://localhost:80/](http://localhost:80/)
 
 ## Auto deployment
 
