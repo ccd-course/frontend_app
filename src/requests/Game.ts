@@ -17,9 +17,12 @@ export const createNewGameRequest = async (players: string[]) => {
         }),
       })
       .then((data) => {
+        console.log(data.data);
         return data.data;
       });
   } catch (e) {
+    console.log("EROR");
+
     console.log(e);
   }
 };
