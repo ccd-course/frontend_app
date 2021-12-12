@@ -11,6 +11,7 @@ on:
 jobs:
   generate_docs:
     name: Generate documentation
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: [8.x, 10.x, 12.x, 13.x]
