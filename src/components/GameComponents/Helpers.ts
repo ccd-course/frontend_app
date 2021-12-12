@@ -20,8 +20,8 @@ export const generateSquaresCoordinatesForOneCircle = (
   const step = 360 / numCols;
   let angle = 0;
   for (let i = 0; i < numCols; i++) {
-    let x = radious * p5.cos(angle);
-    let y = radious * p5.sin(angle);
+    const x = radious * p5.cos(angle);
+    const y = radious * p5.sin(angle);
     coordinates.push({ x: x, y: y, angle: angle });
     angle += step;
   }

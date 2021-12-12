@@ -167,8 +167,8 @@ export class CircleBoard extends Board {
     const step = 360 / this.numCols;
     let angle = 0;
     for (let i = 0; i < this.numCols; i++) {
-      let x = radious * this.p5.cos(angle);
-      let y = radious * this.p5.sin(angle);
+      const x = radious * this.p5.cos(angle);
+      const y = radious * this.p5.sin(angle);
       coordinates.push({ x: x, y: y, angle: angle });
       angle += step;
     }
