@@ -108,7 +108,8 @@ export class CircleBoard extends Board {
               y: boardSquaresCoordinates[i + 1][j].y,
             },
           },
-          [i + 1, boardSquaresCoordinates[i].length - (j + 1) + 1]
+          [i + 1, boardSquaresCoordinates[i].length - (j + 1) + 1],
+          this.numCols
         );
         squares[
           `{${i + 1},${boardSquaresCoordinates[i].length - (j + 1) + 1}}`
@@ -142,7 +143,8 @@ export class CircleBoard extends Board {
             ].y,
           },
         },
-        [i + 1, 1]
+        [i + 1, 1],
+        this.numCols
       );
       squares[`{${i + 1},1}`] = square;
     }

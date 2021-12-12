@@ -7,9 +7,11 @@ import { MouseEvent } from "../../storage/game_data";
 import { map } from "rxjs";
 
 /**
- * Represent the chess-board
- * handles the layout logic of the game
- *
+ * Abstract class
+ * Includes all the logic needed to create and handle a chessgame
+ * Two methods should be implmented in order a board
+ *  - generateSquares
+ *  - mapMouseCoordinateToSquareID
  */
 export abstract class Board {
   public readonly p5: p5Types; // Number of rows on the baord
@@ -37,11 +39,20 @@ export abstract class Board {
     this.currentPlayer = currentPlayer;
   }
 
+  abstract generateSquares(): { [key: string]: Square };
+  abstract mapMouseCoordinateToSquareID(
+    coordinate: Coordinate
+  ): Coordinate | null;
+
+  /**
+   * Init the squares, pieces and subscribe to the mouse events
+   * @returns this
+   */
   public init() {
     // Generate the square
     this.squares = this.generateSquares();
     // Add the pieces to the board
-    this.initBoardPieces();
+    this.setBoardPieces();
     // Subscribe to the MouseEvent
     MouseEvent.pipe(
       map((coordiante: Coordinate) =>
@@ -50,11 +61,6 @@ export abstract class Board {
     ).subscribe(this.handleMouseEvent);
     return this;
   }
-
-  abstract generateSquares(): { [key: string]: Square };
-  abstract mapMouseCoordinateToSquareID(
-    coordinate: Coordinate
-  ): Coordinate | null;
 
   /**
    * Handle the mouse click events
@@ -162,7 +168,7 @@ export abstract class Board {
   /**
    * Read the given board, init the pieces and store them in the right square
    */
-  private initBoardPieces() {
+  private setBoardPieces() {
     this.boardTable.forEach((col, colIndex) => {
       col.forEach((row, rowIndex) => {
         if (row) {

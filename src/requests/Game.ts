@@ -1,7 +1,7 @@
 import axios from "axios";
 import { ResponseChessboard } from "../types";
 
-const baseURL = process.env.REACT_APP_API_BASE_URL;
+const baseURL = "https://backend.chess.valentinriess.com"; //process.env.REACT_APP_API_BASE_URL;
 
 /**
  * Send a request to create a new game
@@ -21,8 +21,6 @@ export const createNewGameRequest = async (players: string[]) => {
         return data.data;
       });
   } catch (e) {
-    console.log("EROR");
-
     console.log(e);
   }
 };
