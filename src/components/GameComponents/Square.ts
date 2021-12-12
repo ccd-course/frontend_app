@@ -19,7 +19,8 @@ export class Square {
   constructor(
     private p5: p5Types, // Reference to the p5 library
     private coordinates: SquareCoordinates, // Coordinates of the points of the square
-    private squareIndex: [number, number] // Represent the index of the square on the board [Col,Row]
+    private squareIndex: [number, number], // Represent the index of the square on the board [Col,Row]
+    private colsNum: number
   ) {
     // Generate the color of the square
     this.sqaureColor = this.generateSquareColor();
@@ -93,14 +94,17 @@ export class Square {
    *  */
   private get contentDimension() {
     return (
+      this.p5.width / this.colsNum - this.p5.abs(this.squareIndex[0] - 4) * 4
+    );
+    /* return (
       this.p5.dist(
         this.coordinates.p3.x,
         this.coordinates.p3.y,
         this.coordinates.p4.x,
         this.coordinates.p4.y
       ) -
-      16 * this.squareIndex[0]
-    );
+      (this.colsNum / 0.7) * this.squareIndex[0] * 0.9
+    ); */
   }
 
   /**

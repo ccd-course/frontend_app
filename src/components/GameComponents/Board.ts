@@ -1,71 +1,77 @@
 import p5Types from "p5";
 import { BoardTable, Coordinate } from "../../types";
-import { getSquareIdOfMouseClick } from "./Helpers";
 import { SELECTION_TYPE, Square } from "./Square";
 import { Piece } from "./Piece";
 import { executeMove, getPossibleMoves } from "../../requests/Game";
 import { MouseEvent } from "../../storage/game_data";
-import {
-  calculateBoardCirclesRadious,
-  generateSquareCoordinates,
-} from "./Generators";
+import { map } from "rxjs";
 
 /**
- * Represent the chess-board
- * handles the layout logic of the game
- *
+ * Abstract class
+ * Includes all the logic needed to create and handle a chessgame
+ * Two methods should be implmented in order a board
+ *  - generateSquares
+ *  - mapMouseCoordinateToSquareID
  */
-export class Board {
-  private boardCirclesRadious: number[]; // Needed to generate the squares (Rows)
-  private readonly numRows: number; // Number of rows on the baord
-  private readonly numCols: number; // Number of cols on the board
+export abstract class Board {
+  public readonly p5: p5Types; // Number of rows on the baord
+  private readonly gameID: string; // The gameID stored in Backend
+  private readonly players: string[]; // CurrentPlayer, who is allowed to move the pieces
+  public readonly boardTable: BoardTable;
+
+  private squares: { [key: string]: Square } = {}; // Reference to the board squares
+  private currentPlayer: string; // CurrentPlayer, who is allowed to move the pieces
   private sourceSquare: Square | undefined;
   private destinationSquare: Square | undefined;
   private possibleMovments: Square[] = [];
-  private squares: { [key: string]: Square } = {}; // Reference to the board squares
 
   constructor(
-    private readonly p5Reference: p5Types,
-    private boardTable: BoardTable,
-    private gameID: string,
-    private currentPlayer: string,
-    private players: string[]
+    p5: p5Types,
+    boardTable: BoardTable,
+    gameID: string,
+    players: string[],
+    currentPlayer: string
   ) {
-    // Init the number of rows and cols
-    this.numRows = this.boardTable[0].length;
-    this.numCols = this.boardTable.length;
+    this.p5 = p5;
+    this.boardTable = boardTable;
+    this.gameID = gameID;
+    this.players = players;
+    this.currentPlayer = currentPlayer;
+  }
 
-    // Calculate the radiouses of the circles on the board
-    this.boardCirclesRadious = calculateBoardCirclesRadious(
-      p5Reference,
-      this.numRows
-    );
-    // Generate the squares and calculate their coordinates
-    this.squares = generateSquareCoordinates(
-      this.p5Reference,
-      this.boardCirclesRadious,
-      this.numCols
-    );
+  abstract generateSquares(): { [key: string]: Square };
+  abstract mapMouseCoordinateToSquareID(
+    coordinate: Coordinate
+  ): Coordinate | null;
+
+  /**
+   * Init the squares, pieces and subscribe to the mouse events
+   * @returns this
+   */
+  public init() {
+    // Generate the square
+    this.squares = this.generateSquares();
     // Add the pieces to the board
-    this.initBoardPieces();
-
+    this.setBoardPieces();
     // Subscribe to the MouseEvent
-    MouseEvent.subscribe(this.handleMouseEvent);
+    MouseEvent.pipe(
+      map((coordiante: Coordinate) =>
+        this.mapMouseCoordinateToSquareID(coordiante)
+      )
+    ).subscribe(this.handleMouseEvent);
+    return this;
   }
 
   /**
    * Handle the mouse click events
    * @param coordinate Coordinate of the mouse click
    */
-  public handleMouseEvent = async (coordinate: Coordinate): Promise<void> => {
-    const squareID = getSquareIdOfMouseClick(
-      this.p5Reference,
-      coordinate.x,
-      coordinate.y,
-      this.numCols,
-      this.boardCirclesRadious
-    );
-    // If the user click inside the board
+  public handleMouseEvent = async (
+    squareID: {
+      x: number;
+      y: number;
+    } | null
+  ): Promise<void> => {
     if (squareID) {
       const { x, y } = squareID;
       const squareIndex = `{${x},${y}}`;
@@ -151,26 +157,26 @@ export class Board {
   }
 
   /**
-   * Read the given board, init the pieces and store them in the right square
-   */
-  private initBoardPieces() {
-    this.boardTable.forEach((col, colIndex) => {
-      col.forEach((row, rowIndex) => {
-        if (row) {
-          this.squares[`{${rowIndex + 1},${colIndex + 1}}`].setPiece(
-            new Piece(this.p5Reference, row.pieceID, row.playerName)
-          );
-        }
-      });
-    });
-  }
-
-  /**
    * Render the sqaures on the screen
    */
   private drawSquares() {
     Object.keys(this.squares).forEach((key) => {
       this.squares[key].drawSquare();
+    });
+  }
+
+  /**
+   * Read the given board, init the pieces and store them in the right square
+   */
+  private setBoardPieces() {
+    this.boardTable.forEach((col, colIndex) => {
+      col.forEach((row, rowIndex) => {
+        if (row) {
+          this.squares[`{${rowIndex + 1},${colIndex + 1}}`].setPiece(
+            new Piece(this.p5, row.pieceID, row.playerName)
+          );
+        }
+      });
     });
   }
 }
