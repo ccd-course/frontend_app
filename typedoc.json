@@ -1,0 +1,7 @@
+{
+  "entryPoints": [
+    "./src/components/GameComponents/index.ts",
+    "src/requests/Game.ts"
+  ],
+  "out": "docs"
+}
