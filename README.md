@@ -48,4 +48,4 @@ The develop branches of [frontend](https://github.com/ccd-course/frontend_app) a
 
 ### Documentaitons
 
--[Documentation](https://ccd-course.github.io/frontend_app/index.html)
+- [Documentation](https://ccd-course.github.io/frontend_app/index.html)
