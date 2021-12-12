@@ -58,6 +58,7 @@ export class Piece {
       this.playerID +
       "/" +
       this.pieceId +
+      this.playerID +
       ".svg").default;
     // Encapsulte the call back inside a Promise
     return new Promise((resolve, reject) => {
