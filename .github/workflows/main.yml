@@ -9,6 +9,14 @@ on:
       - develop
 
 jobs:
+  generate_docs:
+    name: Generate documentation
+    runs-on: Node:latest
+
+    steps:
+      - run: npm install
+      - run: npm run docs
+
   build-and-push-docker-image:
     name: Build Docker image and push to repositories
     runs-on: ubuntu-latest
@@ -26,7 +34,7 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      
+
       - name: Build image and push to Docker Hub and GitHub Container Registry
         uses: docker/build-push-action@v2
         id: docker_build
@@ -36,7 +44,7 @@ jobs:
           context: .
           # Note: tags has to be all lower-case
           tags: |
-            valentinriess/chess_frontend:${{ github.ref_name }} 
+            valentinriess/chess_frontend:${{ github.ref_name }}
           # build on feature branches, push only on develop branch
           push: true
 
@@ -53,14 +61,14 @@ jobs:
           context: .
           # Note: tags has to be all lower-case
           tags: |
-            valentinriess/chess_frontend:latest 
+            valentinriess/chess_frontend:latest
           # build on feature branches, push only on develop branch
           push: ${{ github.ref == 'refs/heads/main' }}
 
       - name: Image digest
         if: ${{ steps.docker_build_main.outcome == 'success' }}
         run: echo ${{ steps.docker_build_main.outputs.digest }}
-  
+
   deploy:
     needs: build-and-push-docker-image
     runs-on: ubuntu-latest
