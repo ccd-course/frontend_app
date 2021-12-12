@@ -24,7 +24,7 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs/apidocs
+          publish_dir: ./docs
 
   build-and-push-docker-image:
     name: Build Docker image and push to repositories
