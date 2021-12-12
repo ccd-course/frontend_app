@@ -1,0 +1,29 @@
+version: '3.7'
+
+services:
+  chess-frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile-local
+    container_name: chess-frontend
+    ports:
+      - "3000:3000"
+
+  chess-backend:
+    container_name: chess-backend
+    image: valentinriess/chess_backend:develop
+    expose:
+      - "8080"
+    ports:
+      - "8080:8080"
+
+  chess-backend-docs:
+    container_name: chess-backend-docs
+    image: valentinriess/chess_backend_docs:develop
+    expose:
+      - "80"
+    ports:
+      - "80:80"
+
+# Run it local with `docker-compose up`.
+# The game will be avaliable on http://localhost:3000/

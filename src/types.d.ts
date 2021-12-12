@@ -1,4 +1,36 @@
+import { Square } from "./components/GameComponents/Square";
+
 export interface NewGameDialogProps {
   open: boolean;
   setOpen: (isOpen: boolean) => void;
 }
+
+export interface NewGameDialogProps {
+  open: boolean;
+  setOpen: (isOpen: boolean) => void;
+}
+export interface BoardPiece {
+  playerName: string;
+  pieceID: string;
+}
+
+export type BoardTable = (BoardPiece | null)[][];
+
+export type Coordinate = { x: number; y: number };
+
+export interface SquareCoordinates {
+  p1: Coordinate;
+  p2: Coordinate;
+  p3: Coordinate;
+  p4: Coordinate;
+}
+
+export interface IBoard {
+  numRows: number;
+  numCos: number;
+  sourceSquare: Square | undefined;
+  destinationSquare: Square | undefined;
+}
+
+export type ResponseChessboard = { pieceID: string; playerName: string }[][];
+export type PossibleMoves = [number, number][];

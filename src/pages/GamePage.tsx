@@ -1,15 +1,56 @@
-import React from "react";
+import React, { useEffect, useLayoutEffect, useRef } from "react";
+import { useLocation } from "react-router-dom";
 import Card from "@mui/material/Card";
-import CircularProgress from "@mui/material/CircularProgress";
 import { COLOR } from "../styles/Colors";
 import { PageStyle } from "../styles/DefaultPagesStyle";
+import { Game } from "../components/Game";
+import { Chat } from "../components/Chat";
+import { Button, Divider, Stack } from "@mui/material";
+import CircularProgress from "@mui/material/CircularProgress";
+import { Item } from "../components/Item";
+import { BoardTable } from "../types";
+import { getChessboard } from "../requests/Game";
+import { ExitGame } from "../components/Dialogs/ExitGameDialog";
+import { extractPlayerNames } from "../components/GameComponents/Helpers";
 
 export const GamePage = () => {
+  const location = useLocation();
   const [isLoading, setIsLoading] = React.useState(true);
-  // SEND REQUEST TO GET THE BOARD DATA
-  setTimeout(() => {
-    setIsLoading(false);
-  }, 0);
+  const [chatWidth, setChatWidth] = React.useState(window.innerWidth / 2);
+  const [chatArea, toggleChatArea] = React.useState(false);
+  const [boardTable, setBoardTable] = React.useState<BoardTable>([]);
+  const [gameID, setGameID] = React.useState<string>();
+  const [_canvas, setCanvas] = React.useState(false);
+  const [open, setOpen] = React.useState(false);
+  const [players, setPlayers] = React.useState<string[]>([]);
+  const [conatinerRef, setMyRef] = React.useState<any>(null);
+
+  const _ref = useRef<any>();
+
+  useLayoutEffect(() => {
+    const { current } = _ref;
+    if (current) {
+      setCanvas(true);
+      setMyRef(_ref);
+    }
+  });
+
+  useEffect(() => {
+    const gameID = location.pathname.split("/")[2];
+    setGameID(gameID);
+    getChessboard(gameID).then((board) => {
+      const _players = extractPlayerNames(board);
+      setPlayers(_players);
+      setBoardTable(board);
+      setIsLoading(false);
+    });
+  }, []);
+
+  const handleResize = () => {
+    setChatWidth(window.innerWidth / 2);
+  };
+
+  window.addEventListener("resize", handleResize);
 
   const customRendering = () => {
     if (isLoading) {
@@ -44,46 +85,108 @@ export const GamePage = () => {
               alignItems: "center",
               width: "100%",
               height: "100%",
+              flexWrap: "wrap",
             }}
           >
             <div
               style={{
-                flex: 1,
-                height: "100%",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-around",
-                alignContent: "center",
-                alignItems: "center",
-              }}
-            ></div>
-            <div
-              style={{
-                flex: 1,
+                flex: 3,
                 height: "100%",
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
               }}
+              ref={_ref}
             >
-              NEW GAME
+              {boardTable && gameID && _ref.current ? (
+                <Game
+                  boardTable={boardTable}
+                  gameID={gameID}
+                  containerRef={conatinerRef}
+                  currentPlayer="0"
+                  players={players}
+                ></Game>
+              ) : (
+                ""
+              )}
             </div>
             <div
               style={{
-                flex: 1,
                 height: "100%",
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "space-around",
                 alignContent: "center",
                 alignItems: "center",
+                flex: 1,
               }}
-            ></div>
+            >
+              <Stack
+                direction="column"
+                justifyContent="ceter"
+                alignContent="center"
+                divider={
+                  <Divider
+                    orientation="horizontal"
+                    flexItem
+                    style={{ backgroundColor: "white" }}
+                  />
+                }
+                spacing={2}
+                style={{
+                  height: "100%",
+                  width: "90%",
+                  margin: 10,
+                }}
+              >
+                <Item style={{ height: "10%", padding: 0 }}>
+                  <Button
+                    variant="contained"
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                    }}
+                    onClick={() => {
+                      setOpen(true);
+                    }}
+                  >
+                    Exit the game
+                  </Button>
+                </Item>
+                <Item style={{ height: "10%" }}>Player's turn</Item>
+                <Item style={{ height: "70%" }}>Moves</Item>
+                <Item style={{ height: "10%", padding: 0 }}>
+                  <Button
+                    variant="contained"
+                    disabled
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                    }}
+                    onClick={() => {
+                      toggleChatArea(true);
+                    }}
+                  >
+                    Chat
+                  </Button>
+                </Item>
+              </Stack>
+            </div>
           </div>
+          <Chat
+            width={chatWidth}
+            isOpen={chatArea}
+            toggleOpen={toggleChatArea}
+          ></Chat>
         </Card>
       );
     }
   };
 
-  return <div style={PageStyle}>{customRendering()}</div>;
+  return (
+    <div style={PageStyle}>
+      {customRendering()}
+      <ExitGame open={open} setOpen={setOpen} gameID={gameID}></ExitGame>
+    </div>
+  );
 };

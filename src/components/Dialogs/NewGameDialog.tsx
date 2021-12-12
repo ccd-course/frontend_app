@@ -12,14 +12,11 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import Button from "@mui/material/Button";
-import { PrimaryButtonStyle } from "../styles/ButtonStyles";
-import { COLOR } from "../styles/Colors";
+import { PrimaryButtonStyle } from "../../styles/ButtonStyles";
+import { COLOR } from "../../styles/Colors";
 import { useNavigate } from "react-router-dom";
-
-interface NewGameDialogProps {
-  open: boolean;
-  setOpen: (isOpen: boolean) => void;
-}
+import { createNewGameRequest } from "../../requests/Game";
+import { NewGameDialogProps } from "../../types";
 
 export const NewGameDialog = ({ open, setOpen }: NewGameDialogProps) => {
   const navigate = useNavigate();
@@ -29,13 +26,15 @@ export const NewGameDialog = ({ open, setOpen }: NewGameDialogProps) => {
   const [playersName, setPlayersName] = useState<string[]>([]);
   const [disabled, setDisabled] = useState(true);
 
-  // SEND THE REQUEST TO INIT THE GAME
-  // REDIRECT THE USER TO THE GAME_ID
-  const initNewGame = () => {
-    // SEND REQUEST AND INIT THE GAME
-    const newGameId = "2932";
-    navigate(`/Game/${newGameId}`);
+  const initNewGame = async () => {
+    try {
+      const newGameId = await createNewGameRequest(playersName);
+      navigate(`/Game/${newGameId}`);
+    } catch (e) {
+      console.log("ERROR WHILE CREATING A NEW GAME");
+    }
   };
+
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
@@ -96,6 +95,11 @@ export const NewGameDialog = ({ open, setOpen }: NewGameDialogProps) => {
                   value="3"
                   control={<Radio style={{ color: COLOR.FONT_SECONDARY }} />}
                   label="3 Players"
+                />
+                <FormControlLabel
+                  value="4"
+                  control={<Radio style={{ color: COLOR.FONT_SECONDARY }} />}
+                  label="4 Players"
                 />
               </RadioGroup>
               <div style={{ width: "100%" }}>{renderRequiredInput()}</div>
