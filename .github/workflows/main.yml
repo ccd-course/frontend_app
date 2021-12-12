@@ -11,12 +11,20 @@ on:
 jobs:
   generate_docs:
     name: Generate documentation
-    matrix:
-      node-version: [latest]
+    strategy:
+      matrix:
+        node-version: [8.x, 10.x, 12.x, 13.x]
 
     steps:
-      - run: npm install
-      - run: npm run docs
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - npm install
+        env:
+          CI: true
+      - npm run docs
+          CI: true
 
   build-and-push-docker-image:
     name: Build Docker image and push to repositories
