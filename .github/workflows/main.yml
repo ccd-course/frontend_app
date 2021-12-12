@@ -20,8 +20,8 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - npm install
-      - npm run docs
+      - run: npm install
+      - run: npm run docs
 
   build-and-push-docker-image:
     name: Build Docker image and push to repositories
