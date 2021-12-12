@@ -1,5 +1,3 @@
-# This is a basic workflow to help you get started with Actions
-
 name: Build and Publish
 
 on:
@@ -12,19 +10,31 @@ jobs:
   generate_docs:
     name: Generate documentation
     runs-on: ubuntu-latest
-
+    
     steps:
       - name: Use Node.js
         uses: actions/checkout@v2
         with:
           node-version: 16
-      - run: npm install
-      - run: npm run docs
-      - name: Deploy
+          
+      - name: Install dependencies
+        run: npm install
+
+      - name: Generate docs
+        run: npm run docs
+
+      - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v3
+        if: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./docs
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: Docs
+          path: ./docs
 
   build-and-push-docker-image:
     name: Build Docker image and push to repositories
