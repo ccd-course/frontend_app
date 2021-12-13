@@ -19,7 +19,7 @@ export const Header = () => {
       >
         <Toolbar>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            <div style={{ display: "inline" }}>JChess</div>
+            <div style={{ display: "inline" }}>Dirty Chess</div>
           </Typography>
           <Stack spacing={2} direction="row">
             <Button variant="contained" style={PrimaryButtonStyle}>
