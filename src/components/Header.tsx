@@ -7,7 +7,7 @@ import Button from "@mui/material/Button";
 import { COLOR } from "../styles/Colors";
 import { PrimaryButtonStyle } from "../styles/ButtonStyles";
 
-export const Header = ({ setAuth }: any) => {
+export const Header = ({ setAuth, auth }: any) => {
   return (
     <div>
       <AppBar
@@ -22,24 +22,30 @@ export const Header = ({ setAuth }: any) => {
             <div style={{ display: "inline" }}>JChess</div>
           </Typography>
           <Stack spacing={2} direction="row">
-            <Button
-              variant="contained"
-              style={PrimaryButtonStyle}
-              onClick={() => {
-                setAuth({ open: true, type: "Signup" });
-              }}
-            >
-              Signup
-            </Button>
-            <Button
-              variant="contained"
-              style={PrimaryButtonStyle}
-              onClick={() => {
-                setAuth({ open: true, type: "Login" });
-              }}
-            >
-              Login
-            </Button>
+            {auth.email ? (
+              <div>{auth.email}</div>
+            ) : (
+              <Stack spacing={2} direction="row">
+                <Button
+                  variant="contained"
+                  style={PrimaryButtonStyle}
+                  onClick={() => {
+                    setAuth({ open: true, type: "Signup" });
+                  }}
+                >
+                  Signup
+                </Button>
+                <Button
+                  variant="contained"
+                  style={PrimaryButtonStyle}
+                  onClick={() => {
+                    setAuth({ open: true, type: "Login" });
+                  }}
+                >
+                  Login
+                </Button>
+              </Stack>
+            )}
           </Stack>
         </Toolbar>
       </AppBar>

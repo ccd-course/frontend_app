@@ -16,7 +16,7 @@ import {
   createUserWithEmailAndPassword,
 } from "firebase/auth";
 
-export const AuthenticationDialog = ({ open, setOpen, type }: any) => {
+export const AuthenticationDialog = ({ open, setOpen, type, setAuth }: any) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -52,6 +52,7 @@ export const AuthenticationDialog = ({ open, setOpen, type }: any) => {
             }}
             onChange={(e) => {
               setEmail(e.target.value);
+              setError("");
             }}
             InputLabelProps={{
               style: {
@@ -77,6 +78,7 @@ export const AuthenticationDialog = ({ open, setOpen, type }: any) => {
             label="Password"
             onChange={(e) => {
               setPassword(e.target.value);
+              setError("");
             }}
             style={{
               margin: "10px",
@@ -103,6 +105,7 @@ export const AuthenticationDialog = ({ open, setOpen, type }: any) => {
             }}
             variant="standard"
           />
+          <div style={{ marginTop: 30, color: "red" }}>{error}</div>
         </DialogContentText>
       </DialogContent>
       <DialogActions>
@@ -120,8 +123,16 @@ export const AuthenticationDialog = ({ open, setOpen, type }: any) => {
             const authentication = getAuth(configAuth);
             if (type === "Signup") {
               createUserWithEmailAndPassword(authentication, email, password)
-                .then((res) => {
-                  console.log(res);
+                .then((res: any) => {
+                  sessionStorage.setItem(
+                    "Auth Token",
+                    res._tokenResponse.refreshToken
+                  );
+                  setOpen({
+                    open: false,
+                    type: "",
+                    email: res._tokenResponse.email,
+                  });
                 })
                 .catch((e) => {
                   if (
@@ -133,11 +144,25 @@ export const AuthenticationDialog = ({ open, setOpen, type }: any) => {
                   }
                 });
             } else {
-              signInWithEmailAndPassword(authentication, email, password).then(
-                (res) => {
-                  console.log(res);
-                }
-              );
+              signInWithEmailAndPassword(authentication, email, password)
+                .then((res: any) => {
+                  sessionStorage.setItem(
+                    "Auth Token",
+                    res._tokenResponse.refreshToken
+                  );
+                  setOpen({
+                    open: false,
+                    type: "",
+                    email: res._tokenResponse.email,
+                  });
+                })
+                .catch((e) => {
+                  if (e.message === "Firebase: Error (auth/user-not-found).") {
+                    setError("Email dose not user.");
+                  } else {
+                    setError("Incorrect password");
+                  }
+                });
             }
           }}
         >
