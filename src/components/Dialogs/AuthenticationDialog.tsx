@@ -9,8 +9,17 @@ import { COLOR } from "../../styles/Colors";
 import { DialogContentText, InputAdornment, TextField } from "@mui/material";
 import Lock from "@mui/icons-material/Lock";
 import AccountCircle from "@mui/icons-material/AccountCircle";
+import { configAuth } from "../../configs/authentication.config";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+} from "firebase/auth";
 
 export const AuthenticationDialog = ({ open, setOpen, type }: any) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
   const handleClose = () => {
     setOpen(false);
   };
@@ -33,13 +42,16 @@ export const AuthenticationDialog = ({ open, setOpen, type }: any) => {
           style={{ color: "#fff", textAlign: "center" }}
         >
           <TextField
-            id="input-with-icon-textfield"
+            id="email"
             label="Email"
             style={{
               margin: "10px",
               width: "400px",
               backgroundColor: "#444",
               color: COLOR.FONT_SECONDARY,
+            }}
+            onChange={(e) => {
+              setEmail(e.target.value);
             }}
             InputLabelProps={{
               style: {
@@ -61,8 +73,11 @@ export const AuthenticationDialog = ({ open, setOpen, type }: any) => {
             variant="standard"
           />
           <TextField
-            id="input-with-icon-textfield"
+            id="password"
             label="Password"
+            onChange={(e) => {
+              setPassword(e.target.value);
+            }}
             style={{
               margin: "10px",
               width: "400px",
@@ -98,7 +113,28 @@ export const AuthenticationDialog = ({ open, setOpen, type }: any) => {
         >
           Close
         </Button>
-        <Button variant="contained" style={PrimaryButtonStyle}>
+        <Button
+          variant="contained"
+          style={PrimaryButtonStyle}
+          onClick={() => {
+            const authentication = getAuth(configAuth);
+            if (type === "Signup") {
+              createUserWithEmailAndPassword(
+                authentication,
+                email,
+                password
+              ).then((res) => {
+                console.log(res);
+              });
+            } else {
+              signInWithEmailAndPassword(authentication, email, password).then(
+                (res) => {
+                  console.log(res);
+                }
+              );
+            }
+          }}
+        >
           {type}
         </Button>
       </DialogActions>

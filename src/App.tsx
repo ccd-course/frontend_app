@@ -4,9 +4,8 @@ import { Header } from "./components/Header";
 import { LandingPage } from "./pages/LandingPage";
 import { PageNotFound } from "./pages/PageNotFound";
 import { GamePage } from "./pages/GamePage";
-
-import "./App.css";
 import { AuthenticationDialog } from "./components/Dialogs/AuthenticationDialog";
+import "./App.css";
 
 export const App = () => {
   const [auth, setAuth] = useState<{ open: boolean; type: string }>({
