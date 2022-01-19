@@ -19,7 +19,7 @@ import {
 export const AuthenticationDialog = ({ open, setOpen, type }: any) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const [error, setError] = useState("");
   const handleClose = () => {
     setOpen(false);
   };
@@ -119,13 +119,19 @@ export const AuthenticationDialog = ({ open, setOpen, type }: any) => {
           onClick={() => {
             const authentication = getAuth(configAuth);
             if (type === "Signup") {
-              createUserWithEmailAndPassword(
-                authentication,
-                email,
-                password
-              ).then((res) => {
-                console.log(res);
-              });
+              createUserWithEmailAndPassword(authentication, email, password)
+                .then((res) => {
+                  console.log(res);
+                })
+                .catch((e) => {
+                  if (
+                    e.message === "Firebase: Error (auth/email-already-in-use)."
+                  ) {
+                    setError("Email is already used.");
+                  } else {
+                    setError("Try again later.");
+                  }
+                });
             } else {
               signInWithEmailAndPassword(authentication, email, password).then(
                 (res) => {
