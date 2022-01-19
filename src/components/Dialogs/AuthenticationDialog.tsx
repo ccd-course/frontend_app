@@ -6,9 +6,9 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Button from "@mui/material/Button";
 import { PrimaryButtonStyle } from "../../styles/ButtonStyles";
 import { COLOR } from "../../styles/Colors";
-import { useNavigate } from "react-router-dom";
-import { closeGame } from "../../requests/Game";
-import { DialogContentText } from "@mui/material";
+import { DialogContentText, InputAdornment, TextField } from "@mui/material";
+import Lock from "@mui/icons-material/Lock";
+import AccountCircle from "@mui/icons-material/AccountCircle";
 
 export const AuthenticationDialog = ({ open, setOpen, type }: any) => {
   const handleClose = () => {
@@ -30,9 +30,64 @@ export const AuthenticationDialog = ({ open, setOpen, type }: any) => {
       <DialogContent>
         <DialogContentText
           id="alert-dialog-description"
-          style={{ color: "#fff" }}
+          style={{ color: "#fff", textAlign: "center" }}
         >
-          Are you sure you want to leave the game?
+          <TextField
+            id="input-with-icon-textfield"
+            label="Email"
+            style={{
+              margin: "10px",
+              width: "400px",
+              backgroundColor: "#444",
+              color: COLOR.FONT_SECONDARY,
+            }}
+            InputLabelProps={{
+              style: {
+                color: COLOR.FONT_SECONDARY,
+                paddingLeft: 10,
+              },
+            }}
+            InputProps={{
+              style: {
+                color: COLOR.FONT_SECONDARY,
+                paddingLeft: 10,
+              },
+              startAdornment: (
+                <InputAdornment position="start">
+                  <AccountCircle style={{ color: "#fff" }} />
+                </InputAdornment>
+              ),
+            }}
+            variant="standard"
+          />
+          <TextField
+            id="input-with-icon-textfield"
+            label="Password"
+            style={{
+              margin: "10px",
+              width: "400px",
+              backgroundColor: "#444",
+              color: COLOR.FONT_SECONDARY,
+            }}
+            InputLabelProps={{
+              style: {
+                color: COLOR.FONT_SECONDARY,
+                paddingLeft: 10,
+              },
+            }}
+            InputProps={{
+              style: {
+                color: COLOR.FONT_SECONDARY,
+                paddingLeft: 10,
+              },
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Lock style={{ color: "#fff" }} />
+                </InputAdornment>
+              ),
+            }}
+            variant="standard"
+          />
         </DialogContentText>
       </DialogContent>
       <DialogActions>
@@ -42,6 +97,9 @@ export const AuthenticationDialog = ({ open, setOpen, type }: any) => {
           onClick={handleClose}
         >
           Close
+        </Button>
+        <Button variant="contained" style={PrimaryButtonStyle}>
+          {type}
         </Button>
       </DialogActions>
     </Dialog>
