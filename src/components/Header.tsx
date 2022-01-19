@@ -23,7 +23,23 @@ export const Header = ({ setAuth, auth }: any) => {
           </Typography>
           <Stack spacing={2} direction="row">
             {auth.email ? (
-              <div>{auth.email}</div>
+              <div>
+                {auth.email}
+                <Button
+                  variant="contained"
+                  style={{ ...PrimaryButtonStyle, marginLeft: 10 }}
+                  onClick={() => {
+                    sessionStorage.removeItem("Auth Token");
+                    setAuth({
+                      email: null,
+                      open: false,
+                      type: "",
+                    });
+                  }}
+                >
+                  Logout
+                </Button>
+              </div>
             ) : (
               <Stack spacing={2} direction="row">
                 <Button
