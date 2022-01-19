@@ -9,7 +9,7 @@ import { COLOR } from "../../styles/Colors";
 import { DialogContentText, InputAdornment, TextField } from "@mui/material";
 import Lock from "@mui/icons-material/Lock";
 import AccountCircle from "@mui/icons-material/AccountCircle";
-import { configAuth } from "../../configs/authentication.config";
+import { firebaseConfigApp } from "../../configs/firebase.config";
 import {
   getAuth,
   signInWithEmailAndPassword,
@@ -120,7 +120,7 @@ export const AuthenticationDialog = ({ open, setOpen, type, setAuth }: any) => {
           variant="contained"
           style={PrimaryButtonStyle}
           onClick={() => {
-            const authentication = getAuth(configAuth);
+            const authentication = getAuth(firebaseConfigApp);
             if (type === "Signup") {
               createUserWithEmailAndPassword(authentication, email, password)
                 .then((res: any) => {
