@@ -1,6 +1,6 @@
 import { Button } from "@mui/material";
 import React from "react";
-import { NewGameDialog } from "../components/Dialogs/NewGameDialog";
+import { NewGameDialog } from "../components/Dialogs/NewGame/NewGame";
 import { StartGameButton } from "../styles/ButtonStyles";
 import { PageStyle } from "../styles/DefaultPagesStyle";
 
