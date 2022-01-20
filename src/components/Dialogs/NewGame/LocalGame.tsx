@@ -38,7 +38,7 @@ export const LocalGame = ({
     setOpen(false);
   };
 
-  const renderRequiredInput = (networkGame: boolean) => {
+  const renderRequiredInput = () => {
     const inputs = [];
     for (let i = 0; i < numberOfPlayers; i++) {
       const playerNameLabel = `Player ${i + 1}`;
@@ -128,7 +128,7 @@ export const LocalGame = ({
               />
             </RadioGroup>
             <div style={{ width: "100%" }}>
-              <div style={{ width: "100%" }}>{renderRequiredInput(true)}</div>
+              <div style={{ width: "100%" }}>{renderRequiredInput()}</div>
             </div>
           </FormControl>
         </div>

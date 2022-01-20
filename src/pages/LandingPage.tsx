@@ -7,8 +7,9 @@ import { PageStyle } from "../styles/DefaultPagesStyle";
 /**
  * Landing Page
  */
-export const LandingPage = () => {
+export const LandingPage = ({ auth, setAuth }: any) => {
   const [open, setOpen] = React.useState(false);
+  console.log(open);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -32,7 +33,12 @@ export const LandingPage = () => {
           New Game
         </Button>
       </div>
-      <NewGameDialog open={open} setOpen={setOpen}></NewGameDialog>
+      <NewGameDialog
+        open={open}
+        auth={auth}
+        setAuth={setAuth}
+        setOpen={setOpen}
+      ></NewGameDialog>
     </div>
   );
 };

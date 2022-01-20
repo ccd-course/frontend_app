@@ -2,13 +2,11 @@ import React from "react";
 import Dialog from "@mui/material/Dialog";
 import Tab from "@mui/material/Tab";
 import { COLOR } from "../../../styles/Colors";
-import { useNavigate } from "react-router-dom";
 import { LocalGame } from "./LocalGame";
 import { OnlineGame } from "./OnlineGame";
 import { DialogTitle, Tabs } from "@mui/material";
-import { NewGameDialogProps } from "../../../types";
 
-export const NewGameDialog = ({ open, setOpen }: NewGameDialogProps) => {
+export const NewGameDialog = ({ open, setOpen, auth, setAuth }: any) => {
   const [tabValue, setValue] = React.useState(0);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -19,7 +17,14 @@ export const NewGameDialog = ({ open, setOpen }: NewGameDialogProps) => {
     if (tabValue === 0) {
       return <LocalGame setOpen={setOpen}></LocalGame>;
     } else {
-      return <OnlineGame></OnlineGame>;
+      return (
+        <OnlineGame
+          auth={auth}
+          setAuth={setAuth}
+          setOpen={setOpen}
+          setValue={setValue}
+        ></OnlineGame>
+      );
     }
   };
 

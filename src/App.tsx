@@ -17,13 +17,10 @@ import {
 } from "firebase/firestore";
 
 import "./App.css";
+import { AuthenticationState } from "./types";
 
 export const App = () => {
-  const [auth, setAuth] = useState<{
-    open: boolean;
-    type: string;
-    email: any;
-  }>({
+  const [auth, setAuth] = useState<AuthenticationState>({
     open: false,
     type: "",
     email: null,
@@ -48,7 +45,10 @@ export const App = () => {
         type={auth.type}
       ></AuthenticationDialog>
       <Routes>
-        <Route path="/" element={<LandingPage />} />
+        <Route
+          path="/"
+          element={<LandingPage auth={auth} setAuth={setAuth} />}
+        />
         <Route path="/Game/:id" element={<GamePage />} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
