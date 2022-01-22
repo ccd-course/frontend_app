@@ -3,9 +3,16 @@ import { BoardTable, Coordinate } from "../../types";
 import { SELECTION_TYPE, Square } from "./Square";
 import { Piece } from "./Piece";
 import { executeMove, getPossibleMoves } from "../../requests/Game";
-import { MouseEvent } from "../../storage/game_data";
+import { MouseEvent } from "../../events/game_data";
 import { map } from "rxjs";
-
+import { db } from "../../events/db";
+import {
+  onSnapshot,
+  doc,
+  DocumentSnapshot,
+  DocumentData,
+} from "firebase/firestore";
+import { EventDialogMessage } from "../../events/EventDialog";
 /**
  * Abstract class
  * Includes all the logic needed to create and handle a chessgame
@@ -37,6 +44,18 @@ export abstract class Board {
     this.gameID = gameID;
     this.players = players;
     this.currentPlayer = currentPlayer;
+
+    onSnapshot(doc(db, "games", gameID), this.handleOnlineChanges);
+  }
+
+  private handleOnlineChanges(changes: DocumentSnapshot<DocumentData>) {
+    const newData = (<any>changes.data()).events;
+    const event = newData[newData.length - 1];
+    if (event === "WAITING") {
+      EventDialogMessage.next("WAITING FOR USERS");
+    } else {
+      EventDialogMessage.next(null);
+    }
   }
 
   abstract generateSquares(): { [key: string]: Square };
