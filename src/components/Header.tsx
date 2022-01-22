@@ -7,7 +7,7 @@ import Button from "@mui/material/Button";
 import { COLOR } from "../styles/Colors";
 import { PrimaryButtonStyle } from "../styles/ButtonStyles";
 
-export const Header = () => {
+export const Header = ({ setAuth, auth }: any) => {
   return (
     <div>
       <AppBar
@@ -22,12 +22,46 @@ export const Header = () => {
             <div style={{ display: "inline" }}>JChess</div>
           </Typography>
           <Stack spacing={2} direction="row">
-            <Button variant="contained" style={PrimaryButtonStyle}>
-              Signup
-            </Button>
-            <Button variant="contained" style={PrimaryButtonStyle}>
-              Login
-            </Button>
+            {auth.email ? (
+              <div>
+                {auth.email}
+                <Button
+                  variant="contained"
+                  style={{ ...PrimaryButtonStyle, marginLeft: 10 }}
+                  onClick={() => {
+                    sessionStorage.removeItem("Auth Token");
+                    setAuth({
+                      email: null,
+                      open: false,
+                      type: "",
+                    });
+                  }}
+                >
+                  Logout
+                </Button>
+              </div>
+            ) : (
+              <Stack spacing={2} direction="row">
+                <Button
+                  variant="contained"
+                  style={PrimaryButtonStyle}
+                  onClick={() => {
+                    setAuth({ open: true, type: "Signup" });
+                  }}
+                >
+                  Signup
+                </Button>
+                <Button
+                  variant="contained"
+                  style={PrimaryButtonStyle}
+                  onClick={() => {
+                    setAuth({ open: true, type: "Login" });
+                  }}
+                >
+                  Login
+                </Button>
+              </Stack>
+            )}
           </Stack>
         </Toolbar>
       </AppBar>

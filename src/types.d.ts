@@ -8,6 +8,7 @@ export interface NewGameDialogProps {
 export interface NewGameDialogProps {
   open: boolean;
   setOpen: (isOpen: boolean) => void;
+  auth: AuthenticationState;
 }
 export interface BoardPiece {
   playerName: string;
@@ -34,3 +35,9 @@ export interface IBoard {
 
 export type ResponseChessboard = { pieceID: string; playerName: string }[][];
 export type PossibleMoves = [number, number][];
+
+export interface AuthenticationState {
+  open: boolean;
+  type: string;
+  email: any;
+}
