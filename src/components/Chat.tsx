@@ -23,6 +23,7 @@ export const Chat = (props: ChatProps) => {
   const [messages, setMessages] = React.useState([]);
   const [message, setMessage] = React.useState("");
 
+  console.log(props);
   React.useEffect(() => {
     onSnapshot(doc(db, "games", props.gameID), (changes: any) => {
       const newData = changes.data();

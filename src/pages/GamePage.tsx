@@ -15,7 +15,7 @@ import { extractPlayerNames } from "../components/GameComponents/Helpers";
 import { getInitialBoard } from "../events/db";
 import { EventDialog } from "../components/Dialogs/EventDialog";
 
-export const GamePage = () => {
+export const GamePage = (auth: any) => {
   const location = useLocation();
   const [isLoading, setIsLoading] = React.useState(true);
   const [chatWidth, setChatWidth] = React.useState(window.innerWidth / 2);
@@ -193,7 +193,7 @@ export const GamePage = () => {
               isOpen={chatArea}
               toggleOpen={toggleChatArea}
               gameID={gameID}
-              email={"majd.adawieh@gmail.com"}
+              email={auth.auth.email}
             ></Chat>
           ) : (
             ""
