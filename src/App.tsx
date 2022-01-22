@@ -28,7 +28,7 @@ export const App = () => {
           path="/"
           element={<LandingPage auth={auth} setAuth={setAuth} />}
         />
-        <Route path="/Game/:id" element={<GamePage />} />
+        <Route path="/Game/:id" element={<GamePage auth={auth} />} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </div>
