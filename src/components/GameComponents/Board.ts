@@ -51,6 +51,7 @@ export abstract class Board {
   private handleOnlineChanges(changes: DocumentSnapshot<DocumentData>) {
     const newData = (<any>changes.data()).events;
     const event = newData[newData.length - 1];
+    console.log(event);
     if (event === "WAITING") {
       EventDialogMessage.next("WAITING FOR USERS");
     } else {

@@ -21,12 +21,14 @@ export const GamePage = () => {
   const [chatWidth, setChatWidth] = React.useState(window.innerWidth / 2);
   const [chatArea, toggleChatArea] = React.useState(false);
   const [boardTable, setBoardTable] = React.useState<BoardTable>([]);
-  const [gameID, setGameID] = React.useState<string>();
+  const [gameID, setGameID] = React.useState<string>("");
   const [_canvas, setCanvas] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const [players, setPlayers] = React.useState<string[]>([]);
   const [conatinerRef, setMyRef] = React.useState<any>(null);
   const [gameType, setGameType] = React.useState<any>(null);
+  const [chat, setChat] = React.useState<any>(true);
+
   const _ref = useRef<any>();
 
   useLayoutEffect(() => {
@@ -44,6 +46,7 @@ export const GamePage = () => {
     if (!x) {
       getInitialBoard(gameID).then((board) => {
         setBoardTable(board);
+        setChat(false);
         setIsLoading(false);
       });
     }
@@ -169,7 +172,7 @@ export const GamePage = () => {
                 <Item style={{ height: "10%", padding: 0 }}>
                   <Button
                     variant="contained"
-                    disabled
+                    disabled={chat}
                     style={{
                       width: "100%",
                       height: "100%",
@@ -184,11 +187,17 @@ export const GamePage = () => {
               </Stack>
             </div>
           </div>
-          <Chat
-            width={chatWidth}
-            isOpen={chatArea}
-            toggleOpen={toggleChatArea}
-          ></Chat>
+          {gameID ? (
+            <Chat
+              width={chatWidth}
+              isOpen={chatArea}
+              toggleOpen={toggleChatArea}
+              gameID={gameID}
+              email={"majd.adawieh@gmail.com"}
+            ></Chat>
+          ) : (
+            ""
+          )}
           <EventDialog></EventDialog>
         </Card>
       );
