@@ -80,24 +80,24 @@ export const Chat = (props: ChatProps) => {
           onOpen={toggleDrawer(true)}
         >
           {list()}
-          <div style={{ width: props.width, backgroundColor: "red" }}>
+          <div style={{ width: props.width }}>
             <TextField
-              label={"message"}
               style={{
                 margin: "10px",
-                backgroundColor: "#444",
+                backgroundColor: "#fff",
                 display: "inline",
                 color: COLOR.FONT_SECONDARY,
-                width: 400,
               }}
               InputLabelProps={{
                 style: {
-                  color: COLOR.FONT_SECONDARY,
+                  color: "#333",
                 },
               }}
               InputProps={{
                 style: {
-                  color: COLOR.FONT_SECONDARY,
+                  width: props.width * 0.8,
+                  height: 50,
+                  color: "#333",
                 },
                 autoComplete: "off",
               }}
