@@ -1,5 +1,5 @@
 import p5Types from "p5";
-import { MouseEvent } from "../../storage/game_data";
+import { MouseEvent } from "../../events/game_data";
 
 /**
  * @class MouseEvnts

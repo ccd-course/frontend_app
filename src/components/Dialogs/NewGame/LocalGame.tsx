@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { createNewGameRequest } from "../../../requests/Game";
+import { createNewGameRequest, GameType } from "../../../requests/Game";
 import { PrimaryButtonStyle } from "../../../styles/ButtonStyles";
 import { COLOR } from "../../../styles/Colors";
 
@@ -28,7 +28,7 @@ export const LocalGame = ({
 
   const initNewGame = async () => {
     try {
-      const newGameId = await createNewGameRequest(playersName);
+      const newGameId = await createNewGameRequest(playersName, GameType.LOCAL);
       navigate(`/Game/${newGameId}`);
     } catch (e) {
       console.log("ERROR WHILE CREATING A NEW GAME");

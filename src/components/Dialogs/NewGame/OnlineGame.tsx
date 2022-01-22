@@ -9,11 +9,15 @@ import {
   DialogActions,
   TextField,
 } from "@mui/material";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { createNewGameRequest, GameType } from "../../../requests/Game";
 import { PrimaryButtonStyle } from "../../../styles/ButtonStyles";
 import { COLOR } from "../../../styles/Colors";
 
 export const OnlineGame = ({ auth, setAuth, setOpen, setValue }: any) => {
+  const navigate = useNavigate();
+
   useEffect(() => {
     if (!auth.email) {
       setValue(0);
@@ -21,8 +25,28 @@ export const OnlineGame = ({ auth, setAuth, setOpen, setValue }: any) => {
       setAuth({ open: true, type: "Login", email: null });
     }
   }, []);
+  const [numberOfPlayers, setNumberOfPlayers] = useState(0);
+
+  const handleNumberOfPlayerChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setNumberOfPlayers(Number((event.target as HTMLInputElement).value));
+  };
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const handleCreateNewGame = async () => {
+    try {
+      const newGameId = await createNewGameRequest(
+        auth.email,
+        GameType.ONLINE,
+        numberOfPlayers
+      );
+      navigate(`/Game/${newGameId}`);
+    } catch (e) {
+      console.log("ERROR WHILE CREATING A NEW GAME");
+    }
   };
   return (
     <>
@@ -38,7 +62,11 @@ export const OnlineGame = ({ auth, setAuth, setOpen, setValue }: any) => {
             >
               Create a new Game
             </FormLabel>
-            <RadioGroup row aria-label="gender">
+            <RadioGroup
+              row
+              aria-label="gender"
+              onChange={handleNumberOfPlayerChange}
+            >
               <FormControlLabel
                 value="2"
                 control={<Radio style={{ color: COLOR.FONT_SECONDARY }} />}
@@ -55,7 +83,11 @@ export const OnlineGame = ({ auth, setAuth, setOpen, setValue }: any) => {
                 label="4 Players"
               />
             </RadioGroup>
-            <Button variant="contained" style={PrimaryButtonStyle}>
+            <Button
+              variant="contained"
+              style={PrimaryButtonStyle}
+              onClick={handleCreateNewGame}
+            >
               Create a network game
             </Button>
             <FormLabel

@@ -12,6 +12,8 @@ import { BoardTable } from "../types";
 import { getChessboard } from "../requests/Game";
 import { ExitGame } from "../components/Dialogs/ExitGameDialog";
 import { extractPlayerNames } from "../components/GameComponents/Helpers";
+import { getInitialBoard } from "../events/db";
+import { EventDialog } from "../components/Dialogs/EventDialog";
 
 export const GamePage = () => {
   const location = useLocation();
@@ -24,7 +26,7 @@ export const GamePage = () => {
   const [open, setOpen] = React.useState(false);
   const [players, setPlayers] = React.useState<string[]>([]);
   const [conatinerRef, setMyRef] = React.useState<any>(null);
-
+  const [gameType, setGameType] = React.useState<any>(null);
   const _ref = useRef<any>();
 
   useLayoutEffect(() => {
@@ -38,12 +40,21 @@ export const GamePage = () => {
   useEffect(() => {
     const gameID = location.pathname.split("/")[2];
     setGameID(gameID);
-    getChessboard(gameID).then((board) => {
-      const _players = extractPlayerNames(board);
-      setPlayers(_players);
-      setBoardTable(board);
-      setIsLoading(false);
-    });
+    const x = false;
+    if (!x) {
+      getInitialBoard(gameID).then((board) => {
+        setBoardTable(board);
+        setIsLoading(false);
+      });
+    }
+    if (x) {
+      getChessboard(gameID).then((board) => {
+        const _players = extractPlayerNames(board);
+        setPlayers(_players);
+        setBoardTable(board);
+        setIsLoading(false);
+      });
+    }
   }, []);
 
   const handleResize = () => {
@@ -178,6 +189,7 @@ export const GamePage = () => {
             isOpen={chatArea}
             toggleOpen={toggleChatArea}
           ></Chat>
+          <EventDialog></EventDialog>
         </Card>
       );
     }

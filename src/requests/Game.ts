@@ -3,19 +3,32 @@ import { ResponseChessboard } from "../types";
 
 const baseURL = process.env.REACT_APP_API_BASE_URL;
 
+export enum GameType {
+  LOCAL = "LOCAL",
+  ONLINE = "ONLINE",
+}
 /**
  * Send a request to create a new game
  * @param players
  * @returns gameID
  */
-export const createNewGameRequest = async (players: string[]) => {
+export const createNewGameRequest = async (
+  players: string[] | string,
+  gameType: GameType,
+  numberOfPlayers?: number
+) => {
+  const newGame: any = { type: gameType };
+  if (gameType === GameType.LOCAL) {
+    newGame.players = (<string[]>players).map((player) => {
+      return { playerName: player };
+    });
+  } else {
+    newGame.player = <string>players;
+    newGame.numberOfPlayer = numberOfPlayers;
+  }
   try {
     return await axios
-      .post(baseURL + "/createNewGame", {
-        players: players.map((player) => {
-          return { playerName: player };
-        }),
-      })
+      .post(baseURL + "/createNewGame", newGame)
       .then((data) => {
         console.log(data.data);
         return data.data;
