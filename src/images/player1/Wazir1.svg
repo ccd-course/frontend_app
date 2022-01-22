@@ -1,0 +1,19 @@
+<svg width="45" height="45" xmlns="http://www.w3.org/2000/svg" version="1.1">
+
+ <g>
+  <title>Layer 1</title>
+  <g transform="rotate(180 22.5 24)" id="svg_1" stroke-miterlimit="4" stroke-linejoin="round" stroke-linecap="round" stroke-width="1.5" stroke="#000000" fill-rule="evenodd" fill="#000000">
+   <path id="svg_2" d="m9,39l27,0l0,-3l-27,0l0,3z"/>
+   <path id="svg_3" d="m12.5,32l1.5,-2.5l17,0l1.5,2.5l-20,0z"/>
+   <path id="svg_4" d="m12,36l0,-4l21,0l0,4l-21,0z"/>
+   <path id="svg_5" d="m14,29.5l0,-13l17,0l0,13l-17,0z"/>
+   <path id="svg_6" d="m14,16.5l-3,-2.5l23,0l-3,2.5l-17,0z"/>
+   <path id="svg_7" d="m11,14l0,-5l4,0l0,2l5,0l0,-2l5,0l0,2l5,0l0,-2l4,0l0,5l-23,0z"/>
+   <path id="svg_8" stroke="#ffffff" fill="none" d="m12,35.5l21,0l0,0"/>
+   <path id="svg_9" stroke="#ffffff" fill="none" d="m13,31.5l19,0"/>
+   <path id="svg_10" stroke="#ffffff" fill="none" d="m14,29.5l17,0"/>
+   <path id="svg_11" stroke="#ffffff" fill="none" d="m14,16.5l17,0"/>
+   <path id="svg_12" stroke="#ffffff" fill="none" d="m11,14l23,0"/>
+  </g>
+ </g>
+</svg>
