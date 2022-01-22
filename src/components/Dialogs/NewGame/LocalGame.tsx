@@ -20,12 +20,13 @@ export const LocalGame = ({
 }: {
   setOpen: (open: boolean) => void;
 }) => {
+  const navigate = useNavigate();
+
   const [numberOfPlayers, setNumberOfPlayers] = useState(0);
   const [playersName, setPlayersName] = useState<string[]>([]);
   const [canStart, setCanStart] = useState(false);
 
   const initNewGame = async () => {
-    const navigate = useNavigate();
     try {
       const newGameId = await createNewGameRequest(playersName);
       navigate(`/Game/${newGameId}`);

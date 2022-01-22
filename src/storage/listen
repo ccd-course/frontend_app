@@ -1,0 +1,18 @@
+const db = getFirestore(firebaseConfigApp);
+
+  onSnapshot(
+    doc(db, "users", "adawieh"),
+    { includeMetadataChanges: true },
+    (doc) => {
+      console.log(doc.data({}));
+    }
+  );import { firebaseConfigApp } from "./configs/firebase.config";
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  getDoc,
+  query,
+  doc,
+  onSnapshot,
+} from "firebase/firestore";

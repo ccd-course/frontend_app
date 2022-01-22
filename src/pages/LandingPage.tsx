@@ -9,7 +9,6 @@ import { PageStyle } from "../styles/DefaultPagesStyle";
  */
 export const LandingPage = ({ auth, setAuth }: any) => {
   const [open, setOpen] = React.useState(false);
-  console.log(open);
 
   const handleClickOpen = () => {
     setOpen(true);

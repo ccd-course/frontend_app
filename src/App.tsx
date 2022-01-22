@@ -5,17 +5,6 @@ import { LandingPage } from "./pages/LandingPage";
 import { PageNotFound } from "./pages/PageNotFound";
 import { GamePage } from "./pages/GamePage";
 import { AuthenticationDialog } from "./components/Dialogs/AuthenticationDialog";
-import { firebaseConfigApp } from "./configs/firebase.config";
-import {
-  getFirestore,
-  collection,
-  addDoc,
-  getDoc,
-  query,
-  doc,
-  onSnapshot,
-} from "firebase/firestore";
-
 import "./App.css";
 import { AuthenticationState } from "./types";
 
@@ -25,16 +14,6 @@ export const App = () => {
     type: "",
     email: null,
   });
-
-  const db = getFirestore(firebaseConfigApp);
-
-  onSnapshot(
-    doc(db, "users", "adawieh"),
-    { includeMetadataChanges: true },
-    (doc) => {
-      console.log(doc.data({}));
-    }
-  );
 
   return (
     <div className="App" style={{ display: "flex", flexDirection: "column" }}>
