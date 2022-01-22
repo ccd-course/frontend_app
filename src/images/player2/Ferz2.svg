@@ -1,0 +1,17 @@
+<svg width="45" height="45" xmlns="http://www.w3.org/2000/svg" xmlns:undefined="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:undefined="http://www.inkscape.org/namespaces/inkscape" version="1.0">
+
+ <metadata id="metadata3133">image/svg+xml</metadata>
+ <g>
+  <title>Layer 1</title>
+  <g transform="rotate(180 22.5 22.1571)" display=" inline" id="layer1"  >
+   <path stroke-miterlimit="4" stroke-linejoin="round" stroke-width="1.5" stroke="black" fill-rule="evenodd" fill="#00c800"  id="path4582" d="m9,36c3.38526,-0.97233 10.11474,0.43082 13.5,-2c3.38526,2.43082 10.11474,1.02767 13.5,2c0,0 1.6459,0.54151 3,2c-0.67705,0.97233 -1.6459,0.98616 -3,0.5c-3.38526,-0.97233 -10.11474,0.45849 -13.5,-1c-3.38526,1.45849 -10.11474,0.02767 -13.5,1c-1.3541,0.48616 -2.32295,0.47233 -3,-0.5c1.3541,-1.94466 3,-2 3,-2z"/>
+   <path stroke-miterlimit="4" stroke-linejoin="round" stroke-width="1.5" stroke="black" fill-rule="evenodd" fill="#00c800"  id="path4584" d="m15,32c2.5,2.5 12.5,2.5 15,0c0.5,-1.5 0,-2 0,-2c0,-2.5 -2.5,-4 -2.5,-4c5.5,-1.5 6,-11.5 -5,-15.5c-11,4 -10.5,14 -5,15.5c0,0 -2.5,1.5 -2.5,4c0,0 -0.5,0.5 0,2z"/>
+   <path stroke-miterlimit="4" stroke-linejoin="round" stroke-width="1.5" stroke="black" fill="#00c800" d="m25,8a2.5,2.5 0 1 1 -5,0a2.5,2.5 0 1 1 5,0z"     id="path4586" />
+   <path stroke-dasharray=" none" stroke-miterlimit="4" stroke-linejoin=" miter" stroke-linecap=" butt" stroke-width="1.5" stroke=" black" fill-rule=" evenodd" fill-opacity="0.75" fill=" none"  id="path4588" d="m17.5,26l10,0"/>
+   <path stroke-dasharray=" none" stroke-miterlimit="4" stroke-linejoin=" miter" stroke-linecap=" butt" stroke-width="1.5" stroke=" black" fill-rule=" evenodd" fill-opacity="0.75" fill=" none"  id="path4590" d="m15,30l15,0"/>
+   <path stroke-dasharray=" none" stroke-miterlimit="4" stroke-linejoin=" miter" stroke-linecap=" round" stroke-width="1.5" stroke=" black" fill-rule=" evenodd" fill-opacity="0.75" fill=" none" id="path4592" d="m22.5,15.5l0,5"/>
+   <path stroke-dasharray=" none" stroke-miterlimit="4" stroke-linejoin=" miter" stroke-linecap=" round" stroke-width="1.5" stroke=" black" fill-rule=" evenodd" fill-opacity="0.75" fill=" none" id="path4594" d="m20,18l5,0"/>
+  </g>
+  <g display=" inline"  id="layer2" />
+ </g>
+</svg>
