@@ -55,71 +55,88 @@ export const AuthenticationDialog = ({
           id="alert-dialog-description"
           style={{ color: "#fff", textAlign: "center" }}
         >
-          <TextField
-            id="email"
-            label="Email"
-            style={{
-              margin: "10px",
-              width: "400px",
-              backgroundColor: "#444",
-              color: COLOR.FONT_SECONDARY,
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
             }}
-            onChange={(e) => {
-              setInputEmail(e.target.value);
-              setError("");
-            }}
-            InputLabelProps={{
-              style: {
+          >
+            <TextField
+              id="email"
+              label="Email"
+              style={{
+                margin: "10px",
+                width: "400px",
+                backgroundColor: "#444",
                 color: COLOR.FONT_SECONDARY,
-                paddingLeft: 10,
-              },
+              }}
+              onChange={(e) => {
+                setInputEmail(e.target.value);
+                setError("");
+              }}
+              InputLabelProps={{
+                style: {
+                  color: COLOR.FONT_SECONDARY,
+                  paddingLeft: 10,
+                },
+              }}
+              InputProps={{
+                autoComplete: "off",
+
+                style: {
+                  color: COLOR.FONT_SECONDARY,
+                  paddingLeft: 10,
+                },
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <AccountCircle style={{ color: "#fff" }} />
+                  </InputAdornment>
+                ),
+              }}
+              variant="standard"
+            />
+          </form>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
             }}
-            InputProps={{
-              style: {
+          >
+            <TextField
+              id="password"
+              label="Password"
+              type={"password"}
+              autoComplete={"new-password"}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                setError("");
+              }}
+              style={{
+                margin: "10px",
+                width: "400px",
+                backgroundColor: "#444",
                 color: COLOR.FONT_SECONDARY,
-                paddingLeft: 10,
-              },
-              startAdornment: (
-                <InputAdornment position="start">
-                  <AccountCircle style={{ color: "#fff" }} />
-                </InputAdornment>
-              ),
-            }}
-            variant="standard"
-          />
-          <TextField
-            id="password"
-            label="Password"
-            type={"password"}
-            onChange={(e) => {
-              setPassword(e.target.value);
-              setError("");
-            }}
-            style={{
-              margin: "10px",
-              width: "400px",
-              backgroundColor: "#444",
-              color: COLOR.FONT_SECONDARY,
-            }}
-            InputLabelProps={{
-              style: {
-                color: COLOR.FONT_SECONDARY,
-                paddingLeft: 10,
-              },
-            }}
-            InputProps={{
-              style: {
-                color: COLOR.FONT_SECONDARY,
-                paddingLeft: 10,
-              },
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Lock style={{ color: "#fff" }} />
-                </InputAdornment>
-              ),
-            }}
-            variant="standard"
-          />
+              }}
+              InputLabelProps={{
+                style: {
+                  color: COLOR.FONT_SECONDARY,
+                  paddingLeft: 10,
+                },
+              }}
+              InputProps={{
+                autoComplete: "new-password",
+                style: {
+                  color: COLOR.FONT_SECONDARY,
+                  paddingLeft: 10,
+                },
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Lock style={{ color: "#fff" }} />
+                  </InputAdornment>
+                ),
+              }}
+              variant="standard"
+            />
+          </form>
+
           <div style={{ marginTop: 30, color: "red" }}>{error}</div>
         </DialogContentText>
       </DialogContent>

@@ -48,7 +48,7 @@ export const NewGameDialog = ({
         style: {
           backgroundColor: COLOR.BACKGROUND_SECONDARY,
           padding: "22px",
-          height: "60%",
+          height: "80%",
         },
       }}
     >
