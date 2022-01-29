@@ -8,14 +8,14 @@ import ListItemText from "@mui/material/ListItemText";
 import { Button, TextField } from "@mui/material";
 import { COLOR } from "../styles/Colors";
 import { PrimaryButtonStyle } from "../styles/ButtonStyles";
-import { doc, onSnapshot, addDoc, updateDoc } from "firebase/firestore";
+import { doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { db } from "../events/db";
 
 interface ChatProps {
   width: number;
   isOpen: boolean;
   gameID: string;
-  email: string;
+  email: string | null;
   toggleOpen: (open: boolean) => void;
 }
 
@@ -23,11 +23,9 @@ export const Chat = (props: ChatProps) => {
   const [messages, setMessages] = React.useState([]);
   const [message, setMessage] = React.useState("");
 
-  console.log(props);
   React.useEffect(() => {
-    onSnapshot(doc(db, "games", props.gameID), (changes: any) => {
+    onSnapshot(doc(db, "game", props.gameID), (changes: any) => {
       const newData = changes.data();
-      console.log(newData);
       setMessages(newData.messages);
     });
   }, []);

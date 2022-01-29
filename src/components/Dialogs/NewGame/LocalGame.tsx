@@ -1,17 +1,17 @@
 import {
-  Radio,
+  Button,
+  DialogActions,
   DialogContent,
   FormControl,
   FormControlLabel,
   FormLabel,
+  Radio,
   RadioGroup,
   TextField,
-  Button,
-  DialogActions,
 } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { createNewGameRequest, GameType } from "../../../requests/Game";
+import { createNewGame, GameType } from "../../../requests/Game";
 import { PrimaryButtonStyle } from "../../../styles/ButtonStyles";
 import { COLOR } from "../../../styles/Colors";
 
@@ -28,7 +28,13 @@ export const LocalGame = ({
 
   const initNewGame = async () => {
     try {
-      const newGameId = await createNewGameRequest(playersName, GameType.LOCAL);
+      const newGameId = await createNewGame(
+        GameType.LOCAL,
+        numberOfPlayers,
+        playersName.map((player) => {
+          return { playerName: player };
+        })
+      ).then((res) => res.data);
       navigate(`/Game/${newGameId}`);
     } catch (e) {
       console.log("ERROR WHILE CREATING A NEW GAME");

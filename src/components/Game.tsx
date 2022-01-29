@@ -8,8 +8,6 @@ import { BoardTable } from "../types";
 interface GameProps {
   boardTable: BoardTable;
   gameID: string;
-  currentPlayer: string;
-  players: string[];
   containerRef: any;
 }
 
@@ -32,15 +30,7 @@ export const Game = (props: GameProps) => {
     p5.angleMode(p5.DEGREES);
     p5.background(p5.color(57, 62, 70));
     p5.translate(p5.width / 2, p5.height / 2);
-    new CircleBoard(
-      p5,
-      props.boardTable,
-      props.gameID,
-      props.players,
-      props.currentPlayer
-    )
-      .init()
-      .drawBoard();
+    new CircleBoard(p5, props.boardTable, props.gameID).init().drawBoard();
   };
 
   const setup = (p5: p5Types, canvasParentRef: Element) => {

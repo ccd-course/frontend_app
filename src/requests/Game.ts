@@ -3,7 +3,7 @@ import axios from "axios";
 const baseURL = process.env.REACT_APP_API_BASE_URL;
 
 export enum GameType {
-  LOCAL = "LOCAL",
+  LOCAL = "OFFLINE",
   ONLINE = "ONLINE",
 }
 
@@ -12,30 +12,16 @@ export enum GameType {
  * @param players
  * @returns gameID
  */
-export const createNewGameRequest = async (
-  players: string[] | string,
-  gameType: GameType,
-  numberOfPlayers?: number
+export const createNewGame = async (
+  type: GameType,
+  numberOfPlayers: number,
+  players: { playerName: string }[]
 ) => {
-  const newGame: any = { type: gameType };
-  if (gameType === GameType.LOCAL) {
-    newGame.players = (<string[]>players).map((player) => {
-      return { playerName: player };
-    });
-  } else {
-    newGame.player = <string>players;
-    newGame.numberOfPlayer = numberOfPlayers;
-  }
-  try {
-    return await axios
-      .post(baseURL + "/createNewGame", newGame)
-      .then((data) => {
-        console.log(data.data);
-        return data.data;
-      });
-  } catch (e) {
-    console.log(e);
-  }
+  return axios.post(baseURL + "/createNewGame", {
+    type,
+    numberOfPlayers,
+    players,
+  });
 };
 
 /**

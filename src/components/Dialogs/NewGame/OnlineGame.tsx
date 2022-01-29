@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { createNewGameRequest, GameType } from "../../../requests/Game";
+import { createNewGame, GameType } from "../../../requests/Game";
 import { PrimaryButtonStyle } from "../../../styles/ButtonStyles";
 import { COLOR } from "../../../styles/Colors";
 import { setAuthDialogFunc } from "../../../types";
@@ -50,12 +50,15 @@ export const OnlineGame = ({
 
   const handleCreateNewGame = async () => {
     try {
-      const newGameId = await createNewGameRequest(
-        "email",
-        GameType.ONLINE,
-        numberOfPlayers
-      );
-      navigate(`/Game/${newGameId}`);
+      if (email) {
+        const newGameId = await createNewGame(
+          GameType.ONLINE,
+          numberOfPlayers,
+          [{ playerName: email }]
+        ).then((res) => res.data);
+
+        navigate(`/Game/${newGameId}`);
+      }
     } catch (e) {
       console.log("ERROR WHILE CREATING A NEW GAME");
     }

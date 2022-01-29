@@ -1,18 +1,13 @@
 import p5Types from "p5";
-import { BoardTable, Coordinate } from "../../types";
-import { SELECTION_TYPE, Square } from "./Square";
-import { Piece } from "./Piece";
-import { executeMove, getPossibleMoves } from "../../requests/Game";
-import { MouseEvent } from "../../events/game_data";
-import { map } from "rxjs";
-import { db } from "../../events/db";
-import {
-  onSnapshot,
-  doc,
-  DocumentSnapshot,
-  DocumentData,
-} from "firebase/firestore";
-import { EventDialogMessage } from "../../events/EventDialog";
+import {BoardTable, Coordinate} from "../../types";
+import {SELECTION_TYPE, Square} from "./Square";
+import {Piece} from "./Piece";
+import {executeMove, getPossibleMoves} from "../../requests/Game";
+import {MouseEvent} from "../../events/game_data";
+import {map} from "rxjs";
+import {db} from "../../events/db";
+import {doc, DocumentData, DocumentSnapshot, onSnapshot,} from "firebase/firestore";
+
 /**
  * Abstract class
  * Includes all the logic needed to create and handle a chessgame
@@ -22,44 +17,27 @@ import { EventDialogMessage } from "../../events/EventDialog";
  */
 export abstract class Board {
   public readonly p5: p5Types; // Number of rows on the baord
+  public readonly boardTable: BoardTable;
   private readonly gameID: string; // The gameID stored in Backend
   private readonly players: string[]; // CurrentPlayer, who is allowed to move the pieces
-  public readonly boardTable: BoardTable;
-
   private squares: { [key: string]: Square } = {}; // Reference to the board squares
-  private currentPlayer: string; // CurrentPlayer, who is allowed to move the pieces
+  private currentPlayer = ""; // CurrentPlayer, who is allowed to move the pieces
   private sourceSquare: Square | undefined;
   private destinationSquare: Square | undefined;
-  private possibleMovments: Square[] = [];
+  private possibleMovements: Square[] = [];
 
-  constructor(
-    p5: p5Types,
-    boardTable: BoardTable,
-    gameID: string,
-    players: string[],
-    currentPlayer: string
-  ) {
+  constructor(p5: p5Types, boardTable: BoardTable, gameID: string) {
     this.p5 = p5;
     this.boardTable = boardTable;
     this.gameID = gameID;
-    this.players = players;
-    this.currentPlayer = currentPlayer;
+    this.players = [];
+    this.currentPlayer = "";
 
-    onSnapshot(doc(db, "games", gameID), this.handleOnlineChanges);
-  }
-
-  private handleOnlineChanges(changes: DocumentSnapshot<DocumentData>) {
-    const newData = (<any>changes.data()).events;
-    const event = newData[newData.length - 1];
-    console.log(event);
-    if (event === "WAITING") {
-      EventDialogMessage.next("WAITING FOR USERS");
-    } else {
-      EventDialogMessage.next(null);
-    }
+    onSnapshot(doc(db, "game", gameID), this.handleOnlineChanges);
   }
 
   abstract generateSquares(): { [key: string]: Square };
+
   abstract mapMouseCoordinateToSquareID(
     coordinate: Coordinate
   ): Coordinate | null;
@@ -104,7 +82,7 @@ export abstract class Board {
 
         if (
           !source.getPiece() ||
-          source.getPlayerID().toString() !== this.currentPlayer.toString()
+          source.getPlayerID().toString() !== this.currentPlayer
         ) {
           return;
         } else {
@@ -113,7 +91,7 @@ export abstract class Board {
           this.sourceSquare.signSquare(SELECTION_TYPE.SQUARE_WITH_PIECE);
 
           // Send a request and get back all possible movments
-          this.possibleMovments = (
+          this.possibleMovements = (
             await getPossibleMoves(this.gameID, this.sourceSquare.getIndex())
           ).map(
             (possible: any) =>
@@ -121,7 +99,7 @@ export abstract class Board {
           );
 
           // Sign the incpming possible movments
-          this.possibleMovments.forEach((square) => {
+          this.possibleMovements.forEach((square) => {
             square.signSquare(SELECTION_TYPE.POSSIBLE_MOVE);
           });
         }
@@ -132,7 +110,7 @@ export abstract class Board {
 
         // Check if the dest is one of possible movments
         if (
-          !this.possibleMovments
+          !this.possibleMovements
             .map((square) => {
               return square.getIndex().toString();
             })
@@ -143,25 +121,24 @@ export abstract class Board {
           this.sourceSquare.neglectSquare();
           this.sourceSquare = undefined;
           this.destinationSquare = undefined;
-          this.possibleMovments.forEach((square) => {
+          this.possibleMovements.forEach((square) => {
             square.neglectSquare();
           });
           return;
         } else {
-          const nextPlayer = await executeMove(
+          await executeMove(
             this.gameID,
             this.sourceSquare.getIndex(),
             dest.getIndex()
           );
 
-          this.currentPlayer = this.players.indexOf(nextPlayer).toString();
           dest.setPiece(<Piece>this.sourceSquare.getPiece());
 
           // After moving the piece
           // Set source to undefined
           this.sourceSquare.empty();
           this.sourceSquare = undefined;
-          this.possibleMovments.forEach((square) => {
+          this.possibleMovements.forEach((square) => {
             square.neglectSquare();
           });
         }
@@ -175,6 +152,14 @@ export abstract class Board {
   public drawBoard() {
     this.drawSquares();
   }
+
+  private handleOnlineChanges = (changes: DocumentSnapshot<DocumentData>) => {
+    const newData = <any>changes.data();
+    console.log(newData);
+    console.log(this.currentPlayer);
+    this.currentPlayer = "0";
+    // CurrentPlayer get the value from the firebase
+  };
 
   /**
    * Render the sqaures on the screen
@@ -193,7 +178,7 @@ export abstract class Board {
       col.forEach((row, rowIndex) => {
         if (row) {
           this.squares[`{${rowIndex + 1},${colIndex + 1}}`].setPiece(
-            new Piece(this.p5, row.pieceID, row.playerName)
+            new Piece(this.p5, row.pieceID, row.playerId)
           );
         }
       });

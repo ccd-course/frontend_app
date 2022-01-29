@@ -1,19 +1,13 @@
 import { firebaseConfigApp } from "../configs/firebase.config";
-import {
-  getFirestore,
-  collection,
-  addDoc,
-  getDoc,
-  query,
-  doc,
-  onSnapshot,
-} from "firebase/firestore";
+import { doc, getDoc, getFirestore } from "firebase/firestore";
 
 export const db = getFirestore(firebaseConfigApp);
 
 export const getInitialBoard = (gameID: string) => {
-  const docRef = doc(db, "games", gameID);
+  const docRef = doc(db, "game", gameID);
   return getDoc(docRef).then((data) => {
-    return JSON.parse((<any>data.data()).initialBoard);
+    const _data = <any>data.data();
+    console.log(_data);
+    return [JSON.parse(_data.chessboard)];
   });
 };

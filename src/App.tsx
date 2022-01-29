@@ -8,6 +8,8 @@ import "./App.css";
 import { Route, Routes } from "react-router-dom";
 import { LandingPage } from "./pages/LandingPage";
 import { IAuthDialog } from "./types";
+import { PageNotFound } from "./pages/PageNotFound";
+import { GamePage } from "./pages/GamePage";
 
 export const App = () => {
   const [email, setEmail] = useState<string | null>(null);
@@ -37,8 +39,9 @@ export const App = () => {
           path="/"
           element={<LandingPage email={email} setAuthDialog={setAuthDialog} />}
         />
-        {/* <Route path="/Game/:id" element={<GamePage auth={auth} />} />
-        <Route path="*" element={<PageNotFound />} />*/}
+
+        <Route path="/Game/:id" element={<GamePage email={email} />} />
+        <Route path="*" element={<PageNotFound />} />
       </Routes>
     </div>
   );

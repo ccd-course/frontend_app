@@ -23,7 +23,7 @@ export interface NewGameDialogProps {
 }
 
 export interface BoardPiece {
-  playerName: string;
+  playerId: string;
   pieceID: string;
 }
 
