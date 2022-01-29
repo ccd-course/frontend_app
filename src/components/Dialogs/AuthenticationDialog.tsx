@@ -11,32 +11,44 @@ import Lock from "@mui/icons-material/Lock";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import { firebaseConfigApp } from "../../configs/firebase.config";
 import {
+  createUserWithEmailAndPassword,
   getAuth,
   signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
 } from "firebase/auth";
 
-export const AuthenticationDialog = ({ open, setOpen, type, setAuth }: any) => {
-  const [email, setEmail] = useState("");
+export enum AUTH_DIALOG_TYPES {
+  LOGIN = "LOGIN",
+  SIGNUP = "SIGNUP",
+  UNDEFINED = "UNDEFINED",
+}
+
+export const AuthenticationDialog = ({
+  authDialog,
+  setAuthDialog,
+  setEmail,
+}: {
+  authDialog: { open: boolean; type: AUTH_DIALOG_TYPES };
+  setAuthDialog: (input: { open: boolean; type: AUTH_DIALOG_TYPES }) => void;
+  setEmail: (email: string | null) => void;
+}) => {
+  const [email, setInputEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const handleClose = () => {
-    setOpen(false);
-  };
-
   return (
     <Dialog
-      open={open}
+      open={authDialog.open}
       PaperProps={{
         style: {
           backgroundColor: COLOR.BACKGROUND_SECONDARY,
-          width: "40%",
-          height: "40%",
+          width: "80%",
+          height: "50%",
         },
       }}
     >
-      <DialogTitle style={{ color: COLOR.FONT_SECONDARY }}>{type}</DialogTitle>
+      <DialogTitle style={{ color: COLOR.FONT_SECONDARY }}>
+        {authDialog.type}
+      </DialogTitle>
       <DialogContent>
         <DialogContentText
           id="alert-dialog-description"
@@ -52,7 +64,7 @@ export const AuthenticationDialog = ({ open, setOpen, type, setAuth }: any) => {
               color: COLOR.FONT_SECONDARY,
             }}
             onChange={(e) => {
-              setEmail(e.target.value);
+              setInputEmail(e.target.value);
               setError("");
             }}
             InputLabelProps={{
@@ -113,7 +125,9 @@ export const AuthenticationDialog = ({ open, setOpen, type, setAuth }: any) => {
         <Button
           variant="contained"
           style={PrimaryButtonStyle}
-          onClick={handleClose}
+          onClick={() => {
+            setAuthDialog({ open: false, type: AUTH_DIALOG_TYPES.LOGIN });
+          }}
         >
           Close
         </Button>
@@ -122,18 +136,16 @@ export const AuthenticationDialog = ({ open, setOpen, type, setAuth }: any) => {
           style={PrimaryButtonStyle}
           onClick={() => {
             const authentication = getAuth(firebaseConfigApp);
-            if (type === "Signup") {
+            if (authDialog.type === AUTH_DIALOG_TYPES.SIGNUP) {
               createUserWithEmailAndPassword(authentication, email, password)
                 .then((res: any) => {
-                  sessionStorage.setItem(
-                    "Auth Token",
+                  localStorage.setItem(
+                    "jwt_token",
                     res._tokenResponse.refreshToken
                   );
-                  setOpen({
-                    open: false,
-                    type: "",
-                    email: res._tokenResponse.email,
-                  });
+                  localStorage.setItem("email", email);
+                  setEmail(email);
+                  setAuthDialog({ open: false, type: AUTH_DIALOG_TYPES.LOGIN });
                 })
                 .catch((e) => {
                   if (
@@ -147,15 +159,13 @@ export const AuthenticationDialog = ({ open, setOpen, type, setAuth }: any) => {
             } else {
               signInWithEmailAndPassword(authentication, email, password)
                 .then((res: any) => {
-                  sessionStorage.setItem(
-                    "Auth Token",
+                  localStorage.setItem(
+                    "jwt_token",
                     res._tokenResponse.refreshToken
                   );
-                  setOpen({
-                    open: false,
-                    type: "",
-                    email: res._tokenResponse.email,
-                  });
+                  localStorage.setItem("email", email);
+                  setEmail(email);
+                  setAuthDialog({ open: false, type: AUTH_DIALOG_TYPES.LOGIN });
                 })
                 .catch((e) => {
                   if (e.message === "Firebase: Error (auth/user-not-found).") {
@@ -167,7 +177,7 @@ export const AuthenticationDialog = ({ open, setOpen, type, setAuth }: any) => {
             }
           }}
         >
-          {type}
+          {authDialog.type}
         </Button>
       </DialogActions>
     </Dialog>
