@@ -1,16 +1,12 @@
-<svg width="45" height="45" xmlns="http://www.w3.org/2000/svg" xmlns:undefined="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:undefined="http://www.inkscape.org/namespaces/inkscape" version="1.0">
-
- <metadata id="metadata3133">image/svg+xml</metadata>
- <g>
-  <title>Layer 1</title>
-  <g transform="rotate(180 22.5 24)" display=" inline" id="layer1"  >
-   <path stroke-miterlimit="4" stroke-linejoin="round" stroke-width="1.5" stroke="black" fill-rule="evenodd" fill="#00c800"  id="path3119" d="m9,39l27,0l0,-3l-27,0l0,3z"/>
-   <path stroke-miterlimit="4" stroke-linejoin="round" stroke-width="1.5" stroke="black" fill-rule="evenodd" fill="#00c800"  id="path3121" d="m12,36l0,-4l21,0l0,4l-21,0z"/>
-   <path stroke-miterlimit="4" stroke-linejoin="round" stroke-width="1.5" stroke="black" fill-rule="evenodd" fill="#00c800"  id="path3129" d="m11,14l0,-5l4,0l0,2l5,0l0,-2l5,0l0,2l5,0l0,-2l4,0l0,5"/>
-   <path stroke-miterlimit="4" stroke-linejoin="round" stroke-linecap="round" stroke-width="1.5" stroke="black" fill-rule="evenodd" fill="#00c800"  id="path3127" d="m34,14l-3,3l-17,0l-3,-3"/>
-   <path stroke-miterlimit="4" stroke-width="1.5" stroke="black" fill-rule="evenodd" fill="#00c800"  id="path3125" d="m31,17l0,12.50002l-17,0l0,-12.50002"/>
-   <path stroke-miterlimit="4" stroke-linejoin="round" stroke-linecap="round" stroke-width="1.5" stroke="black" fill-rule="evenodd" fill="#00c800"  id="path3123" d="m31,29.5l1.5,2.5l-20,0l1.5,-2.5"/>
-   <path stroke-linecap="round" stroke-width="1px" stroke="black" fill-rule="evenodd" fill="#00c800" id="path5175" d="m11,14l23,0"/>
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 45 45" width="45" height="45" xmlns="http://www.w3.org/2000/svg">
+  <g id="layer1" style="display: inline;" transform="matrix(-1, 0, 0, -1, 44.943897, 46.443886)">
+    <path style="fill:#00c800;fill-opacity:1;fill-rule:evenodd;stroke:black;stroke-width:1.50000000000000000;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none" d="M 9,39 L 36,39 L 36,36 L 9,36 L 9,39 z " id="path3119"/>
+    <path style="fill:#00c800;fill-opacity:1;fill-rule:evenodd;stroke:black;stroke-width:1.50000000000000000;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none" d="M 12,36 L 12,32 L 33,32 L 33,36 L 12,36 z " id="path3121"/>
+    <path style="fill:#00c800;fill-opacity:1;fill-rule:evenodd;stroke:black;stroke-width:1.50000000000000000;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none" d="M 11,14 L 11,9 L 15,9 L 15,11 L 20,11 L 20,9 L 25,9 L 25,11 L 30,11 L 30,9 L 34,9 L 34,14" id="path3129"/>
+    <path style="fill:#00c800;fill-opacity:1;fill-rule:evenodd;stroke:black;stroke-width:1.50000000000000000;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none" d="M 34,14 L 31,17 L 14,17 L 11,14" id="path3127"/>
+    <path style="fill:#00c800;fill-opacity:1;fill-rule:evenodd;stroke:black;stroke-width:1.50000000000000000;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" d="M 31,17 L 31,29.500018 L 14,29.500018 L 14,17" id="path3125"/>
+    <path style="fill:#00c800;fill-opacity:1;fill-rule:evenodd;stroke:black;stroke-width:1.50000000000000000;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none" d="M 31,29.5 L 32.5,32 L 12.5,32 L 14,29.5" id="path3123"/>
+    <path style="fill:#00c800;fill-opacity:1;fill-rule:evenodd;stroke:black;stroke-width:1px;stroke-linecap:round;stroke-linejoin:miter;stroke-opacity:1" d="M 11,14 L 34,14" id="path5175"/>
   </g>
- </g>
 </svg>
