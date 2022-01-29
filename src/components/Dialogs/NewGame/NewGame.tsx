@@ -5,8 +5,19 @@ import { COLOR } from "../../../styles/Colors";
 import { LocalGame } from "./LocalGame";
 import { OnlineGame } from "./OnlineGame";
 import { DialogTitle, Tabs } from "@mui/material";
+import { setAuthDialogFunc } from "../../../types";
 
-export const NewGameDialog = ({ open, setOpen, auth, setAuth }: any) => {
+export const NewGameDialog = ({
+  open,
+  setOpen,
+  email,
+  setAuthDialog,
+}: {
+  open: boolean;
+  setOpen: (open: boolean) => void;
+  email: string | null;
+  setAuthDialog: setAuthDialogFunc;
+}) => {
   const [tabValue, setValue] = React.useState(0);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -19,11 +30,11 @@ export const NewGameDialog = ({ open, setOpen, auth, setAuth }: any) => {
     } else {
       return (
         <OnlineGame
-          auth={auth}
-          setAuth={setAuth}
+          email={email}
           setOpen={setOpen}
-          setValue={setValue}
-        ></OnlineGame>
+          setTabValue={setValue}
+          setAuthDialog={setAuthDialog}
+        />
       );
     }
   };

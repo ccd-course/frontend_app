@@ -1,5 +1,4 @@
 import axios from "axios";
-import { ResponseChessboard } from "../types";
 
 const baseURL = process.env.REACT_APP_API_BASE_URL;
 
@@ -7,6 +6,7 @@ export enum GameType {
   LOCAL = "LOCAL",
   ONLINE = "ONLINE",
 }
+
 /**
  * Send a request to create a new game
  * @param players
@@ -44,9 +44,7 @@ export const createNewGameRequest = async (
  * @returns
  *
  */
-export const getChessboard = async (
-  gameID: string
-): Promise<ResponseChessboard> => {
+export const getChessboard = async (gameID: string): Promise<any> => {
   return axios.get(baseURL + "/getChessboard?gameID=" + gameID).then((data) => {
     return data.data.chessboard;
   });
@@ -57,9 +55,7 @@ export const getChessboard = async (
  * @param gameID
  * @returns
  */
-export const closeGame = async (
-  gameID: string
-): Promise<ResponseChessboard> => {
+export const closeGame = async (gameID: string): Promise<any> => {
   console.log(gameID);
   return axios.post(baseURL + "/endGame?gameID=" + gameID, {}).then((data) => {
     return data.data.chessboard;

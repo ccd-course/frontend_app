@@ -1,4 +1,15 @@
+import { AUTH_DIALOG_TYPES } from "./components/Dialogs/AuthenticationDialog";
 import { Square } from "./components/GameComponents/Square";
+
+export type setAuthDialogFunc = (input: {
+  open: boolean;
+  type: AUTH_DIALOG_TYPES;
+}) => void;
+
+export interface IAuthDialog {
+  open: boolean;
+  type: AUTH_DIALOG_TYPES;
+}
 
 export interface NewGameDialogProps {
   open: boolean;
@@ -10,6 +21,7 @@ export interface NewGameDialogProps {
   setOpen: (isOpen: boolean) => void;
   auth: AuthenticationState;
 }
+
 export interface BoardPiece {
   playerName: string;
   pieceID: string;

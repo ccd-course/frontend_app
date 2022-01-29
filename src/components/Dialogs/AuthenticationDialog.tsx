@@ -15,6 +15,7 @@ import {
   getAuth,
   signInWithEmailAndPassword,
 } from "firebase/auth";
+import { IAuthDialog, setAuthDialogFunc } from "../../types";
 
 export enum AUTH_DIALOG_TYPES {
   LOGIN = "LOGIN",
@@ -27,8 +28,8 @@ export const AuthenticationDialog = ({
   setAuthDialog,
   setEmail,
 }: {
-  authDialog: { open: boolean; type: AUTH_DIALOG_TYPES };
-  setAuthDialog: (input: { open: boolean; type: AUTH_DIALOG_TYPES }) => void;
+  authDialog: IAuthDialog;
+  setAuthDialog: setAuthDialogFunc;
   setEmail: (email: string | null) => void;
 }) => {
   const [email, setInputEmail] = useState("");
@@ -89,6 +90,7 @@ export const AuthenticationDialog = ({
           <TextField
             id="password"
             label="Password"
+            type={"password"}
             onChange={(e) => {
               setPassword(e.target.value);
               setError("");
@@ -145,7 +147,10 @@ export const AuthenticationDialog = ({
                   );
                   localStorage.setItem("email", email);
                   setEmail(email);
-                  setAuthDialog({ open: false, type: AUTH_DIALOG_TYPES.LOGIN });
+                  setAuthDialog({
+                    open: false,
+                    type: AUTH_DIALOG_TYPES.UNDEFINED,
+                  });
                 })
                 .catch((e) => {
                   if (
@@ -165,7 +170,10 @@ export const AuthenticationDialog = ({
                   );
                   localStorage.setItem("email", email);
                   setEmail(email);
-                  setAuthDialog({ open: false, type: AUTH_DIALOG_TYPES.LOGIN });
+                  setAuthDialog({
+                    open: false,
+                    type: AUTH_DIALOG_TYPES.UNDEFINED,
+                  });
                 })
                 .catch((e) => {
                   if (e.message === "Firebase: Error (auth/user-not-found).") {
