@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import Card from "@mui/material/Card";
 import { COLOR } from "../styles/Colors";
@@ -15,15 +15,16 @@ import { Chat } from "../components/Chat";
 
 export const GamePage = ({ email }: { email: string | null }) => {
   const location = useLocation();
-  const [isLoading, setIsLoading] = React.useState(true);
-  const [chatWidth, setChatWidth] = React.useState(window.innerWidth / 2);
-  const [chatArea, toggleChatArea] = React.useState(false);
-  const [boardTable, setBoardTable] = React.useState<BoardTable>([]);
-  const [gameID, setGameID] = React.useState<string>("");
-  const [_canvas, setCanvas] = React.useState(false);
-  const [open, setOpen] = React.useState(false);
-  const [conatinerRef, setMyRef] = React.useState<any>(null);
-  const [chat, setChat] = React.useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [chatWidth, setChatWidth] = useState(window.innerWidth / 2);
+  const [chatArea, toggleChatArea] = useState(false);
+  const [boardTable, setBoardTable] = useState<BoardTable>([]);
+  const [gameID, setGameID] = useState<string>("");
+  const [_canvas, setCanvas] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [conatinerRef, setMyRef] = useState<any>(null);
+  const [chatAvailable, setChatAvailable] = useState<boolean>(false);
+  const [gameType, setGameType] = Reac;
 
   const _ref = useRef<any>();
 
@@ -40,7 +41,7 @@ export const GamePage = ({ email }: { email: string | null }) => {
     setGameID(gameID);
     getInitialBoard(gameID).then((data) => {
       setBoardTable(data[0]);
-      setChat(data[1] !== "ONLINE");
+      setChatAvailable(data[1] !== "ONLINE");
       setIsLoading(false);
     });
   }, []);
@@ -155,7 +156,7 @@ export const GamePage = ({ email }: { email: string | null }) => {
                 <Item style={{ height: "10%", padding: 0 }}>
                   <Button
                     variant="contained"
-                    disabled={chat}
+                    disabled={chatAvailable}
                     style={{
                       width: "100%",
                       height: "100%",

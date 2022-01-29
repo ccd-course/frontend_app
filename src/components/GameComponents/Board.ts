@@ -155,8 +155,7 @@ export abstract class Board {
 
   private handleOnlineChanges = (changes: DocumentSnapshot<DocumentData>) => {
     const newData = <any>changes.data();
-    console.log(newData);
-    console.log(this.currentPlayer);
+
     this.currentPlayer = "0";
     // CurrentPlayer get the value from the firebase
   };
