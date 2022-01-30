@@ -10,7 +10,6 @@ export const ActivePlayers = () => {
 
   useEffect(() => {
     ActivePlayersEvent.subscribe((newData) => {
-      console.log(newData);
       setPlayers(newData);
     });
   }, []);
@@ -18,7 +17,7 @@ export const ActivePlayers = () => {
   const renderPlayers = () => {
     return players?.map((player, index) => {
       return (
-        <ListItem disablePadding>
+        <ListItem disablePadding key={index}>
           {player.turn ? (
             <ListItemIcon>
               <StarIcon style={{ color: PLAYER_COLORS[player.colorIndex] }} />

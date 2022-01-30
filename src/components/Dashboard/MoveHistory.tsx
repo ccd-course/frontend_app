@@ -7,15 +7,14 @@ export const MoveHistory = () => {
 
   useEffect(() => {
     MoveHistoryEvent.subscribe((newEvent) => {
-      const newHistoryList = [...moveHistory, newEvent];
-      setMoveHistory(newHistoryList);
+      setMoveHistory(newEvent);
     });
   }, []);
 
   const renderHistory = () => {
-    return moveHistory.map((move) => {
+    return moveHistory.map((move, index) => {
       return (
-        <ListItem disablePadding>
+        <ListItem disablePadding key={index}>
           <ListItemText primary={move.playerID} style={{ color: "#000" }} />
           <ListItemText
             primary={`${move.move.src} => ${move.move.dest}`}
@@ -25,6 +24,8 @@ export const MoveHistory = () => {
       );
     });
   };
-
+  console.log("RERENDERING");
   return <>{renderHistory()}</>;
 };
+
+export {};

@@ -161,7 +161,7 @@ export const GamePage = ({ email }: { email: string | null }) => {
                   <ActivePlayers></ActivePlayers>
                 </Item>
                 <Item style={{ height: "50%" }}>
-                  Moves
+                  <h4>Moves</h4>
                   <MoveHistory></MoveHistory>
                 </Item>
                 <Item style={{ height: "10%", padding: 0 }}>
