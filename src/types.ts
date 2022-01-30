@@ -12,6 +12,8 @@ export enum EVENTS {
   NEW_PLAYER_JOIN = "NEW_PLAYER_JOIN",
   PLAYER_CHANGE = "PLAYER_CHANGE",
   NEW_MOVE = "NEW_MOVE",
+  CHECKMATED = "CHECKMATED",
+  DRAW = "DRAW",
 }
 
 export type setAuthDialogFunc = (input: {

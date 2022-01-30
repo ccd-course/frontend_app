@@ -9,7 +9,7 @@ export const MoveHistory = () => {
     MoveHistoryEvent.subscribe((newEvent) => {
       setMoveHistory(newEvent);
     });
-  }, []);
+  }, [moveHistory]);
 
   const renderHistory = () => {
     return moveHistory.map((move, index) => {

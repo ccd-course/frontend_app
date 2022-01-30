@@ -115,6 +115,9 @@ export abstract class Board {
             (possible: any) =>
               this.squares[`{${possible[0] + 1},${possible[1] + 1}}`]
           );
+          console.log(
+            await getPossibleMoves(this.gameID, this.sourceSquare.getIndex())
+          );
 
           // Sign the incpming possible movments
           this.possibleMovements.forEach((square) => {
@@ -237,6 +240,26 @@ export abstract class Board {
         const piece = <Piece>sourceSquare.getPiece();
         destinationSquare.setPiece(piece);
         sourceSquare.empty();
+        return;
+      }
+      if (lastEvent.type === EVENTS.CHECKMATED) {
+        EventDialogMessage.next({
+          gameID: this.gameID,
+          status: "",
+          players: [],
+          result: "WINNER",
+          winner: lastEvent.metadata.playerName,
+        });
+        return;
+      }
+      if (lastEvent.type === EVENTS.DRAW) {
+        EventDialogMessage.next({
+          gameID: this.gameID,
+          status: "",
+          players: [],
+          result: "DRAW",
+        });
+        return;
       }
     }
   };
