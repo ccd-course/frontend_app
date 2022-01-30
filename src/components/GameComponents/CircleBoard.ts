@@ -1,8 +1,8 @@
 import p5Types from "p5";
-import { BoardTable, Coordinate } from "../../types";
-import { Square } from "./Square";
-import { Board } from "./Board";
-import { getAngleHelper } from "./Helpers";
+import {BoardTable, Coordinate, GAME_TYPE} from "../../types";
+import {Square} from "./Square";
+import {Board} from "./Board";
+import {getAngleHelper} from "./Helpers";
 
 /**
  * Represent the chess-board
@@ -17,10 +17,10 @@ export class CircleBoard extends Board {
     p5: p5Types,
     boardTable: BoardTable,
     gameID: string,
-    players: string[],
-    currentPlayer: string
+    email: string | null,
+    gameType: GAME_TYPE
   ) {
-    super(p5, boardTable, gameID, players, currentPlayer);
+    super(p5, boardTable, gameID, email, gameType);
     // Init the number of rows and cols
     this.numRows = this.boardTable[0].length;
     this.numCols = this.boardTable.length;

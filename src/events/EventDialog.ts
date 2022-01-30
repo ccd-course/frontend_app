@@ -1,3 +1,9 @@
-import rxjs, { Subject } from "rxjs";
+import { Subject } from "rxjs";
 
-export const EventDialogMessage = new Subject<any>();
+export interface IDialogMessage {
+  gameID: string;
+  status: string;
+  players: string[];
+}
+
+export const EventDialogMessage = new Subject<IDialogMessage | null>();

@@ -1,33 +1,32 @@
-import React, { useEffect, useLayoutEffect, useRef } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import Card from "@mui/material/Card";
 import { COLOR } from "../styles/Colors";
 import { PageStyle } from "../styles/DefaultPagesStyle";
 import { Game } from "../components/Game";
-import { Chat } from "../components/Chat";
 import { Button, Divider, Stack } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Item } from "../components/Item";
-import { BoardTable } from "../types";
-import { getChessboard } from "../requests/Game";
+import { BoardTable, GAME_TYPE } from "../types";
 import { ExitGame } from "../components/Dialogs/ExitGameDialog";
-import { extractPlayerNames } from "../components/GameComponents/Helpers";
 import { getInitialBoard } from "../events/db";
 import { EventDialog } from "../components/Dialogs/EventDialog";
+import { Chat } from "../components/Chat";
+import { ActivePlayers } from "../components/Dashboard/ActivePlayers";
+import { MoveHistory } from "../components/Dashboard/MoveHistory";
 
-export const GamePage = (auth: any) => {
+export const GamePage = ({ email }: { email: string | null }) => {
   const location = useLocation();
-  const [isLoading, setIsLoading] = React.useState(true);
-  const [chatWidth, setChatWidth] = React.useState(window.innerWidth / 2);
-  const [chatArea, toggleChatArea] = React.useState(false);
-  const [boardTable, setBoardTable] = React.useState<BoardTable>([]);
-  const [gameID, setGameID] = React.useState<string>("");
-  const [_canvas, setCanvas] = React.useState(false);
-  const [open, setOpen] = React.useState(false);
-  const [players, setPlayers] = React.useState<string[]>([]);
-  const [conatinerRef, setMyRef] = React.useState<any>(null);
-  const [gameType, setGameType] = React.useState<any>(null);
-  const [chat, setChat] = React.useState<any>(true);
+  const [isLoading, setIsLoading] = useState(true);
+  const [chatWidth, setChatWidth] = useState(window.innerWidth / 2);
+  const [chatArea, toggleChatArea] = useState(false);
+  const [boardTable, setBoardTable] = useState<BoardTable>([]);
+  const [gameID, setGameID] = useState<string>("");
+  const [_canvas, setCanvas] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [conatinerRef, setMyRef] = useState<any>(null);
+  const [chatAvailable, setChatAvailable] = useState<boolean>(false);
+  const [gameType, setGameType] = useState<GAME_TYPE>(GAME_TYPE.UNDEFINED);
 
   const _ref = useRef<any>();
 
@@ -42,22 +41,12 @@ export const GamePage = (auth: any) => {
   useEffect(() => {
     const gameID = location.pathname.split("/")[2];
     setGameID(gameID);
-    const x = false;
-    if (!x) {
-      getInitialBoard(gameID).then((board) => {
-        setBoardTable(board);
-        setChat(false);
-        setIsLoading(false);
-      });
-    }
-    if (x) {
-      getChessboard(gameID).then((board) => {
-        const _players = extractPlayerNames(board);
-        setPlayers(_players);
-        setBoardTable(board);
-        setIsLoading(false);
-      });
-    }
+    getInitialBoard(gameID).then((data) => {
+      setBoardTable(data[0]);
+      setChatAvailable(data[1] !== "ONLINE");
+      setGameType(data[1]);
+      setIsLoading(false);
+    });
   }, []);
 
   const handleResize = () => {
@@ -72,8 +61,8 @@ export const GamePage = (auth: any) => {
         <div style={{ textAlign: "center", marginTop: "100px" }}>
           <CircularProgress
             style={{
-              height: "30%",
-              width: "30%",
+              height: "20%",
+              width: "20%",
               color: COLOR.FONT_PRIMARY,
             }}
           />
@@ -117,9 +106,9 @@ export const GamePage = (auth: any) => {
                   boardTable={boardTable}
                   gameID={gameID}
                   containerRef={conatinerRef}
-                  currentPlayer="0"
-                  players={players}
-                ></Game>
+                  email={email}
+                  gameType={gameType}
+                />
               ) : (
                 ""
               )}
@@ -167,12 +156,18 @@ export const GamePage = (auth: any) => {
                     Exit the game
                   </Button>
                 </Item>
-                <Item style={{ height: "10%" }}>Player's turn</Item>
-                <Item style={{ height: "70%" }}>Moves</Item>
+                <Item style={{ height: "20%", backgroundColor: "blue" }}>
+                  Players
+                  <ActivePlayers></ActivePlayers>
+                </Item>
+                <Item style={{ height: "60%" }}>
+                  Moves
+                  <MoveHistory></MoveHistory>
+                </Item>
                 <Item style={{ height: "10%", padding: 0 }}>
                   <Button
                     variant="contained"
-                    disabled={chat}
+                    disabled={chatAvailable}
                     style={{
                       width: "100%",
                       height: "100%",
@@ -187,14 +182,14 @@ export const GamePage = (auth: any) => {
               </Stack>
             </div>
           </div>
-          {gameID ? (
+          {gameID && chatArea ? (
             <Chat
               width={chatWidth}
               isOpen={chatArea}
               toggleOpen={toggleChatArea}
               gameID={gameID}
-              email={auth.auth.email}
-            ></Chat>
+              email={email}
+            />
           ) : (
             ""
           )}

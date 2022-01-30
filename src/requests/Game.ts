@@ -1,41 +1,27 @@
 import axios from "axios";
-import { ResponseChessboard } from "../types";
 
 const baseURL = process.env.REACT_APP_API_BASE_URL;
 
 export enum GameType {
-  LOCAL = "LOCAL",
+  LOCAL = "OFFLINE",
   ONLINE = "ONLINE",
 }
+
 /**
  * Send a request to create a new game
  * @param players
  * @returns gameID
  */
-export const createNewGameRequest = async (
-  players: string[] | string,
-  gameType: GameType,
-  numberOfPlayers?: number
+export const createNewGame = async (
+  type: GameType,
+  numberOfPlayers: number,
+  players: { playerName: string }[]
 ) => {
-  const newGame: any = { type: gameType };
-  if (gameType === GameType.LOCAL) {
-    newGame.players = (<string[]>players).map((player) => {
-      return { playerName: player };
-    });
-  } else {
-    newGame.player = <string>players;
-    newGame.numberOfPlayer = numberOfPlayers;
-  }
-  try {
-    return await axios
-      .post(baseURL + "/createNewGame", newGame)
-      .then((data) => {
-        console.log(data.data);
-        return data.data;
-      });
-  } catch (e) {
-    console.log(e);
-  }
+  return axios.post(baseURL + "/createNewGame", {
+    type,
+    numberOfPlayers,
+    players,
+  });
 };
 
 /**
@@ -44,9 +30,7 @@ export const createNewGameRequest = async (
  * @returns
  *
  */
-export const getChessboard = async (
-  gameID: string
-): Promise<ResponseChessboard> => {
+export const getChessboard = async (gameID: string): Promise<any> => {
   return axios.get(baseURL + "/getChessboard?gameID=" + gameID).then((data) => {
     return data.data.chessboard;
   });
@@ -57,9 +41,7 @@ export const getChessboard = async (
  * @param gameID
  * @returns
  */
-export const closeGame = async (
-  gameID: string
-): Promise<ResponseChessboard> => {
+export const closeGame = async (gameID: string): Promise<any> => {
   console.log(gameID);
   return axios.post(baseURL + "/endGame?gameID=" + gameID, {}).then((data) => {
     return data.data.chessboard;
@@ -124,4 +106,8 @@ export const executeMove = (
   } catch (e) {
     console.log(e);
   }
+};
+
+export const joinGame = (player: string, gameId: string) => {
+  return axios.post(baseURL + "/joinOnlineNewGame", { player, gameId });
 };

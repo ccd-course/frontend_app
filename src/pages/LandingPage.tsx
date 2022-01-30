@@ -1,17 +1,24 @@
-import { Button } from "@mui/material";
+import {Button} from "@mui/material";
 import React from "react";
-import { NewGameDialog } from "../components/Dialogs/NewGame/NewGame";
-import { StartGameButton } from "../styles/ButtonStyles";
-import { PageStyle } from "../styles/DefaultPagesStyle";
+import {NewGameDialog} from "../components/Dialogs/NewGame/NewGame";
+import {StartGameButton} from "../styles/ButtonStyles";
+import {PageStyle} from "../styles/DefaultPagesStyle";
+import {setAuthDialogFunc} from "../types";
 
 /**
  * Landing Page
  */
-export const LandingPage = ({ auth, setAuth }: any) => {
-  const [open, setOpen] = React.useState(false);
+export const LandingPage = ({
+  email,
+  setAuthDialog,
+}: {
+  email: string | null;
+  setAuthDialog: setAuthDialogFunc;
+}) => {
+  const [openNewGame, setOpenNewGame] = React.useState(false);
 
   const handleClickOpen = () => {
-    setOpen(true);
+    setOpenNewGame(true);
   };
   return (
     <div style={PageStyle}>
@@ -33,11 +40,11 @@ export const LandingPage = ({ auth, setAuth }: any) => {
         </Button>
       </div>
       <NewGameDialog
-        open={open}
-        auth={auth}
-        setAuth={setAuth}
-        setOpen={setOpen}
-      ></NewGameDialog>
+        email={email}
+        setAuthDialog={setAuthDialog}
+        open={openNewGame}
+        setOpen={setOpenNewGame}
+      />
     </div>
   );
 };

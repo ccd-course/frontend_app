@@ -1,5 +1,5 @@
 import p5Types from "p5";
-import { Coordinate } from "../../types";
+import {Coordinate} from "../../types";
 
 /**
  * Representation of the piece
@@ -51,15 +51,29 @@ export class Piece {
   }
 
   /**
+   *
+   * @returns the playerID, to which the piece belongs
+   */
+  public getPlayerID() {
+    return this.playerID;
+  }
+
+  /**
    * @returns Load the image, given the playerID and pieceID
    */
   private loadImagePromise = (): Promise<p5Types.Image> => {
-    const img = require("../../images/player" +
-      this.playerID +
-      "/" +
-      this.pieceId +
-      this.playerID +
-      ".svg").default;
+    let img: any;
+    if (this.pieceId === "Cannon") {
+      img = require("../../images/" + this.pieceId + ".svg").default;
+    } else {
+      img = require("../../images/player" +
+        this.playerID +
+        "/" +
+        this.pieceId +
+        this.playerID +
+        ".svg").default;
+    }
+
     // Encapsulte the call back inside a Promise
     return new Promise((resolve, reject) => {
       this.p5Reference.loadImage(img, (imgData) => {
@@ -67,12 +81,4 @@ export class Piece {
       });
     });
   };
-
-  /**
-   *
-   * @returns the playerID, to which the piece belongs
-   */
-  public getPlayerID() {
-    return this.playerID;
-  }
 }

@@ -1,28 +1,41 @@
 import {
-  Radio,
+  Button,
+  DialogActions,
   DialogContent,
   FormControl,
   FormControlLabel,
   FormLabel,
+  Radio,
   RadioGroup,
-  Button,
-  DialogActions,
   TextField,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { createNewGameRequest, GameType } from "../../../requests/Game";
+import { createNewGame, GameType, joinGame } from "../../../requests/Game";
 import { PrimaryButtonStyle } from "../../../styles/ButtonStyles";
 import { COLOR } from "../../../styles/Colors";
+import { setAuthDialogFunc } from "../../../types";
+import { AUTH_DIALOG_TYPES } from "../AuthenticationDialog";
 
-export const OnlineGame = ({ auth, setAuth, setOpen, setValue }: any) => {
+export const OnlineGame = ({
+  setOpen,
+  email,
+  setAuthDialog,
+  setTabValue,
+}: {
+  setOpen: (open: boolean) => void;
+  email: string | null;
+  setAuthDialog: setAuthDialogFunc;
+  setTabValue: (tab: number) => void;
+}) => {
   const navigate = useNavigate();
+  const [gameID, setGameID] = useState("");
 
   useEffect(() => {
-    if (!auth.email) {
-      setValue(0);
+    if (!email) {
+      setTabValue(0);
       setOpen(false);
-      setAuth({ open: true, type: "Login", email: null });
+      setAuthDialog({ open: true, type: AUTH_DIALOG_TYPES.LOGIN });
     }
   }, []);
   const [numberOfPlayers, setNumberOfPlayers] = useState(0);
@@ -38,12 +51,15 @@ export const OnlineGame = ({ auth, setAuth, setOpen, setValue }: any) => {
 
   const handleCreateNewGame = async () => {
     try {
-      const newGameId = await createNewGameRequest(
-        auth.email,
-        GameType.ONLINE,
-        numberOfPlayers
-      );
-      navigate(`/Game/${newGameId}`);
+      if (email) {
+        const newGameId = await createNewGame(
+          GameType.ONLINE,
+          numberOfPlayers,
+          [{ playerName: email }]
+        ).then((res) => res.data);
+
+        navigate(`/Game/${newGameId}`);
+      }
     } catch (e) {
       console.log("ERROR WHILE CREATING A NEW GAME");
     }
@@ -53,7 +69,7 @@ export const OnlineGame = ({ auth, setAuth, setOpen, setValue }: any) => {
       <DialogContent
         style={{ marginLeft: "22px", color: COLOR.FONT_SECONDARY }}
       >
-        <div>Email: {auth.email}</div>
+        <div>Email: {email}</div>
         <div style={{ marginTop: "40px" }}>
           <FormControl component="fieldset">
             <FormLabel
@@ -117,17 +133,26 @@ export const OnlineGame = ({ auth, setAuth, setOpen, setValue }: any) => {
                 },
                 autoComplete: "off",
               }}
+              onChange={(e) => {
+                setGameID(e.target.value);
+              }}
             />
             <Button
               variant="contained"
               style={{ ...PrimaryButtonStyle, marginTop: 10 }}
+              onClick={() => {
+                if (email)
+                  joinGame(email, gameID).then((data) => {
+                    navigate(`/Game/${gameID}`);
+                  });
+              }}
             >
               Join a network game
             </Button>
           </FormControl>
         </div>
       </DialogContent>
-      <DialogActions style={{}}>
+      <DialogActions>
         <Button
           variant="contained"
           style={PrimaryButtonStyle}

@@ -1,18 +1,14 @@
 import p5Types from "p5";
-import { BoardTable, Coordinate } from "../../types";
-import { SELECTION_TYPE, Square } from "./Square";
-import { Piece } from "./Piece";
-import { executeMove, getPossibleMoves } from "../../requests/Game";
-import { MouseEvent } from "../../events/game_data";
-import { map } from "rxjs";
-import { db } from "../../events/db";
-import {
-  onSnapshot,
-  doc,
-  DocumentSnapshot,
-  DocumentData,
-} from "firebase/firestore";
-import { EventDialogMessage } from "../../events/EventDialog";
+import {BoardTable, Coordinate, EVENTS, GAME_TYPE} from "../../types";
+import {SELECTION_TYPE, Square} from "./Square";
+import {Piece} from "./Piece";
+import {executeMove, getPossibleMoves} from "../../requests/Game";
+import {ActivePlayersEvent, MouseEvent, MoveHistoryEvent,} from "../../events/game_data";
+import {map} from "rxjs";
+import {db} from "../../events/db";
+import {doc, DocumentData, DocumentSnapshot, onSnapshot,} from "firebase/firestore";
+import {EventDialogMessage} from "../../events/EventDialog";
+
 /**
  * Abstract class
  * Includes all the logic needed to create and handle a chessgame
@@ -22,44 +18,36 @@ import { EventDialogMessage } from "../../events/EventDialog";
  */
 export abstract class Board {
   public readonly p5: p5Types; // Number of rows on the baord
-  private readonly gameID: string; // The gameID stored in Backend
-  private readonly players: string[]; // CurrentPlayer, who is allowed to move the pieces
   public readonly boardTable: BoardTable;
-
+  private readonly gameID: string; // The gameID stored in Backend
+  private players: string[] = []; // CurrentPlayer, who is allowed to move the pieces
   private squares: { [key: string]: Square } = {}; // Reference to the board squares
-  private currentPlayer: string; // CurrentPlayer, who is allowed to move the pieces
+  private currentPlayer = ""; // CurrentPlayer, who is allowed to move the pieces
   private sourceSquare: Square | undefined;
   private destinationSquare: Square | undefined;
-  private possibleMovments: Square[] = [];
+  private possibleMovements: Square[] = [];
+  private email: string | null;
+  private gameType: GAME_TYPE;
 
   constructor(
     p5: p5Types,
     boardTable: BoardTable,
     gameID: string,
-    players: string[],
-    currentPlayer: string
+    email: string | null,
+    gameType: GAME_TYPE
   ) {
     this.p5 = p5;
     this.boardTable = boardTable;
     this.gameID = gameID;
-    this.players = players;
-    this.currentPlayer = currentPlayer;
+    this.currentPlayer = "";
+    this.email = email;
+    this.gameType = gameType;
 
-    onSnapshot(doc(db, "games", gameID), this.handleOnlineChanges);
-  }
-
-  private handleOnlineChanges(changes: DocumentSnapshot<DocumentData>) {
-    const newData = (<any>changes.data()).events;
-    const event = newData[newData.length - 1];
-    console.log(event);
-    if (event === "WAITING") {
-      EventDialogMessage.next("WAITING FOR USERS");
-    } else {
-      EventDialogMessage.next(null);
-    }
+    onSnapshot(doc(db, "game", gameID), this.handleOnlineChanges);
   }
 
   abstract generateSquares(): { [key: string]: Square };
+
   abstract mapMouseCoordinateToSquareID(
     coordinate: Coordinate
   ): Coordinate | null;
@@ -84,7 +72,7 @@ export abstract class Board {
 
   /**
    * Handle the mouse click events
-   * @param coordinate Coordinate of the mouse click
+   * @param squareID
    */
   public handleMouseEvent = async (
     squareID: {
@@ -92,6 +80,12 @@ export abstract class Board {
       y: number;
     } | null
   ): Promise<void> => {
+    if (
+      this.gameType === GAME_TYPE.ONLINE &&
+      this.email &&
+      this.players.indexOf(this.email).toString() != this.currentPlayer
+    )
+      return;
     if (squareID) {
       const { x, y } = squareID;
       const squareIndex = `{${x},${y}}`;
@@ -104,7 +98,7 @@ export abstract class Board {
 
         if (
           !source.getPiece() ||
-          source.getPlayerID().toString() !== this.currentPlayer.toString()
+          source.getPlayerID().toString() !== this.currentPlayer
         ) {
           return;
         } else {
@@ -113,7 +107,7 @@ export abstract class Board {
           this.sourceSquare.signSquare(SELECTION_TYPE.SQUARE_WITH_PIECE);
 
           // Send a request and get back all possible movments
-          this.possibleMovments = (
+          this.possibleMovements = (
             await getPossibleMoves(this.gameID, this.sourceSquare.getIndex())
           ).map(
             (possible: any) =>
@@ -121,7 +115,7 @@ export abstract class Board {
           );
 
           // Sign the incpming possible movments
-          this.possibleMovments.forEach((square) => {
+          this.possibleMovements.forEach((square) => {
             square.signSquare(SELECTION_TYPE.POSSIBLE_MOVE);
           });
         }
@@ -132,7 +126,7 @@ export abstract class Board {
 
         // Check if the dest is one of possible movments
         if (
-          !this.possibleMovments
+          !this.possibleMovements
             .map((square) => {
               return square.getIndex().toString();
             })
@@ -143,25 +137,19 @@ export abstract class Board {
           this.sourceSquare.neglectSquare();
           this.sourceSquare = undefined;
           this.destinationSquare = undefined;
-          this.possibleMovments.forEach((square) => {
+          this.possibleMovements.forEach((square) => {
             square.neglectSquare();
           });
           return;
         } else {
-          const nextPlayer = await executeMove(
+          await executeMove(
             this.gameID,
             this.sourceSquare.getIndex(),
             dest.getIndex()
           );
 
-          this.currentPlayer = this.players.indexOf(nextPlayer).toString();
-          dest.setPiece(<Piece>this.sourceSquare.getPiece());
-
-          // After moving the piece
-          // Set source to undefined
-          this.sourceSquare.empty();
           this.sourceSquare = undefined;
-          this.possibleMovments.forEach((square) => {
+          this.possibleMovements.forEach((square) => {
             square.neglectSquare();
           });
         }
@@ -175,6 +163,83 @@ export abstract class Board {
   public drawBoard() {
     this.drawSquares();
   }
+
+  private handleOnlineChanges = (changes: DocumentSnapshot<DocumentData>) => {
+    const newData = <any>changes.data();
+    const events = JSON.parse(newData.events);
+    const chessboard = JSON.parse(newData.chessboard);
+    this.setPLayers(chessboard);
+    ActivePlayersEvent.next(
+      this.players.map((player, index) => {
+        return {
+          player: player,
+          turn: index.toString() !== this.currentPlayer ? false : true,
+          color: "red",
+        };
+      })
+    );
+    if (events.length === 0) {
+      EventDialogMessage.next({
+        gameID: this.gameID,
+        status: "WAITING FOR USERS",
+        players: [<string>this.email],
+      });
+      this.currentPlayer = "";
+    } else {
+      const lastEvent = events[events.length - 1];
+      if (lastEvent.type === EVENTS.NEW_PLAYER_JOIN) {
+        EventDialogMessage.next({
+          gameID: this.gameID,
+          status: "WAITING FOR USERS",
+          players: [...this.players],
+        });
+        return;
+      }
+      if (lastEvent.type === EVENTS.GAME_STARTED) {
+        this.currentPlayer = "0";
+        EventDialogMessage.next(null);
+        return;
+      }
+      if (lastEvent.type === EVENTS.PLAYER_CHANGE) {
+        this.currentPlayer = lastEvent.metadata.playerId.toString();
+
+        return;
+      }
+      if (lastEvent.type === EVENTS.NEW_MOVE) {
+        const sourceSquare =
+          this.squares[
+            `{${lastEvent.metadata.start[1] + 1},${
+              lastEvent.metadata.start[0] + 1
+            }}`
+          ];
+        const destinationSquare =
+          this.squares[
+            `{${lastEvent.metadata.end[1] + 1},${
+              lastEvent.metadata.end[0] + 1
+            }}`
+          ];
+        MoveHistoryEvent.next({
+          playerID: lastEvent.metadata.playerId,
+          move: { src: lastEvent.metadata.start, dest: lastEvent.metadata.end },
+        });
+        const piece = <Piece>sourceSquare.getPiece();
+        destinationSquare.setPiece(piece);
+        sourceSquare.empty();
+      }
+    }
+  };
+
+  private setPLayers = (chessboard: any[][]) => {
+    const players: any[] = [];
+    chessboard.forEach((col) => {
+      col.forEach((row) => {
+        if (row && row.playerName && !players.includes(row.playerName)) {
+          players.push(row.playerName);
+        }
+      });
+    });
+    this.players = players;
+  };
 
   /**
    * Render the sqaures on the screen
@@ -193,7 +258,7 @@ export abstract class Board {
       col.forEach((row, rowIndex) => {
         if (row) {
           this.squares[`{${rowIndex + 1},${colIndex + 1}}`].setPiece(
-            new Piece(this.p5, row.pieceID, row.playerName)
+            new Piece(this.p5, row.pieceID, row.playerId)
           );
         }
       });

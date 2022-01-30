@@ -1,34 +1,46 @@
 import React, { useEffect, useState } from "react";
-import { Routes, Route } from "react-router-dom";
 import { Header } from "./components/Header";
+import {
+  AUTH_DIALOG_TYPES,
+  AuthenticationDialog,
+} from "./components/Dialogs/AuthenticationDialog";
+import "./App.css";
+import { Route, Routes } from "react-router-dom";
 import { LandingPage } from "./pages/LandingPage";
+import { IAuthDialog } from "./types";
 import { PageNotFound } from "./pages/PageNotFound";
 import { GamePage } from "./pages/GamePage";
-import { AuthenticationDialog } from "./components/Dialogs/AuthenticationDialog";
-import "./App.css";
-import { AuthenticationState } from "./types";
 
 export const App = () => {
-  const [auth, setAuth] = useState<AuthenticationState>({
+  const [email, setEmail] = useState<string | null>(null);
+  const [authDialog, setAuthDialog] = useState<IAuthDialog>({
     open: false,
-    type: "",
-    email: null,
+    type: AUTH_DIALOG_TYPES.UNDEFINED,
   });
+
+  useEffect(() => {
+    const jwt_token = localStorage.getItem("jwt_token");
+    const email = localStorage.getItem("email");
+    if (jwt_token && email) {
+      setEmail(email);
+    }
+  }, []);
 
   return (
     <div className="App" style={{ display: "flex", flexDirection: "column" }}>
-      <Header setAuth={setAuth} auth={auth}></Header>
+      <Header email={email} setAuthDialog={setAuthDialog} setEmail={setEmail} />
       <AuthenticationDialog
-        open={auth.open}
-        setOpen={setAuth}
-        type={auth.type}
-      ></AuthenticationDialog>
+        authDialog={authDialog}
+        setAuthDialog={setAuthDialog}
+        setEmail={setEmail}
+      />
       <Routes>
         <Route
           path="/"
-          element={<LandingPage auth={auth} setAuth={setAuth} />}
+          element={<LandingPage email={email} setAuthDialog={setAuthDialog} />}
         />
-        <Route path="/Game/:id" element={<GamePage auth={auth} />} />
+
+        <Route path="/Game/:id" element={<GamePage email={email} />} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </div>

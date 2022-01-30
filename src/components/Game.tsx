@@ -3,14 +3,14 @@ import Sketch from "react-p5";
 import p5Types from "p5";
 import { CircleBoard } from "./GameComponents/CircleBoard";
 import { MouseEvents } from "./GameComponents/MouseEvents";
-import { BoardTable } from "../types";
+import { BoardTable, GAME_TYPE } from "../types";
 
 interface GameProps {
   boardTable: BoardTable;
   gameID: string;
-  currentPlayer: string;
-  players: string[];
   containerRef: any;
+  email: string | null;
+  gameType: GAME_TYPE;
 }
 
 export const Game = (props: GameProps) => {
@@ -36,8 +36,8 @@ export const Game = (props: GameProps) => {
       p5,
       props.boardTable,
       props.gameID,
-      props.players,
-      props.currentPlayer
+      props.email,
+      props.gameType
     )
       .init()
       .drawBoard();

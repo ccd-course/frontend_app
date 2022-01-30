@@ -11,101 +11,132 @@ import Lock from "@mui/icons-material/Lock";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import { firebaseConfigApp } from "../../configs/firebase.config";
 import {
+  createUserWithEmailAndPassword,
   getAuth,
   signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
 } from "firebase/auth";
+import { IAuthDialog, setAuthDialogFunc } from "../../types";
 
-export const AuthenticationDialog = ({ open, setOpen, type, setAuth }: any) => {
-  const [email, setEmail] = useState("");
+export enum AUTH_DIALOG_TYPES {
+  LOGIN = "LOGIN",
+  SIGNUP = "SIGNUP",
+  UNDEFINED = "UNDEFINED",
+}
+
+export const AuthenticationDialog = ({
+  authDialog,
+  setAuthDialog,
+  setEmail,
+}: {
+  authDialog: IAuthDialog;
+  setAuthDialog: setAuthDialogFunc;
+  setEmail: (email: string | null) => void;
+}) => {
+  const [email, setInputEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const handleClose = () => {
-    setOpen(false);
-  };
-
   return (
     <Dialog
-      open={open}
+      open={authDialog.open}
       PaperProps={{
         style: {
           backgroundColor: COLOR.BACKGROUND_SECONDARY,
-          width: "40%",
-          height: "40%",
+          width: "80%",
+          height: "50%",
         },
       }}
     >
-      <DialogTitle style={{ color: COLOR.FONT_SECONDARY }}>{type}</DialogTitle>
+      <DialogTitle style={{ color: COLOR.FONT_SECONDARY }}>
+        {authDialog.type}
+      </DialogTitle>
       <DialogContent>
         <DialogContentText
           id="alert-dialog-description"
           style={{ color: "#fff", textAlign: "center" }}
         >
-          <TextField
-            id="email"
-            label="Email"
-            style={{
-              margin: "10px",
-              width: "400px",
-              backgroundColor: "#444",
-              color: COLOR.FONT_SECONDARY,
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
             }}
-            onChange={(e) => {
-              setEmail(e.target.value);
-              setError("");
-            }}
-            InputLabelProps={{
-              style: {
+          >
+            <TextField
+              id="email"
+              label="Email"
+              style={{
+                margin: "10px",
+                width: "400px",
+                backgroundColor: "#444",
                 color: COLOR.FONT_SECONDARY,
-                paddingLeft: 10,
-              },
+              }}
+              onChange={(e) => {
+                setInputEmail(e.target.value);
+                setError("");
+              }}
+              InputLabelProps={{
+                style: {
+                  color: COLOR.FONT_SECONDARY,
+                  paddingLeft: 10,
+                },
+              }}
+              InputProps={{
+                autoComplete: "off",
+
+                style: {
+                  color: COLOR.FONT_SECONDARY,
+                  paddingLeft: 10,
+                },
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <AccountCircle style={{ color: "#fff" }} />
+                  </InputAdornment>
+                ),
+              }}
+              variant="standard"
+            />
+          </form>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
             }}
-            InputProps={{
-              style: {
+          >
+            <TextField
+              id="password"
+              label="Password"
+              type={"password"}
+              autoComplete={"new-password"}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                setError("");
+              }}
+              style={{
+                margin: "10px",
+                width: "400px",
+                backgroundColor: "#444",
                 color: COLOR.FONT_SECONDARY,
-                paddingLeft: 10,
-              },
-              startAdornment: (
-                <InputAdornment position="start">
-                  <AccountCircle style={{ color: "#fff" }} />
-                </InputAdornment>
-              ),
-            }}
-            variant="standard"
-          />
-          <TextField
-            id="password"
-            label="Password"
-            onChange={(e) => {
-              setPassword(e.target.value);
-              setError("");
-            }}
-            style={{
-              margin: "10px",
-              width: "400px",
-              backgroundColor: "#444",
-              color: COLOR.FONT_SECONDARY,
-            }}
-            InputLabelProps={{
-              style: {
-                color: COLOR.FONT_SECONDARY,
-                paddingLeft: 10,
-              },
-            }}
-            InputProps={{
-              style: {
-                color: COLOR.FONT_SECONDARY,
-                paddingLeft: 10,
-              },
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Lock style={{ color: "#fff" }} />
-                </InputAdornment>
-              ),
-            }}
-            variant="standard"
-          />
+              }}
+              InputLabelProps={{
+                style: {
+                  color: COLOR.FONT_SECONDARY,
+                  paddingLeft: 10,
+                },
+              }}
+              InputProps={{
+                autoComplete: "new-password",
+                style: {
+                  color: COLOR.FONT_SECONDARY,
+                  paddingLeft: 10,
+                },
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Lock style={{ color: "#fff" }} />
+                  </InputAdornment>
+                ),
+              }}
+              variant="standard"
+            />
+          </form>
+
           <div style={{ marginTop: 30, color: "red" }}>{error}</div>
         </DialogContentText>
       </DialogContent>
@@ -113,7 +144,9 @@ export const AuthenticationDialog = ({ open, setOpen, type, setAuth }: any) => {
         <Button
           variant="contained"
           style={PrimaryButtonStyle}
-          onClick={handleClose}
+          onClick={() => {
+            setAuthDialog({ open: false, type: AUTH_DIALOG_TYPES.LOGIN });
+          }}
         >
           Close
         </Button>
@@ -122,17 +155,18 @@ export const AuthenticationDialog = ({ open, setOpen, type, setAuth }: any) => {
           style={PrimaryButtonStyle}
           onClick={() => {
             const authentication = getAuth(firebaseConfigApp);
-            if (type === "Signup") {
+            if (authDialog.type === AUTH_DIALOG_TYPES.SIGNUP) {
               createUserWithEmailAndPassword(authentication, email, password)
                 .then((res: any) => {
-                  sessionStorage.setItem(
-                    "Auth Token",
+                  localStorage.setItem(
+                    "jwt_token",
                     res._tokenResponse.refreshToken
                   );
-                  setOpen({
+                  localStorage.setItem("email", email);
+                  setEmail(email);
+                  setAuthDialog({
                     open: false,
-                    type: "",
-                    email: res._tokenResponse.email,
+                    type: AUTH_DIALOG_TYPES.UNDEFINED,
                   });
                 })
                 .catch((e) => {
@@ -147,14 +181,15 @@ export const AuthenticationDialog = ({ open, setOpen, type, setAuth }: any) => {
             } else {
               signInWithEmailAndPassword(authentication, email, password)
                 .then((res: any) => {
-                  sessionStorage.setItem(
-                    "Auth Token",
+                  localStorage.setItem(
+                    "jwt_token",
                     res._tokenResponse.refreshToken
                   );
-                  setOpen({
+                  localStorage.setItem("email", email);
+                  setEmail(email);
+                  setAuthDialog({
                     open: false,
-                    type: "",
-                    email: res._tokenResponse.email,
+                    type: AUTH_DIALOG_TYPES.UNDEFINED,
                   });
                 })
                 .catch((e) => {
@@ -167,7 +202,7 @@ export const AuthenticationDialog = ({ open, setOpen, type, setAuth }: any) => {
             }
           }}
         >
-          {type}
+          {authDialog.type}
         </Button>
       </DialogActions>
     </Dialog>

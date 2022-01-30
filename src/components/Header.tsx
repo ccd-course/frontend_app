@@ -4,10 +4,20 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
-import { COLOR } from "../styles/Colors";
 import { PrimaryButtonStyle } from "../styles/ButtonStyles";
+import { COLOR } from "../styles/Colors";
+import { AUTH_DIALOG_TYPES } from "./Dialogs/AuthenticationDialog";
+import { setAuthDialogFunc } from "../types";
 
-export const Header = ({ setAuth, auth }: any) => {
+export const Header = ({
+  email,
+  setAuthDialog,
+  setEmail,
+}: {
+  email: string | null;
+  setAuthDialog: setAuthDialogFunc;
+  setEmail: (email: string | null) => void;
+}): JSX.Element => {
   return (
     <div>
       <AppBar
@@ -22,19 +32,15 @@ export const Header = ({ setAuth, auth }: any) => {
             <div style={{ display: "inline" }}>JChess</div>
           </Typography>
           <Stack spacing={2} direction="row">
-            {auth.email ? (
+            {email ? (
               <div>
-                {auth.email}
+                {email}
                 <Button
                   variant="contained"
                   style={{ ...PrimaryButtonStyle, marginLeft: 10 }}
                   onClick={() => {
-                    sessionStorage.removeItem("Auth Token");
-                    setAuth({
-                      email: null,
-                      open: false,
-                      type: "",
-                    });
+                    localStorage.clear();
+                    setEmail(null);
                   }}
                 >
                   Logout
@@ -46,7 +52,10 @@ export const Header = ({ setAuth, auth }: any) => {
                   variant="contained"
                   style={PrimaryButtonStyle}
                   onClick={() => {
-                    setAuth({ open: true, type: "Signup" });
+                    setAuthDialog({
+                      open: true,
+                      type: AUTH_DIALOG_TYPES.SIGNUP,
+                    });
                   }}
                 >
                   Signup
@@ -55,7 +64,10 @@ export const Header = ({ setAuth, auth }: any) => {
                   variant="contained"
                   style={PrimaryButtonStyle}
                   onClick={() => {
-                    setAuth({ open: true, type: "Login" });
+                    setAuthDialog({
+                      open: true,
+                      type: AUTH_DIALOG_TYPES.LOGIN,
+                    });
                   }}
                 >
                   Login

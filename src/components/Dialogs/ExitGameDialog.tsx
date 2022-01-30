@@ -8,7 +8,6 @@ import { PrimaryButtonStyle } from "../../styles/ButtonStyles";
 import { COLOR } from "../../styles/Colors";
 import { useNavigate } from "react-router-dom";
 import { closeGame } from "../../requests/Game";
-import { NewGameDialogProps } from "../../types";
 import { DialogContentText } from "@mui/material";
 
 export const ExitGame = ({ open, setOpen, gameID }: any) => {
