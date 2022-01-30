@@ -6,12 +6,6 @@ import {Coordinate} from "../types";
  */
 export const MouseEvent = new Subject<Coordinate>();
 
-export const ActivePlayersEvent = new Subject<
-  { player: string; turn: boolean; color: string }[]
->();
-
-export const PLAYER_COLORS = ["white", "black", "blue"];
-
 export interface IMoveHistory {
   playerID: string;
   move: {
@@ -20,4 +14,4 @@ export interface IMoveHistory {
   };
 }
 
-export const MoveHistoryEvent = new Subject<IMoveHistory>();
+export const MoveHistoryEvent = new Subject<{ history: IMoveHistory[] }>();

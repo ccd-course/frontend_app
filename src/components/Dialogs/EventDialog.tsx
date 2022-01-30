@@ -73,30 +73,41 @@ export const EventDialog = () => {
           marginTop: "100px",
         }}
       >
-        <div>
-          <h1>Game ID : {message?.gameID}</h1>
-        </div>
-        <div>
-          <h4>Status: {message?.status}</h4>
-        </div>
-        <div
-          style={{
-            color: "#fff",
-            textAlign: "center",
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
-          <List
-            sx={{ width: "100%", maxWidth: 360, bgcolor: "#333" }}
-            aria-label="contacts"
-          >
-            {renderPlayers()}
-          </List>
-        </div>
-        <Box sx={{ width: "100%", marginTop: "50px" }}>
-          <LinearProgress />
-        </Box>
+        {message?.result ? (
+          <>
+            <div>
+              <h4>Status: {message?.result}</h4>
+              {message.winner ? <h4>Status: {message?.winner}</h4> : ""}
+            </div>
+          </>
+        ) : (
+          <>
+            <div>
+              <h1>Game ID : {message?.gameID}</h1>
+            </div>
+            <div>
+              <h4>Status: {message?.status}</h4>
+            </div>
+            <div
+              style={{
+                color: "#fff",
+                textAlign: "center",
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
+              <List
+                sx={{ width: "100%", maxWidth: 360, bgcolor: "#333" }}
+                aria-label="contacts"
+              >
+                {renderPlayers()}
+              </List>
+            </div>
+            <Box sx={{ width: "100%", marginTop: "50px" }}>
+              <LinearProgress />
+            </Box>
+          </>
+        )}
       </DialogContent>
       <DialogActions>
         <Button

@@ -29,7 +29,19 @@ export const Header = ({
       >
         <Toolbar>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            <div style={{ display: "inline" }}>JChess</div>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <img
+                src={"favicon.png"}
+                height={40}
+                style={{ marginRight: "10px" }}
+              />
+              Circular Chess
+            </div>
           </Typography>
           <Stack spacing={2} direction="row">
             {email ? (

@@ -3,11 +3,12 @@ import {BoardTable, Coordinate, EVENTS, GAME_TYPE} from "../../types";
 import {SELECTION_TYPE, Square} from "./Square";
 import {Piece} from "./Piece";
 import {executeMove, getPossibleMoves} from "../../requests/Game";
-import {ActivePlayersEvent, MouseEvent, MoveHistoryEvent,} from "../../events/game_data";
+import {IMoveHistory, MouseEvent, MoveHistoryEvent,} from "../../events/game_data";
 import {map} from "rxjs";
 import {db} from "../../events/db";
 import {doc, DocumentData, DocumentSnapshot, onSnapshot,} from "firebase/firestore";
 import {EventDialogMessage} from "../../events/EventDialog";
+import {ActivePlayersEvent} from "../../events/game_events";
 
 /**
  * Abstract class
@@ -26,6 +27,7 @@ export abstract class Board {
   private sourceSquare: Square | undefined;
   private destinationSquare: Square | undefined;
   private possibleMovements: Square[] = [];
+  private moveHistory: IMoveHistory[] = [];
   private email: string | null;
   private gameType: GAME_TYPE;
 
@@ -169,15 +171,6 @@ export abstract class Board {
     const events = JSON.parse(newData.events);
     const chessboard = JSON.parse(newData.chessboard);
     this.setPLayers(chessboard);
-    ActivePlayersEvent.next(
-      this.players.map((player, index) => {
-        return {
-          player: player,
-          turn: index.toString() !== this.currentPlayer ? false : true,
-          color: "red",
-        };
-      })
-    );
     if (events.length === 0) {
       EventDialogMessage.next({
         gameID: this.gameID,
@@ -198,11 +191,28 @@ export abstract class Board {
       if (lastEvent.type === EVENTS.GAME_STARTED) {
         this.currentPlayer = "0";
         EventDialogMessage.next(null);
+        ActivePlayersEvent.next(
+          this.players.map((player, index) => {
+            return {
+              player: player,
+              turn: index.toString() !== this.currentPlayer ? false : true,
+              colorIndex: index,
+            };
+          })
+        );
         return;
       }
       if (lastEvent.type === EVENTS.PLAYER_CHANGE) {
         this.currentPlayer = lastEvent.metadata.playerId.toString();
-
+        ActivePlayersEvent.next(
+          this.players.map((player, index) => {
+            return {
+              player: player,
+              turn: index.toString() !== this.currentPlayer ? false : true,
+              colorIndex: index,
+            };
+          })
+        );
         return;
       }
       if (lastEvent.type === EVENTS.NEW_MOVE) {
@@ -218,13 +228,34 @@ export abstract class Board {
               lastEvent.metadata.end[0] + 1
             }}`
           ];
-        MoveHistoryEvent.next({
-          playerID: lastEvent.metadata.playerId,
+        this.moveHistory.push({
+          playerID: lastEvent.metadata.playerName,
           move: { src: lastEvent.metadata.start, dest: lastEvent.metadata.end },
         });
+        MoveHistoryEvent.next({ history: this.moveHistory });
         const piece = <Piece>sourceSquare.getPiece();
         destinationSquare.setPiece(piece);
         sourceSquare.empty();
+        return;
+      }
+      if (lastEvent.type === EVENTS.CHECKMATED) {
+        EventDialogMessage.next({
+          gameID: this.gameID,
+          status: "",
+          players: [],
+          result: "WINNER",
+          winner: lastEvent.metadata.playerName,
+        });
+        return;
+      }
+      if (lastEvent.type === EVENTS.DRAW) {
+        EventDialogMessage.next({
+          gameID: this.gameID,
+          status: "",
+          players: [],
+          result: "DRAW",
+        });
+        return;
       }
     }
   };
