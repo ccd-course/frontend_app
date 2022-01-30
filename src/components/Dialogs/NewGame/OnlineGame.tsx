@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { createNewGame, GameType } from "../../../requests/Game";
+import { createNewGame, GameType, joinGame } from "../../../requests/Game";
 import { PrimaryButtonStyle } from "../../../styles/ButtonStyles";
 import { COLOR } from "../../../styles/Colors";
 import { setAuthDialogFunc } from "../../../types";
@@ -29,6 +29,7 @@ export const OnlineGame = ({
   setTabValue: (tab: number) => void;
 }) => {
   const navigate = useNavigate();
+  const [gameID, setGameID] = useState("");
 
   useEffect(() => {
     if (!email) {
@@ -132,10 +133,19 @@ export const OnlineGame = ({
                 },
                 autoComplete: "off",
               }}
+              onChange={(e) => {
+                setGameID(e.target.value);
+              }}
             />
             <Button
               variant="contained"
               style={{ ...PrimaryButtonStyle, marginTop: 10 }}
+              onClick={() => {
+                if (email)
+                  joinGame(email, gameID).then((data) => {
+                    navigate(`/Game/${gameID}`);
+                  });
+              }}
             >
               Join a network game
             </Button>

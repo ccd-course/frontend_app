@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import Card from "@mui/material/Card";
 import { COLOR } from "../styles/Colors";
@@ -7,7 +7,7 @@ import { Game } from "../components/Game";
 import { Button, Divider, Stack } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Item } from "../components/Item";
-import { BoardTable } from "../types";
+import { BoardTable, GAME_TYPE } from "../types";
 import { ExitGame } from "../components/Dialogs/ExitGameDialog";
 import { getInitialBoard } from "../events/db";
 import { EventDialog } from "../components/Dialogs/EventDialog";
@@ -24,7 +24,7 @@ export const GamePage = ({ email }: { email: string | null }) => {
   const [open, setOpen] = useState(false);
   const [conatinerRef, setMyRef] = useState<any>(null);
   const [chatAvailable, setChatAvailable] = useState<boolean>(false);
-  const [gameType, setGameType] = Reac;
+  const [gameType, setGameType] = useState<GAME_TYPE>(GAME_TYPE.UNDEFINED);
 
   const _ref = useRef<any>();
 
@@ -42,6 +42,7 @@ export const GamePage = ({ email }: { email: string | null }) => {
     getInitialBoard(gameID).then((data) => {
       setBoardTable(data[0]);
       setChatAvailable(data[1] !== "ONLINE");
+      setGameType(data[1]);
       setIsLoading(false);
     });
   }, []);
@@ -103,6 +104,7 @@ export const GamePage = ({ email }: { email: string | null }) => {
                   boardTable={boardTable}
                   gameID={gameID}
                   containerRef={conatinerRef}
+                  email={email}
                 />
               ) : (
                 ""

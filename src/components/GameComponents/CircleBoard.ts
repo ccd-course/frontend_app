@@ -13,8 +13,13 @@ export class CircleBoard extends Board {
   private boardCirclesRadious: number[]; // Needed to generate the squares (Rows)
   private readonly numRows: number; // Number of rows on the baord
   private readonly numCols: number; // Number of cols on the board
-  constructor(p5: p5Types, boardTable: BoardTable, gameID: string) {
-    super(p5, boardTable, gameID);
+  constructor(
+    p5: p5Types,
+    boardTable: BoardTable,
+    gameID: string,
+    email: string | null
+  ) {
+    super(p5, boardTable, gameID, email);
     // Init the number of rows and cols
     this.numRows = this.boardTable[0].length;
     this.numCols = this.boardTable.length;

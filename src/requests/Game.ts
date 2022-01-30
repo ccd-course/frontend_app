@@ -107,3 +107,7 @@ export const executeMove = (
     console.log(e);
   }
 };
+
+export const joinGame = (player: string, gameId: string) => {
+  return axios.post(baseURL + "/joinOnlineNewGame", { player, gameId });
+};

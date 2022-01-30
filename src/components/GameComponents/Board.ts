@@ -1,5 +1,5 @@
 import p5Types from "p5";
-import {BoardTable, Coordinate} from "../../types";
+import {BoardTable, Coordinate, EVENTS} from "../../types";
 import {SELECTION_TYPE, Square} from "./Square";
 import {Piece} from "./Piece";
 import {executeMove, getPossibleMoves} from "../../requests/Game";
@@ -7,6 +7,7 @@ import {MouseEvent} from "../../events/game_data";
 import {map} from "rxjs";
 import {db} from "../../events/db";
 import {doc, DocumentData, DocumentSnapshot, onSnapshot,} from "firebase/firestore";
+import {EventDialogMessage} from "../../events/EventDialog";
 
 /**
  * Abstract class
@@ -19,19 +20,25 @@ export abstract class Board {
   public readonly p5: p5Types; // Number of rows on the baord
   public readonly boardTable: BoardTable;
   private readonly gameID: string; // The gameID stored in Backend
-  private readonly players: string[]; // CurrentPlayer, who is allowed to move the pieces
+  private players: string[] = []; // CurrentPlayer, who is allowed to move the pieces
   private squares: { [key: string]: Square } = {}; // Reference to the board squares
   private currentPlayer = ""; // CurrentPlayer, who is allowed to move the pieces
   private sourceSquare: Square | undefined;
   private destinationSquare: Square | undefined;
   private possibleMovements: Square[] = [];
+  private email: string | null;
 
-  constructor(p5: p5Types, boardTable: BoardTable, gameID: string) {
+  constructor(
+      p5: p5Types,
+      boardTable: BoardTable,
+      gameID: string,
+      email: string | null
+  ) {
     this.p5 = p5;
     this.boardTable = boardTable;
     this.gameID = gameID;
-    this.players = [];
     this.currentPlayer = "";
+    this.email = email;
 
     onSnapshot(doc(db, "game", gameID), this.handleOnlineChanges);
   }
@@ -39,7 +46,7 @@ export abstract class Board {
   abstract generateSquares(): { [key: string]: Square };
 
   abstract mapMouseCoordinateToSquareID(
-    coordinate: Coordinate
+      coordinate: Coordinate
   ): Coordinate | null;
 
   /**
@@ -53,25 +60,26 @@ export abstract class Board {
     this.setBoardPieces();
     // Subscribe to the MouseEvent
     MouseEvent.pipe(
-      map((coordiante: Coordinate) =>
-        this.mapMouseCoordinateToSquareID(coordiante)
-      )
+        map((coordiante: Coordinate) =>
+            this.mapMouseCoordinateToSquareID(coordiante)
+        )
     ).subscribe(this.handleMouseEvent);
     return this;
   }
 
   /**
    * Handle the mouse click events
-   * @param coordinate Coordinate of the mouse click
+   * @param squareID
    */
   public handleMouseEvent = async (
-    squareID: {
-      x: number;
-      y: number;
-    } | null
+      squareID: {
+        x: number;
+        y: number;
+      } | null
   ): Promise<void> => {
+
     if (squareID) {
-      const { x, y } = squareID;
+      const {x, y} = squareID;
       const squareIndex = `{${x},${y}}`;
 
       // First click
@@ -81,8 +89,8 @@ export abstract class Board {
         // Check if the piece belongs to the right player
 
         if (
-          !source.getPiece() ||
-          source.getPlayerID().toString() !== this.currentPlayer
+            !source.getPiece() ||
+            source.getPlayerID().toString() !== this.currentPlayer
         ) {
           return;
         } else {
@@ -92,10 +100,10 @@ export abstract class Board {
 
           // Send a request and get back all possible movments
           this.possibleMovements = (
-            await getPossibleMoves(this.gameID, this.sourceSquare.getIndex())
+              await getPossibleMoves(this.gameID, this.sourceSquare.getIndex())
           ).map(
-            (possible: any) =>
-              this.squares[`{${possible[0] + 1},${possible[1] + 1}}`]
+              (possible: any) =>
+                  this.squares[`{${possible[0] + 1},${possible[1] + 1}}`]
           );
 
           // Sign the incpming possible movments
@@ -110,11 +118,11 @@ export abstract class Board {
 
         // Check if the dest is one of possible movments
         if (
-          !this.possibleMovements
-            .map((square) => {
-              return square.getIndex().toString();
-            })
-            .includes(dest.getIndex().toString())
+            !this.possibleMovements
+                .map((square) => {
+                  return square.getIndex().toString();
+                })
+                .includes(dest.getIndex().toString())
         ) {
           // Set source and dest to default values
           // remove all possible movments
@@ -127,9 +135,9 @@ export abstract class Board {
           return;
         } else {
           await executeMove(
-            this.gameID,
-            this.sourceSquare.getIndex(),
-            dest.getIndex()
+              this.gameID,
+              this.sourceSquare.getIndex(),
+              dest.getIndex()
           );
 
           dest.setPiece(<Piece>this.sourceSquare.getPiece());
@@ -155,9 +163,36 @@ export abstract class Board {
 
   private handleOnlineChanges = (changes: DocumentSnapshot<DocumentData>) => {
     const newData = <any>changes.data();
+    const events = JSON.parse(newData.events);
+    const chessboard = JSON.parse(newData.chessboard);
+    this.setPLayers(chessboard);
+    if (events.length === 0) {
+      EventDialogMessage.next("WAITING FOR OTHER USERS");
+      this.currentPlayer = "";
+    } else {
+      const lastEvent = events[events.length - 1];
+      if (lastEvent.type === EVENTS.NEW_PLAYER_JOIN) {
+        EventDialogMessage.next("WAITING FOR OTHER USERS, NEW PLAYER JOINS");
+        return;
+      }
+      if (lastEvent.type === EVENTS.GAME_STARTED) {
+        this.currentPlayer = "0";
+        EventDialogMessage.next(undefined);
+        return;
+      }
+    }
+  };
 
-    this.currentPlayer = "0";
-    // CurrentPlayer get the value from the firebase
+  private setPLayers = (chessboard: any[][]) => {
+    const players: any[] = [];
+    chessboard.forEach((col) => {
+      col.forEach((row) => {
+        if (row && row.playerName && !players.includes(row.playerName)) {
+          players.push(row.playerName);
+        }
+      });
+    });
+    this.players = players;
   };
 
   /**
@@ -177,7 +212,7 @@ export abstract class Board {
       col.forEach((row, rowIndex) => {
         if (row) {
           this.squares[`{${rowIndex + 1},${colIndex + 1}}`].setPiece(
-            new Piece(this.p5, row.pieceID, row.playerId)
+              new Piece(this.p5, row.pieceID, row.playerId)
           );
         }
       });
