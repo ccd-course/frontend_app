@@ -30,6 +30,7 @@ export abstract class Board {
   private moveHistory: IMoveHistory[] = [];
   private email: string | null;
   private gameType: GAME_TYPE;
+  private gameStarted = false;
 
   constructor(
     p5: p5Types,
@@ -170,6 +171,7 @@ export abstract class Board {
     const newData = <any>changes.data();
     const events = JSON.parse(newData.events);
     const chessboard = JSON.parse(newData.chessboard);
+    if (!this.gameStarted) this.setPLayers(chessboard);
     if (events.length === 0) {
       EventDialogMessage.next({
         gameID: this.gameID,
@@ -188,8 +190,7 @@ export abstract class Board {
         return;
       }
       if (lastEvent.type === EVENTS.GAME_STARTED) {
-        if (this.players.length === 0) this.setPLayers(chessboard);
-
+        this.gameStarted = true;
         this.currentPlayer = "0";
         EventDialogMessage.next(null);
         ActivePlayersEvent.next(
