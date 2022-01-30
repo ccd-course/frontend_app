@@ -3,7 +3,7 @@ import {BoardTable, Coordinate, EVENTS, GAME_TYPE} from "../../types";
 import {SELECTION_TYPE, Square} from "./Square";
 import {Piece} from "./Piece";
 import {executeMove, getPossibleMoves} from "../../requests/Game";
-import {ActivePlayersEvent, MouseEvent} from "../../events/game_data";
+import {ActivePlayersEvent, MouseEvent, MoveHistoryEvent,} from "../../events/game_data";
 import {map} from "rxjs";
 import {db} from "../../events/db";
 import {doc, DocumentData, DocumentSnapshot, onSnapshot,} from "firebase/firestore";
@@ -218,6 +218,10 @@ export abstract class Board {
               lastEvent.metadata.end[0] + 1
             }}`
           ];
+        MoveHistoryEvent.next({
+          playerID: lastEvent.metadata.playerId,
+          move: { src: lastEvent.metadata.start, dest: lastEvent.metadata.end },
+        });
         const piece = <Piece>sourceSquare.getPiece();
         destinationSquare.setPiece(piece);
         sourceSquare.empty();

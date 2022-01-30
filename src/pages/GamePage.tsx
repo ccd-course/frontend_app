@@ -13,6 +13,7 @@ import { getInitialBoard } from "../events/db";
 import { EventDialog } from "../components/Dialogs/EventDialog";
 import { Chat } from "../components/Chat";
 import { ActivePlayers } from "../components/Dashboard/ActivePlayers";
+import { MoveHistory } from "../components/Dashboard/MoveHistory";
 
 export const GamePage = ({ email }: { email: string | null }) => {
   const location = useLocation();
@@ -159,7 +160,10 @@ export const GamePage = ({ email }: { email: string | null }) => {
                   Players
                   <ActivePlayers></ActivePlayers>
                 </Item>
-                <Item style={{ height: "60%" }}>Moves</Item>
+                <Item style={{ height: "60%" }}>
+                  Moves
+                  <MoveHistory></MoveHistory>
+                </Item>
                 <Item style={{ height: "10%", padding: 0 }}>
                   <Button
                     variant="contained"
