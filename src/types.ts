@@ -14,6 +14,7 @@ export enum EVENTS {
   NEW_MOVE = "NEW_MOVE",
   CHECKMATED = "CHECKMATED",
   DRAW = "DRAW",
+  PROMOTE = "PROMOTE",
 }
 
 export type setAuthDialogFunc = (input: {

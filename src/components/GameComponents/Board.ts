@@ -238,7 +238,9 @@ export abstract class Board {
               fixed: true,
             },
           });
+
           MoveHistoryEvent.next({ history: this.moveHistory });
+          sourceSquare.neglectSquare();
           destinationSquare.empty();
         } else {
           this.moveHistory.push({
@@ -251,7 +253,6 @@ export abstract class Board {
           MoveHistoryEvent.next({ history: this.moveHistory });
           const piece = <Piece>sourceSquare.getPiece();
           destinationSquare.setPiece(piece);
-          destinationSquare.empty();
           sourceSquare.empty();
         }
 
@@ -266,6 +267,18 @@ export abstract class Board {
           winner: lastEvent.metadata.playerName,
         });
         return;
+      }
+      if (lastEvent.type === EVENTS.PROMOTE) {
+        const destinationSquare =
+          this.squares[
+            `{${lastEvent.metadata.end[1] + 1},${
+              lastEvent.metadata.end[0] + 1
+            }}`
+          ];
+        const piece = new Piece(this.p5, "Queen", lastEvent.metadata.playerId);
+
+        destinationSquare.empty();
+        destinationSquare.setPiece(piece);
       }
       if (lastEvent.type === EVENTS.DRAW) {
         EventDialogMessage.next({
