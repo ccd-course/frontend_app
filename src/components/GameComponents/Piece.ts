@@ -13,7 +13,7 @@ export class Piece {
   constructor(
     private p5Reference: p5Types,
     private readonly pieceId: string,
-    private readonly playerID: string
+    private playerID: string
   ) {
     this.pieceImage = this.loadImagePromise();
   }
@@ -56,6 +56,14 @@ export class Piece {
    */
   public getPlayerID() {
     return this.playerID;
+  }
+
+  public getPieceID() {
+    return this.pieceId;
+  }
+
+  public setPlayerID(id: string) {
+    this.playerID = id;
   }
 
   /**

@@ -213,6 +213,11 @@ export abstract class Board {
             };
           })
         );
+        Object.keys(this.squares).forEach((key) => {
+          if (this.squares[key].getPiece()?.getPieceID() === "Cannon") {
+            this.squares[key].getPiece()?.setPlayerID(this.currentPlayer);
+          }
+        });
         return;
       }
       if (lastEvent.type === EVENTS.NEW_MOVE) {
