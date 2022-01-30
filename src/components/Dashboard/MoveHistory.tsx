@@ -26,7 +26,6 @@ export const MoveHistory = () => {
       );
     });
   };
-  console.log("RERENDERING");
   return <>{renderHistory()}</>;
 };
 
