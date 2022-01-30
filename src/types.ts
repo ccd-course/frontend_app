@@ -2,7 +2,7 @@ import { AUTH_DIALOG_TYPES } from "./components/Dialogs/AuthenticationDialog";
 import { Square } from "./components/GameComponents/Square";
 
 export enum GAME_TYPE {
-  LOCAL = "LOCAL",
+  ONLINE = "ONLINE",
   OFFLINE = "OFFLINE",
   UNDEFINED = "UNDEFINED",
 }
@@ -10,6 +10,8 @@ export enum GAME_TYPE {
 export enum EVENTS {
   GAME_STARTED = "GAME_STARTED",
   NEW_PLAYER_JOIN = "NEW_PLAYER_JOIN",
+  PLAYER_CHANGE = "PLAYER_CHANGE",
+  NEW_MOVE = "NEW_MOVE",
 }
 
 export type setAuthDialogFunc = (input: {

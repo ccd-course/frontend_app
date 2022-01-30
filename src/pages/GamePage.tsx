@@ -105,6 +105,7 @@ export const GamePage = ({ email }: { email: string | null }) => {
                   gameID={gameID}
                   containerRef={conatinerRef}
                   email={email}
+                  gameType={gameType}
                 />
               ) : (
                 ""
