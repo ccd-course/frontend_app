@@ -170,18 +170,25 @@ export abstract class Board {
     const chessboard = JSON.parse(newData.chessboard);
     this.setPLayers(chessboard);
     if (events.length === 0) {
-      EventDialogMessage.next("WAITING FOR OTHER USERS");
+      EventDialogMessage.next({
+        gameID: this.gameID,
+        status: "WAITING FOR USERS",
+        players: [<string>this.email],
+      });
       this.currentPlayer = "";
     } else {
-      console.log(events);
       const lastEvent = events[events.length - 1];
       if (lastEvent.type === EVENTS.NEW_PLAYER_JOIN) {
-        EventDialogMessage.next("WAITING FOR OTHER USERS, NEW PLAYER JOINS");
+        EventDialogMessage.next({
+          gameID: this.gameID,
+          status: "WAITING FOR USERS",
+          players: [...this.players],
+        });
         return;
       }
       if (lastEvent.type === EVENTS.GAME_STARTED) {
         this.currentPlayer = "0";
-        EventDialogMessage.next(undefined);
+        EventDialogMessage.next(null);
         return;
       }
       if (lastEvent.type === EVENTS.PLAYER_CHANGE) {
@@ -191,18 +198,19 @@ export abstract class Board {
       if (lastEvent.type === EVENTS.NEW_MOVE) {
         const sourceSquare =
           this.squares[
-            `{${lastEvent.metadata.start[1]},${lastEvent.metadata.start[0]}}`
+            `{${lastEvent.metadata.start[1] + 1},${
+              lastEvent.metadata.start[0] + 1
+            }}`
           ];
         const destinationSquare =
           this.squares[
-            `{${lastEvent.metadata.end[1]},${lastEvent.metadata.end[0]}}`
+            `{${lastEvent.metadata.end[1] + 1},${
+              lastEvent.metadata.end[0] + 1
+            }}`
           ];
         const piece = <Piece>sourceSquare.getPiece();
-        console.log(piece);
         destinationSquare.setPiece(piece);
         sourceSquare.empty();
-      } else {
-        console.log("NOTHING");
       }
     }
   };
