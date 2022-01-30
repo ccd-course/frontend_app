@@ -228,15 +228,33 @@ export abstract class Board {
               lastEvent.metadata.end[0] + 1
             }}`
           ];
-        this.moveHistory.push({
-          playerID: lastEvent.metadata.playerName,
-          move: { src: lastEvent.metadata.start, dest: lastEvent.metadata.end },
-        });
-        MoveHistoryEvent.next({ history: this.moveHistory });
-        const piece = <Piece>sourceSquare.getPiece();
-        destinationSquare.setPiece(piece);
-        destinationSquare.empty();
-        sourceSquare.empty();
+
+        if (lastEvent.metadata.fixed) {
+          this.moveHistory.push({
+            playerID: lastEvent.metadata.playerName,
+            move: {
+              src: lastEvent.metadata.start,
+              dest: lastEvent.metadata.end,
+              fixed: true,
+            },
+          });
+          MoveHistoryEvent.next({ history: this.moveHistory });
+          destinationSquare.empty();
+        } else {
+          this.moveHistory.push({
+            playerID: lastEvent.metadata.playerName,
+            move: {
+              src: lastEvent.metadata.start,
+              dest: lastEvent.metadata.end,
+            },
+          });
+          MoveHistoryEvent.next({ history: this.moveHistory });
+          const piece = <Piece>sourceSquare.getPiece();
+          destinationSquare.setPiece(piece);
+          destinationSquare.empty();
+          sourceSquare.empty();
+        }
+
         return;
       }
       if (lastEvent.type === EVENTS.CHECKMATED) {
