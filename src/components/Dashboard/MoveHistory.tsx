@@ -3,7 +3,9 @@ import { IMoveHistory, MoveHistoryEvent } from "../../events/game_data";
 import { ListItem, ListItemText } from "@mui/material";
 
 export const MoveHistory = () => {
-  const [moveHistory, setMoveHistory] = useState<IMoveHistory[]>([]);
+  const [moveHistory, setMoveHistory] = useState<{
+    history: IMoveHistory[] | null;
+  }>({ history: null });
 
   useEffect(() => {
     MoveHistoryEvent.subscribe((newEvent) => {
@@ -12,7 +14,7 @@ export const MoveHistory = () => {
   }, [moveHistory]);
 
   const renderHistory = () => {
-    return moveHistory.map((move, index) => {
+    return moveHistory?.history?.map((move, index) => {
       return (
         <ListItem disablePadding key={index}>
           <ListItemText primary={move.playerID} style={{ color: "#000" }} />

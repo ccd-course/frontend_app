@@ -14,4 +14,4 @@ export interface IMoveHistory {
   };
 }
 
-export const MoveHistoryEvent = new Subject<IMoveHistory[]>();
+export const MoveHistoryEvent = new Subject<{ history: IMoveHistory[] }>();

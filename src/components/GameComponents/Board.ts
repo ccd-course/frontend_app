@@ -115,9 +115,6 @@ export abstract class Board {
             (possible: any) =>
               this.squares[`{${possible[0] + 1},${possible[1] + 1}}`]
           );
-          console.log(
-            await getPossibleMoves(this.gameID, this.sourceSquare.getIndex())
-          );
 
           // Sign the incpming possible movments
           this.possibleMovements.forEach((square) => {
@@ -174,7 +171,6 @@ export abstract class Board {
     const events = JSON.parse(newData.events);
     const chessboard = JSON.parse(newData.chessboard);
     this.setPLayers(chessboard);
-
     if (events.length === 0) {
       EventDialogMessage.next({
         gameID: this.gameID,
@@ -236,7 +232,7 @@ export abstract class Board {
           playerID: lastEvent.metadata.playerName,
           move: { src: lastEvent.metadata.start, dest: lastEvent.metadata.end },
         });
-        MoveHistoryEvent.next(this.moveHistory);
+        MoveHistoryEvent.next({ history: this.moveHistory });
         const piece = <Piece>sourceSquare.getPiece();
         destinationSquare.setPiece(piece);
         sourceSquare.empty();
