@@ -3,7 +3,7 @@ import {BoardTable, Coordinate, EVENTS, GAME_TYPE} from "../../types";
 import {SELECTION_TYPE, Square} from "./Square";
 import {Piece} from "./Piece";
 import {executeMove, getPossibleMoves} from "../../requests/Game";
-import {MouseEvent} from "../../events/game_data";
+import {ActivePlayersEvent, MouseEvent} from "../../events/game_data";
 import {map} from "rxjs";
 import {db} from "../../events/db";
 import {doc, DocumentData, DocumentSnapshot, onSnapshot,} from "firebase/firestore";
@@ -169,6 +169,15 @@ export abstract class Board {
     const events = JSON.parse(newData.events);
     const chessboard = JSON.parse(newData.chessboard);
     this.setPLayers(chessboard);
+    ActivePlayersEvent.next(
+      this.players.map((player, index) => {
+        return {
+          player: player,
+          turn: index.toString() !== this.currentPlayer ? false : true,
+          color: "red",
+        };
+      })
+    );
     if (events.length === 0) {
       EventDialogMessage.next({
         gameID: this.gameID,
@@ -193,6 +202,7 @@ export abstract class Board {
       }
       if (lastEvent.type === EVENTS.PLAYER_CHANGE) {
         this.currentPlayer = lastEvent.metadata.playerId.toString();
+
         return;
       }
       if (lastEvent.type === EVENTS.NEW_MOVE) {

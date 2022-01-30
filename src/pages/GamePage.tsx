@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import Card from "@mui/material/Card";
 import { COLOR } from "../styles/Colors";
@@ -12,6 +12,7 @@ import { ExitGame } from "../components/Dialogs/ExitGameDialog";
 import { getInitialBoard } from "../events/db";
 import { EventDialog } from "../components/Dialogs/EventDialog";
 import { Chat } from "../components/Chat";
+import { ActivePlayers } from "../components/Dashboard/ActivePlayers";
 
 export const GamePage = ({ email }: { email: string | null }) => {
   const location = useLocation();
@@ -154,8 +155,11 @@ export const GamePage = ({ email }: { email: string | null }) => {
                     Exit the game
                   </Button>
                 </Item>
-                <Item style={{ height: "10%" }}>Player's turn</Item>
-                <Item style={{ height: "70%" }}>Moves</Item>
+                <Item style={{ height: "20%", backgroundColor: "blue" }}>
+                  Players
+                  <ActivePlayers></ActivePlayers>
+                </Item>
+                <Item style={{ height: "60%" }}>Moves</Item>
                 <Item style={{ height: "10%", padding: 0 }}>
                   <Button
                     variant="contained"
