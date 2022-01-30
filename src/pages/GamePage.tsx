@@ -156,7 +156,7 @@ export const GamePage = ({ email }: { email: string | null }) => {
                     Exit the game
                   </Button>
                 </Item>
-                <Item style={{ height: "20%", backgroundColor: "blue" }}>
+                <Item style={{ height: "20%", backgroundColor: "#1d7af4" }}>
                   Players
                   <ActivePlayers></ActivePlayers>
                 </Item>
