@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { ListItem, ListItemIcon, ListItemText } from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
-import { PLAYER_COLORS } from "../../events/game_data";
 import { ActivePlayersEvent } from "../../events/game_events";
+import { PLAYER_COLORS } from "../../styles/player.style";
 
 export const ActivePlayers = () => {
   const [players, setPlayers] =
