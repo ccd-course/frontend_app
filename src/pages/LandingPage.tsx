@@ -25,7 +25,34 @@ export const LandingPage = ({
       <div
         style={{
           position: "absolute",
-          top: "80%",
+          top: "40%",
+          left: "50%",
+          transform: "translate(-50%,-50%)",
+          width: "50%",
+          height: "40%",
+          textAlign: "center",
+        }}
+      >
+        <h1 style={{ display: "inline", fontSize: 120, color: "#fff" }}>
+          Circular
+        </h1>
+        <img
+          src={"/favicon.png"}
+          style={{
+            display: "inline",
+            height: 95,
+            marginRight: "20px",
+            marginLeft: "20px",
+          }}
+        />
+        <h1 style={{ display: "inline", fontSize: 120, color: "#fff" }}>
+          Chess
+        </h1>
+      </div>
+      <div
+        style={{
+          position: "absolute",
+          top: "70%",
           left: "50%",
           transform: "translate(-50%,-50%)",
           width: "20%",

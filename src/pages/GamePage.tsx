@@ -160,8 +160,8 @@ export const GamePage = ({ email }: { email: string | null }) => {
                   <h4>Players</h4>
                   <ActivePlayers></ActivePlayers>
                 </Item>
-                <Item style={{ height: "50%" }}>
-                  <h4>Moves</h4>
+                <Item style={{ height: "50%", overflowY: "scroll" }}>
+                  <h4>History</h4>
                   <MoveHistory></MoveHistory>
                 </Item>
                 <Item style={{ height: "10%", padding: 0 }}>
