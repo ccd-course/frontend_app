@@ -235,6 +235,7 @@ export abstract class Board {
         MoveHistoryEvent.next({ history: this.moveHistory });
         const piece = <Piece>sourceSquare.getPiece();
         destinationSquare.setPiece(piece);
+        destinationSquare.empty();
         sourceSquare.empty();
         return;
       }
