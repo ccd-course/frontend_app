@@ -170,7 +170,7 @@ export abstract class Board {
     const newData = <any>changes.data();
     const events = JSON.parse(newData.events);
     const chessboard = JSON.parse(newData.chessboard);
-    this.setPLayers(chessboard);
+    if (this.players.length === 0) this.setPLayers(chessboard);
     if (events.length === 0) {
       EventDialogMessage.next({
         gameID: this.gameID,
