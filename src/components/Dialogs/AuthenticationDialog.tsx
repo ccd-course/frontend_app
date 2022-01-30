@@ -9,11 +9,14 @@ import { COLOR } from "../../styles/Colors";
 import { DialogContentText, InputAdornment, TextField } from "@mui/material";
 import Lock from "@mui/icons-material/Lock";
 import AccountCircle from "@mui/icons-material/AccountCircle";
-import { firebaseConfigApp } from "../../configs/firebase.config";
+import { auth, firebaseConfigApp } from "../../configs/firebase.config";
+import GoogleIcon from "@mui/icons-material/Google";
 import {
   createUserWithEmailAndPassword,
   getAuth,
+  GoogleAuthProvider,
   signInWithEmailAndPassword,
+  signInWithPopup,
 } from "firebase/auth";
 import { IAuthDialog, setAuthDialogFunc } from "../../types";
 
@@ -35,6 +38,9 @@ export const AuthenticationDialog = ({
   const [email, setInputEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const googleProvider = new GoogleAuthProvider();
+
+  const signInWithGoogle = () => signInWithPopup(auth, googleProvider);
 
   return (
     <Dialog
@@ -136,6 +142,27 @@ export const AuthenticationDialog = ({
               variant="standard"
             />
           </form>
+          <div>
+            <Button
+              className="button"
+              onClick={async () => {
+                const res: any = await signInWithGoogle();
+                localStorage.setItem(
+                  "jwt_token",
+                  res._tokenResponse.refreshToken
+                );
+                localStorage.setItem("email", res.user.email);
+                setEmail(res.user.email);
+                setAuthDialog({
+                  open: false,
+                  type: AUTH_DIALOG_TYPES.UNDEFINED,
+                });
+              }}
+            >
+              <GoogleIcon />
+              <span style={{ marginLeft: "10px" }}>Log in with Google</span>
+            </Button>
+          </div>
 
           <div style={{ marginTop: 30, color: "red" }}>{error}</div>
         </DialogContentText>
@@ -185,7 +212,7 @@ export const AuthenticationDialog = ({
                     "jwt_token",
                     res._tokenResponse.refreshToken
                   );
-                  localStorage.setItem("email", email);
+                  localStorage.setItem("email", res.user.email);
                   setEmail(email);
                   setAuthDialog({
                     open: false,
