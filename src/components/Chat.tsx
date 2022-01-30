@@ -26,7 +26,7 @@ export const Chat = (props: ChatProps) => {
   React.useEffect(() => {
     onSnapshot(doc(db, "game", props.gameID), (changes: any) => {
       const newData = changes.data();
-      setMessages(newData.messages);
+      setMessages(newData.chat);
     });
   }, []);
 
@@ -112,8 +112,8 @@ export const Chat = (props: ChatProps) => {
                   ...messages,
                   { email: props.email, message: message },
                 ];
-                updateDoc(doc(db, "games", props.gameID), {
-                  messages: newMessages,
+                updateDoc(doc(db, "game", props.gameID), {
+                  chat: newMessages,
                 });
               }}
             >
