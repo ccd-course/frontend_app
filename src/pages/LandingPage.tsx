@@ -40,7 +40,7 @@ export const LandingPage = ({
           src={"/favicon.png"}
           style={{
             display: "inline",
-            height: 80,
+            height: 95,
             marginRight: "20px",
             marginLeft: "20px",
           }}
@@ -52,7 +52,7 @@ export const LandingPage = ({
       <div
         style={{
           position: "absolute",
-          top: "60%",
+          top: "70%",
           left: "50%",
           transform: "translate(-50%,-50%)",
           width: "20%",
