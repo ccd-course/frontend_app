@@ -33,7 +33,7 @@ export const LandingPage = ({
           textAlign: "center",
         }}
       >
-        <h1 style={{ display: "inline", fontSize: 110, color: "#fff" }}>
+        <h1 style={{ display: "inline", fontSize: 80, color: "#fff" }}>
           Circular
         </h1>
         <img
@@ -45,7 +45,7 @@ export const LandingPage = ({
             marginLeft: "20px",
           }}
         />
-        <h1 style={{ display: "inline", fontSize: 110, color: "#fff" }}>
+        <h1 style={{ display: "inline", fontSize: 80, color: "#fff" }}>
           Chess
         </h1>
       </div>

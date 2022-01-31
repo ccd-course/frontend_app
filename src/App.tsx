@@ -10,6 +10,7 @@ import { LandingPage } from "./pages/LandingPage";
 import { IAuthDialog } from "./types";
 import { PageNotFound } from "./pages/PageNotFound";
 import { GamePage } from "./pages/GamePage";
+import Footer from "./components/Footer";
 
 export const App = () => {
   const [email, setEmail] = useState<string | null>(null);
@@ -43,6 +44,7 @@ export const App = () => {
         <Route path="/Game/:id" element={<GamePage email={email} />} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
+      <Footer/>
     </div>
   );
 };
